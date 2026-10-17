@@ -1,0 +1,505 @@
+/* =========================================================
+   Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
+   Układ odwzorowany 1:1 z projektu Figma (szerokość 1728 px).
+   Wszystkie wymiary podane są w "pikselach projektu" (u):
+   1u = 1/1728 szerokości okna, więc strona skaluje się
+   proporcjonalnie na każdym monitorze.
+   ========================================================= */
+
+/* ---------- Czcionki (hostowane lokalnie – bez Google Fonts, zgodnie z RODO) ---------- */
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-latin-opsz-normal.woff2") format("woff2");
+  font-weight: 200 800; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-latin-ext-opsz-normal.woff2") format("woff2");
+  font-weight: 200 800; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin-ext-wght-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------- Zmienne ---------- */
+:root {
+  --u: calc(100vw / 1728);           /* 1 piksel projektu */
+  --czern: #000;
+  --biel: #fff;
+  --szary-ikona: #898989;
+  --wypelnienie-pola: rgba(255, 255, 255, 0.18);
+  --szeryf: "Newsreader", "Times New Roman", Georgia, serif;
+  --bezszeryf: "Inter", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+
+/* ---------- Podstawy ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  position: relative;
+  min-height: calc(3792 * var(--u));
+  background: var(--czern);
+  color: var(--biel);
+  font-family: var(--bezszeryf);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, p, ul { margin: 0; padding: 0; }
+ul { list-style: none; }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+:focus-visible { outline: 2px solid var(--biel); outline-offset: 4px; border-radius: 2px; }
+
+.ukryte {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* Pozycjonowanie w układzie projektu: --x i --y w pikselach projektu */
+.naglowek > *, .sekcja > *, .stopka > * {
+  position: absolute;
+  left: calc(var(--x, 180) * var(--u));
+  top: calc(var(--y, 0) * var(--u));
+}
+
+/* ---------- Typografia ---------- */
+.tekst {
+  font-family: var(--bezszeryf);
+  font-size: max(14px, calc(18 * var(--u)));
+  line-height: max(22px, calc(28 * var(--u)));
+  letter-spacing: -0.007em;
+  font-weight: 400;
+}
+.tytul {
+  font-family: var(--szeryf);
+  font-weight: 400;
+  font-size: calc(80 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+}
+.podtytul, .naglowek-sekcji {
+  font-family: var(--szeryf);
+  font-weight: 400;
+  font-size: calc(36 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ===================== TŁA ===================== */
+.tla {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(3792 * var(--u));
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.tlo { position: absolute; left: 0; width: 100%; }
+
+/* Zdjęcie 1 – Rynek: wysokość 1150, wyśrodkowane, krycie 90% na czerni */
+.tlo--rynek {
+  top: 0;
+  height: calc(1150 * var(--u));
+  background: url("../img/zdjecie-1-rynek.webp") center top / auto 100% no-repeat;
+  opacity: 0.9;
+}
+/* Zdjęcie 3 – dachy: od początku strony 3, na całą szerokość */
+.tlo--dachy {
+  top: calc(2234 * var(--u));
+  height: calc(1475 * var(--u));
+  background: url("../img/zdjecie-3-dachy.webp") center top / 100% auto no-repeat;
+}
+/* Zdjęcie 2 – waga (PNG z alfą) – leży NAD pozostałymi, dzięki czemu płynnie w nie przechodzi */
+.tlo--waga {
+  top: calc(890 * var(--u));
+  height: calc(1679 * var(--u));
+  background: url("../img/zdjecie-2-waga.webp") center top / 100% auto no-repeat;
+}
+/* Gradient pod nagłówkiem – odtworzony kodem (czerń 20%, wygaszana od 235 do 390 px) */
+.tlo--gradient-header {
+  top: 0;
+  height: calc(390 * var(--u));
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0.2) 0,
+    rgba(0, 0, 0, 0.2) 60%,
+    rgba(0, 0, 0, 0) 100%);
+}
+/* Przejście dolnego zdjęcia w czerń przy stopce */
+.tlo--wygaszenie {
+  top: calc(2944 * var(--u));
+  height: calc(848 * var(--u));
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.14) 26%,
+    rgba(0, 0, 0, 0.45) 43%,
+    rgba(0, 0, 0, 0.70) 61%,
+    rgba(0, 0, 0, 0.95) 78%,
+    #000 87%);
+}
+
+/* Gradient pod danymi kontaktowymi – przyklejony do dołu ekranu.
+   Odtworzony kodem 1:1 z pliku Web_01_Gradient.png (lżejszy niż PNG). */
+.gradient-kontakt {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: calc(717 * var(--u));
+  background: linear-gradient(150.07deg,
+    rgba(0, 0, 0, 0) 66.6%,
+    rgba(0, 0, 0, 0.48) 93.9%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--gradient, 1);
+}
+
+/* ===================== NAGŁÓWEK ===================== */
+.naglowek {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(300 * var(--u));
+  z-index: 3;
+}
+.logo-adwokatura {
+  --x: 181; --y: 96;
+  width: calc(186 * var(--u));
+  display: block;
+  text-align: center;
+  font-family: var(--szeryf);
+  font-size: calc(25.7 * var(--u));
+  line-height: calc(28 * var(--u));
+}
+.logo-adwokatura:hover { text-decoration: none; }
+.logo-adwokatura img {
+  display: block;
+  margin: 0 auto calc(15 * var(--u));
+  height: calc(57 * var(--u));
+  width: auto;
+}
+/* gdy nie ma jeszcze pliku znaku – zachowujemy miejsce */
+.logo-adwokatura span { display: block; }
+.logo-adwokatura:not(:has(img)) span { margin-top: calc(72 * var(--u)); }
+
+.menu {
+  --x: 581; --y: 141;
+  display: flex;
+  gap: calc(61 * var(--u));
+  font-family: var(--bezszeryf);
+  font-size: calc(23.4 * var(--u));
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.logo-amm {
+  --x: 1429; --y: 97;
+  width: calc(119 * var(--u));
+  height: calc(119 * var(--u));
+  border: calc(3 * var(--u)) solid var(--biel);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-family: var(--bezszeryf);
+  font-size: calc(23 * var(--u));
+  line-height: 1.15;
+}
+
+/* ===================== SEKCJE ===================== */
+main { position: relative; z-index: 2; }
+.sekcja { position: relative; height: calc(1117 * var(--u)); }
+
+/* Strona 1 */
+.tytul { --y: 601; }
+.podtytul { --y: 699; --x: 182; }
+.tekst--start { --y: 779; --x: 183; }
+
+/* Strona 2 – zakres usług */
+.naglowek-sekcji--uslugi { --y: 244; }
+.tekst--uslugi { --y: 298; }
+.kafle {
+  --x: 178; --y: 480;
+  width: calc(1371 * var(--u));
+  display: grid;
+  grid-template-columns: repeat(5, calc(259 * var(--u)));
+  column-gap: calc(19 * var(--u));
+  row-gap: calc(22 * var(--u));
+}
+.kafel {
+  position: relative;
+  height: calc(259 * var(--u));
+  border: calc(2 * var(--u)) solid transparent;
+  border-radius: calc(10 * var(--u));
+  font-size: max(13px, calc(18 * var(--u)));
+  letter-spacing: -0.007em;
+  line-height: 1;
+  text-align: center;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.kafel span {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(48 * var(--u));
+  white-space: nowrap;
+}
+.ikona {
+  position: absolute;
+  left: 50%;
+  top: calc(89 * var(--u));
+  width: calc(119 * var(--u));
+  height: calc(119 * var(--u));
+  margin-left: calc(-59.5 * var(--u));
+  border-radius: 50%;
+  background: var(--szary-ikona);
+}
+/* Stan zaznaczenia kafla (jak "Prawo cywilne" w projekcie) – po najechaniu myszą */
+.kafel:hover {
+  border-color: var(--biel);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Strona 3 – kontakt */
+.naglowek-sekcji--kontakt { --y: 282; }
+.info--1 { --y: 336; --x: 178; }
+.info--2 { --y: 336; --x: 596; }
+.info--3 { --y: 364; --x: 1013; }
+.mapa {
+  --x: 178; --y: 446;
+  width: calc(674 * var(--u));
+  height: calc(539 * var(--u));
+  border-radius: calc(8 * var(--u));
+  overflow: hidden;
+  background: #f2f2f2;
+  color: #222;
+}
+.mapa img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mapa:has(img) .mapa__zastepstwo { display: none; }
+.mapa__zastepstwo {
+  height: 100%;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: calc(16 * var(--u));
+  font-size: max(14px, calc(18 * var(--u)));
+}
+.mapa__zastepstwo a { text-decoration: underline; }
+
+.formularz {
+  --x: 1013; --y: 451;
+  width: calc(535 * var(--u));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: calc(21 * var(--u));
+  row-gap: calc(12 * var(--u));
+}
+.pole {
+  width: 100%;
+  height: calc(48 * var(--u));
+  padding: 0 calc(16 * var(--u));
+  border: calc(1.5 * var(--u)) solid var(--biel);
+  border-radius: calc(8 * var(--u));
+  background: var(--wypelnienie-pola);
+  color: var(--biel);
+  font: inherit;
+  font-size: max(13px, calc(18 * var(--u)));
+  letter-spacing: -0.007em;
+}
+.pole::placeholder { color: var(--biel); opacity: 1; }
+.pole:focus { outline: none; background: rgba(255, 255, 255, 0.26); }
+.pole:focus-visible { outline: 2px solid var(--biel); outline-offset: 2px; }
+.pole--pelne { grid-column: 1 / -1; }
+.pole--wiadomosc {
+  height: calc(229 * var(--u));
+  padding-top: calc(12 * var(--u));
+  resize: vertical;
+  line-height: 1.4;
+}
+.formularz__status {
+  grid-column: 1;
+  align-self: center;
+  font-size: max(12px, calc(14 * var(--u)));
+  min-height: 1em;
+}
+.przycisk {
+  grid-column: 2;
+  justify-self: end;
+  margin-top: calc(4 * var(--u));
+  width: calc(97 * var(--u));
+  height: calc(49 * var(--u));
+  border: 0;
+  border-radius: calc(8 * var(--u));
+  background: var(--biel);
+  color: var(--czern);
+  font-family: var(--bezszeryf);
+  font-size: max(13px, calc(18 * var(--u)));
+  letter-spacing: -0.007em;
+  cursor: pointer;
+}
+.przycisk:hover { background: #e6e6e6; }
+
+/* ===================== STOPKA ===================== */
+.stopka {
+  position: relative;
+  z-index: 2;
+  height: calc(441 * var(--u));
+}
+.stopka__tytul {
+  --y: 150;
+  font-family: var(--bezszeryf);
+  font-weight: 400;
+  font-size: calc(21.3 * var(--u));
+  line-height: 1.2;
+}
+.stopka__kolumna {
+  --y: 189;
+  font-size: max(11px, calc(11.9 * var(--u)));
+  line-height: calc(24 * var(--u));
+}
+.stopka__kolumna:nth-of-type(2) { --x: 599; }
+.stopka__kolumna:nth-of-type(3) { --x: 1014; }
+.stopka__prawa {
+  --y: 359; --x: 0;
+  width: 100%;
+  text-align: center;
+  font-size: max(13px, calc(18 * var(--u)));
+  line-height: calc(28 * var(--u));
+  letter-spacing: -0.007em;
+}
+
+/* ===================== PŁYWAJĄCE DANE KONTAKTOWE ===================== */
+.kontakt {
+  position: fixed;
+  right: calc(50% - 684 * var(--u));   /* prawa krawędź treści (1548 px w projekcie) */
+  bottom: calc(59 * var(--u));
+  z-index: 4;
+  text-align: right;
+  opacity: var(--kontakt, 1);
+  visibility: var(--kontakt-widocznosc, visible);
+}
+.kontakt__godziny {
+  font-size: max(13px, calc(18 * var(--u)));
+  line-height: 1;
+  letter-spacing: -0.007em;
+  margin-bottom: calc(17 * var(--u));
+}
+.kontakt__dane {
+  position: relative;
+  height: calc(80 * var(--u));         /* stała wysokość = godziny zostają w miejscu */
+  width: calc(500 * var(--u));
+}
+.kontakt__duzy, .kontakt__maly {
+  position: absolute;
+  top: 0; right: 0;
+  white-space: nowrap;
+  transform-origin: top right;
+}
+/* wariant na stronie 1 */
+.kontakt__duzy {
+  font-family: var(--szeryf);
+  font-size: calc(36 * var(--u));
+  line-height: calc(41 * var(--u));
+  opacity: var(--duzy-krycie, 1);
+  transform: scale(var(--duzy-skala, 1));
+}
+/* wariant na stronie 2 */
+.kontakt__maly {
+  font-family: var(--bezszeryf);
+  font-size: max(13px, calc(18 * var(--u)));
+  line-height: max(20px, calc(28 * var(--u)));
+  letter-spacing: -0.007em;
+  opacity: var(--maly-krycie, 0);
+  transform: scale(var(--maly-skala, 1.45));
+}
+
+/* =========================================================
+   TELEFONY I TABLETY (< 1100 px)
+   Projekt istnieje tylko w wersji komputerowej – poniżej
+   prosty układ jednokolumnowy do czasu projektu mobilnego.
+   ========================================================= */
+@media (max-width: 1099px) {
+  :root { --u: 1px; }
+  body { min-height: 0; }
+  .naglowek > *, .sekcja > *, .stopka > * { position: static; }
+
+  .tla, .gradient-kontakt { display: none; }
+
+  .naglowek {
+    position: absolute;
+    height: auto;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    gap: 16px;
+    padding: 24px 20px;
+  }
+  .logo-adwokatura { width: auto; font-size: 16px; line-height: 1.2; }
+  .logo-adwokatura img { height: 40px; margin-bottom: 4px; }
+  .logo-adwokatura:not(:has(img)) span { margin-top: 0; }
+  .menu { order: 3; width: 100%; justify-content: space-between; gap: 12px; font-size: 14px; }
+  .logo-amm { width: 64px; height: 64px; border-width: 2px; font-size: 12px; }
+
+  main { position: static; }
+  .sekcja { height: auto; padding: 48px 20px; }
+  .sekcja--start {
+    background:
+      linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.6)),
+      url("../img/zdjecie-1-rynek.webp") center / cover no-repeat;
+    padding-top: 200px; padding-bottom: 48px;
+  }
+  .sekcja--uslugi {
+    background:
+      linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.75)),
+      url("../img/zdjecie-2-waga.webp") center / cover no-repeat;
+  }
+  .sekcja--kontakt {
+    background:
+      linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.85)),
+      url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
+  }
+  .tytul { font-size: clamp(36px, 9vw, 64px); white-space: normal; }
+  .podtytul, .naglowek-sekcji { font-size: clamp(18px, 4.6vw, 28px); white-space: normal; line-height: 1.2; }
+  .podtytul { margin-top: 12px; }
+  .tekst { font-size: 15px; line-height: 24px; letter-spacing: 0.03em; margin-top: 20px; }
+  .tekst br { display: none; }
+  .info br { display: inline; }
+
+  .kafle { width: auto; margin-top: 32px; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .kafel { height: 150px; border-width: 1px; border-color: rgba(255,255,255,.35); border-radius: 10px; font-size: 14px; }
+  .kafel span { top: 20px; white-space: normal; padding: 0 8px; }
+  .ikona { top: 64px; width: 64px; height: 64px; margin-left: -32px; }
+
+  .info { margin-top: 20px; }
+  .mapa { width: 100%; height: 280px; margin-top: 28px; border-radius: 8px; }
+  .formularz { width: 100%; margin-top: 28px; column-gap: 12px; row-gap: 12px; }
+  .pole { height: 48px; border-width: 1px; border-radius: 8px; padding: 0 14px; font-size: 16px; }
+  .pole--wiadomosc { height: 180px; padding-top: 12px; }
+  .przycisk { width: 110px; height: 48px; border-radius: 8px; font-size: 16px; }
+
+  .stopka { height: auto; padding: 40px 20px 32px; }
+  .stopka__tytul { font-size: 20px; margin-bottom: 12px; }
+  .stopka__kolumna { font-size: 13px; line-height: 24px; margin-bottom: 12px; }
+  .stopka__prawa { margin-top: 28px; font-size: 13px; line-height: 20px; }
+
+  /* dane kontaktowe na telefonie – mały pasek przyklejony do dołu ekranu */
+  .kontakt {
+    left: 0; right: 0; bottom: 0;
+    padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(0, 0, 0, 0.85);
+    text-align: left;
+  }
+  .kontakt__godziny { font-size: 12px; margin-bottom: 4px; opacity: .8; }
+  .kontakt__dane { height: auto; width: auto; }
+  .kontakt__duzy { display: none; }
+  .kontakt__maly {
+    position: static; opacity: 1; transform: none;
+    font-size: 14px; line-height: 20px; letter-spacing: 0.02em;
+  }
+  .stopka { padding-bottom: 110px; }
+}

@@ -3,11 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Strona testowa</title>
-    <meta name="robots" content="noindex, nofollow">
+  <!-- WERSJA ROBOCZA: usuń poniższą linię w dniu przełączenia domeny -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków</title>
+  <meta name="description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, szkody osobowe, odzyskiwanie długów.">
+  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Strona w budowie!</h1>
-  <p>To jest strona testowa. Właściwa strona kancelarii pojawi się tu wkrótce.</p>
+
+  <!-- ===== TŁA (zdjęcia ułożone warstwami) ===== -->
+  <div class="tla" aria-hidden="true">
+    <div class="tlo tlo--rynek"></div>
+    <div class="tlo tlo--dachy"></div>
+    <div class="tlo tlo--waga"></div>            <!-- PNG z alfą, leży nad dwoma pozostałymi -->
+    <div class="tlo tlo--gradient-header"></div> <!-- gradient pod nagłówkiem (kodem) -->
+    <div class="tlo tlo--wygaszenie"></div>      <!-- przejście w czerń przy stopce -->
+  </div>
+
+  <!-- Gradient pod danymi kontaktowymi: przyklejony do dołu ekranu -->
+  <div class="gradient-kontakt" aria-hidden="true"></div>
+
+  <!-- ===== NAGŁÓWEK ===== -->
+  <header class="naglowek">
+    <a class="logo-adwokatura" href="#kancelaria" aria-label="Adwokatura Polska – strona główna">
+      <!-- Wgraj plik znaku do img/logo-adwokatura.svg (albo .png i zmień nazwę poniżej) -->
+      <img src="img/logo-adwokatura.svg" alt="" onerror="this.remove()">
+      <span>ADWOKATURA<br>POLSKA</span>
+    </a>
+    <nav class="menu" aria-label="Menu główne">
+      <a href="#kancelaria">KANCELARIA</a>
+      <a href="#specjalizacje">SPECJALIZACJE</a>
+      <a href="#kontakt">KONTAKT</a>
+    </nav>
+    <!-- Miejsce na logo kancelarii (tymczasowo kółko z napisem, jak w projekcie) -->
+    <div class="logo-amm">LOGO<br>AMM</div>
+  </header>
+
+  <main>
+    <!-- ===== STRONA 1: KANCELARIA ===== -->
+    <section class="sekcja sekcja--start" id="kancelaria">
+      <h1 class="tytul">Kancelaria Adwokacka</h1>
+      <p class="podtytul">ADWOKAT AGNIESZKA MINCER-MADEJSKA</p>
+      <p class="tekst tekst--start">
+        Jestem członkiem Krakowskiej Izby Adwokackiej od 2018&nbsp;roku.<br>
+        Swoje doświadczenie zawodowe od 2016&nbsp;roku zdobywałam<br>
+        w&nbsp;renomowanych kancelariach adwokackich na terenie Krakowa.
+      </p>
+    </section>
+
+    <!-- ===== STRONA 2: ZAKRES USŁUG ===== -->
+    <section class="sekcja sekcja--uslugi" id="specjalizacje">
+      <h2 class="naglowek-sekcji naglowek-sekcji--uslugi">ZAKRES USŁUG</h2>
+      <p class="tekst tekst--uslugi">
+        Wiele lat pracy w&nbsp;kancelariach adwokackich pozwoliło mi na zdobycie<br>
+        bogatego doświadczenia procesowego przed sądami, zarówno w&nbsp;roli<br>
+        pełnomocnika w&nbsp;sprawach cywilnych, rodzinnych, czy gospodarczych,<br>
+        jak również jako obrońca, pełnomocnik oskarżyciela posiłkowego/<br><!--
+        -->prywatnego w&nbsp;sprawach karnych.
+      </p>
+      <ul class="kafle">
+        <li class="kafel"><span>Prawo cywilne</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo spadkowe</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Szkody osobowe</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo spadkowe</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo karne</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo rodzinne</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo pracy</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Prawo rzeczowe</span><i class="ikona"></i></li>
+        <li class="kafel"><span>Odzyskiwanie długów</span><i class="ikona"></i></li>
+      </ul>
+    </section>
+
+    <!-- ===== STRONA 3: KONTAKT ===== -->
+    <section class="sekcja sekcja--kontakt" id="kontakt">
+      <h2 class="naglowek-sekcji naglowek-sekcji--kontakt">NASZE BIURA NA MAPIE KRAKOWA</h2>
+
+      <div class="info info--1 tekst">
+        Dwie lokalizacje:<br>
+        ul. Świętej Anny 9 Kraków<br>
+        ul. Urzędnicza 20/8 Kraków
+      </div>
+      <div class="info info--2 tekst">
+        Czynne:<br>
+        poniedziałek — piątek<br>
+        od 9:00 — 17:00
+      </div>
+      <div class="info info--3 tekst">
+        tel: <a href="tel:+48780147406">780-147-406</a><br>
+        e-mail: <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
+      </div>
+
+      <div class="mapa">
+        <!-- Wgraj obraz mapy wyeksportowany z Figmy jako img/mapa.webp -->
+        <img src="img/mapa.webp" alt="Mapa Krakowa z zaznaczonymi biurami kancelarii" onerror="this.remove()">
+        <div class="mapa__zastepstwo">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ul.+%C5%9Awi%C4%99tej+Anny+9+Krak%C3%B3w" target="_blank" rel="noopener">ul. Świętej Anny 9 – pokaż na mapie</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ul.+Urz%C4%99dnicza+20+Krak%C3%B3w" target="_blank" rel="noopener">ul. Urzędnicza 20/8 – pokaż na mapie</a>
+        </div>
+      </div>
+
+      <form class="formularz" id="formularz" action="#" method="post">
+        <label class="ukryte" for="f-imie">Imię i nazwisko</label>
+        <input class="pole pole--pelne" id="f-imie" name="imie" type="text" placeholder="Imię i nazwisko" autocomplete="name" required>
+
+        <label class="ukryte" for="f-adres">Adres</label>
+        <input class="pole pole--pelne" id="f-adres" name="adres" type="text" placeholder="Adres" autocomplete="street-address">
+
+        <label class="ukryte" for="f-email">e-mail</label>
+        <input class="pole" id="f-email" name="email" type="email" placeholder="e-mail" autocomplete="email" required>
+
+        <label class="ukryte" for="f-telefon">Telefon</label>
+        <input class="pole" id="f-telefon" name="telefon" type="tel" placeholder="Telefon" autocomplete="tel">
+
+        <label class="ukryte" for="f-temat">Temat</label>
+        <input class="pole pole--pelne" id="f-temat" name="temat" type="text" placeholder="Temat">
+
+        <label class="ukryte" for="f-wiadomosc">Wiadomość</label>
+        <textarea class="pole pole--pelne pole--wiadomosc" id="f-wiadomosc" name="wiadomosc" placeholder="Tutaj wpisz swoją wiadomość" required></textarea>
+
+        <p class="formularz__status" role="status" aria-live="polite"></p>
+        <button class="przycisk" type="submit">Wyślij</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ===== STOPKA ===== -->
+  <footer class="stopka">
+    <h2 class="stopka__tytul">Blog</h2>
+    <ul class="stopka__kolumna">
+      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
+    </ul>
+    <ul class="stopka__kolumna">
+      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
+    </ul>
+    <ul class="stopka__kolumna">
+      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
+      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
+    </ul>
+    <p class="stopka__prawa">Wszystkie prawa @ Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
+  </footer>
+
+  <!-- ===== PŁYWAJĄCE DANE KONTAKTOWE (strona 1 i 2) ===== -->
+  <aside class="kontakt" aria-label="Dane kontaktowe">
+    <p class="kontakt__godziny">od 9:00 — 17:00</p>
+    <div class="kontakt__dane">
+      <p class="kontakt__duzy">
+        <a href="tel:+48780147406">+48 780 147 406</a><br>
+        <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
+      </p>
+      <p class="kontakt__maly" aria-hidden="true">
+        tel: <a href="tel:+48780147406" tabindex="-1">+48 780 147 406</a><br>
+        e-mail: <a href="mailto:kancelaria@adwokat-mincer.com" tabindex="-1">kancelaria@adwokat-mincer.com</a>
+      </p>
+    </div>
+  </aside>
+
+  <script src="js/main.js"></script>
 </body>
 </html>
