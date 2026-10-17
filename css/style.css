@@ -46,8 +46,7 @@
 
 /* ---------- Podstawy ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* Płynne przewijanie do sekcji realizuje js/main.js (dłuższe, z długim wyhamowaniem) */
 
 body {
   margin: 0;
@@ -191,7 +190,8 @@ a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 }
 /* gdy nie ma jeszcze pliku znaku – zachowujemy miejsce */
 .logo-adwokatura span { display: block; }
-.logo-adwokatura:not(:has(img)) span { margin-top: calc(72 * var(--u)); }
+/* bez znaku: napis wyśrodkowany w pionie względem przycisków menu */
+.logo-adwokatura:not(:has(img)) span { margin-top: calc(35 * var(--u)); }
 
 .menu {
   --x: 581; --y: 141;
@@ -229,7 +229,7 @@ main { position: relative; z-index: 2; }
 .naglowek-sekcji--uslugi { --y: 244; }
 .tekst--uslugi { --y: 298; }
 .kafle {
-  --x: 178; --y: 480;
+  --x: 178; --y: 469;
   width: calc(1371 * var(--u));
   display: grid;
   grid-template-columns: repeat(5, calc(259 * var(--u)));
@@ -275,7 +275,7 @@ main { position: relative; z-index: 2; }
 .info--2 { --y: 336; --x: 596; }
 .info--3 { --y: 364; --x: 1013; }
 .mapa {
-  --x: 178; --y: 446;
+  --x: 178; --y: 458;
   width: calc(674 * var(--u));
   height: calc(539 * var(--u));
   border-radius: calc(8 * var(--u));
@@ -283,8 +283,7 @@ main { position: relative; z-index: 2; }
   background: #f2f2f2;
   color: #222;
 }
-.mapa img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.mapa:has(img) .mapa__zastepstwo { display: none; }
+.mapa--aktywna .mapa__zastepstwo { display: none; }
 .mapa__zastepstwo {
   height: 100%;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -294,7 +293,7 @@ main { position: relative; z-index: 2; }
 .mapa__zastepstwo a { text-decoration: underline; }
 
 .formularz {
-  --x: 1013; --y: 451;
+  --x: 1013; --y: 463;
   width: calc(535 * var(--u));
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -314,8 +313,8 @@ main { position: relative; z-index: 2; }
   letter-spacing: -0.007em;
 }
 .pole::placeholder { color: var(--biel); opacity: 1; }
-.pole:focus { outline: none; background: rgba(255, 255, 255, 0.26); }
-.pole:focus-visible { outline: 2px solid var(--biel); outline-offset: 2px; }
+/* aktywne pole: bez dodatkowej obwódki, ramka pogrubiona o 2 px */
+.pole:focus, .pole:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--biel); }
 .pole--pelne { grid-column: 1 / -1; }
 .pole--wiadomosc {
   height: calc(229 * var(--u));
@@ -345,6 +344,43 @@ main { position: relative; z-index: 2; }
   cursor: pointer;
 }
 .przycisk:hover { background: #e6e6e6; }
+
+/* Adresy klikalne */
+.adres { text-decoration: none; }
+.adres:hover { text-decoration: underline; }
+
+/* ---------- Mapa interaktywna (Leaflet) ---------- */
+.mapa.leaflet-container { font-family: var(--bezszeryf); background: #f2f2f2; }
+/* szare kafelki – jak w projekcie */
+.mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.88); }
+.pinezka svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)); }
+.mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); border-radius: 6px; overflow: hidden; }
+.mapa .leaflet-control-zoom a { color: #222; width: 32px; height: 32px; line-height: 32px; }
+.mapa .leaflet-control-attribution { font-size: 10px; background: rgba(255, 255, 255, 0.8); color: #333; }
+.mapa .leaflet-control-attribution a { color: #333; text-decoration: underline; }
+
+/* ---------- Okienko wyboru map (wygląd do dopracowania) ---------- */
+.wybor-mapy {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  background: #1c1c1c;
+  color: var(--biel);
+  padding: 24px;
+  width: min(360px, calc(100vw - 40px));
+  font-family: var(--bezszeryf);
+}
+.wybor-mapy::backdrop { background: rgba(0, 0, 0, 0.6); }
+.wybor-mapy__tytul { font-size: 18px; margin-bottom: 4px; }
+.wybor-mapy__adres { font-size: 14px; opacity: 0.75; margin-bottom: 18px; }
+.wybor-mapy__przyciski { display: grid; gap: 10px; }
+.wybor-mapy__opcja, .wybor-mapy__anuluj {
+  display: block; text-align: center;
+  padding: 12px; border-radius: 8px;
+  font: inherit; font-size: 16px; cursor: pointer;
+}
+.wybor-mapy__opcja { background: var(--biel); color: var(--czern); }
+.wybor-mapy__opcja:hover { text-decoration: none; background: #e6e6e6; }
+.wybor-mapy__anuluj { background: transparent; color: var(--biel); border: 1px solid rgba(255, 255, 255, 0.5); }
 
 /* ===================== STOPKA ===================== */
 .stopka {

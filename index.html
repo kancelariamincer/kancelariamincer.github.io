@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- WERSJA ROBOCZA: usuń poniższą linię w dniu przełączenia domeny -->
   <meta name="robots" content="noindex, nofollow">
+  <!-- Bezpieczeństwo: przeglądarka wykona wyłącznie pliki z tej strony; obrazy mapy tylko z OpenStreetMap -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków</title>
   <meta name="description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, szkody osobowe, odzyskiwanie długów.">
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -28,8 +32,7 @@
   <!-- ===== NAGŁÓWEK ===== -->
   <header class="naglowek">
     <a class="logo-adwokatura" href="#kancelaria" aria-label="Adwokatura Polska – strona główna">
-      <!-- Wgraj plik znaku do img/logo-adwokatura.svg (albo .png i zmień nazwę poniżej) -->
-      <img src="img/logo-adwokatura.svg" alt="" onerror="this.remove()">
+      <!-- Tu trafi znak Adwokatury (plik PNG) – dodamy go, gdy będzie gotowy -->
       <span>ADWOKATURA<br>POLSKA</span>
     </a>
     <nav class="menu" aria-label="Menu główne">
@@ -82,8 +85,8 @@
 
       <div class="info info--1 tekst">
         Dwie lokalizacje:<br>
-        ul. Świętej Anny 9 Kraków<br>
-        ul. Urzędnicza 20/8 Kraków
+        <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20%C5%9Awi%C4%99tej%20Anny%209%2C%20Krak%C3%B3w" data-adres="ul. Świętej Anny 9, Kraków">ul. Świętej Anny 9 Kraków</a><br>
+        <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Urz%C4%99dnicza%2020%2C%20Krak%C3%B3w" data-adres="ul. Urzędnicza 20, Kraków">ul. Urzędnicza 20/8 Kraków</a>
       </div>
       <div class="info info--2 tekst">
         Czynne:<br>
@@ -95,12 +98,11 @@
         e-mail: <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
       </div>
 
-      <div class="mapa">
-        <!-- Wgraj obraz mapy wyeksportowany z Figmy jako img/mapa.webp -->
-        <img src="img/mapa.webp" alt="Mapa Krakowa z zaznaczonymi biurami kancelarii" onerror="this.remove()">
+      <div class="mapa" id="mapa" role="region" aria-label="Mapa Krakowa z biurami kancelarii">
+        <!-- Mapa interaktywna (Leaflet + OpenStreetMap). Bez JavaScriptu widać poniższe linki. -->
         <div class="mapa__zastepstwo">
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=ul.+%C5%9Awi%C4%99tej+Anny+9+Krak%C3%B3w" target="_blank" rel="noopener">ul. Świętej Anny 9 – pokaż na mapie</a>
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=ul.+Urz%C4%99dnicza+20+Krak%C3%B3w" target="_blank" rel="noopener">ul. Urzędnicza 20/8 – pokaż na mapie</a>
+          <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20%C5%9Awi%C4%99tej%20Anny%209%2C%20Krak%C3%B3w" data-adres="ul. Świętej Anny 9, Kraków">ul. Świętej Anny 9 – pokaż na mapie</a>
+          <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Urz%C4%99dnicza%2020%2C%20Krak%C3%B3w" data-adres="ul. Urzędnicza 20, Kraków">ul. Urzędnicza 20/8 – pokaż na mapie</a>
         </div>
       </div>
 
@@ -133,26 +135,13 @@
   <footer class="stopka">
     <h2 class="stopka__tytul">Blog</h2>
     <ul class="stopka__kolumna">
-      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
+      <li><a href="https://www.adwokat-mincer.com/post/zachowek-kiedy-przys%C5%82uguje-i-jak-skutecznie-go-dochodzi%C4%87">Zachowek – kiedy przysługuje i jak skutecznie go dochodzić?</a></li>
+      <li><a href="https://www.adwokat-mincer.com/post/jak-napisa%C4%87-testament-w-polsce-rodzaje-testament%C3%B3w-i-ich-znaczenie">Jak napisać testament w Polsce? Rodzaje testamentów i ich znaczenie</a></li>
+      <li><a href="https://www.adwokat-mincer.com/post/rozdzielno%C5%9B%C4%87-maj%C4%85tkowa-mo%C5%BCliwo%C5%9Bci-procedury-i-wymogi-prawne">Rozdzielność majątkowa: możliwości, procedury i wymogi prawne</a></li>
     </ul>
-    <ul class="stopka__kolumna">
-      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
-    </ul>
-    <ul class="stopka__kolumna">
-      <li><a href="#">Link do bloga “Tytuł bloga 1”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 2”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 3”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 4”</a></li>
-      <li><a href="#">Link do bloga “Tytuł bloga 5”</a></li>
-    </ul>
+    <!-- Kolumny 2 i 3 – na kolejne wpisy po przeniesieniu bloga -->
+    <ul class="stopka__kolumna"></ul>
+    <ul class="stopka__kolumna"></ul>
     <p class="stopka__prawa">Wszystkie prawa @ Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
   </footer>
 
@@ -171,6 +160,18 @@
     </div>
   </aside>
 
+  <!-- ===== WYBÓR APLIKACJI MAP (wygląd do dopracowania) ===== -->
+  <dialog class="wybor-mapy" id="wybor-mapy" aria-labelledby="wybor-mapy-tytul">
+    <p class="wybor-mapy__tytul" id="wybor-mapy-tytul">Otwórz adres w:</p>
+    <p class="wybor-mapy__adres"></p>
+    <div class="wybor-mapy__przyciski">
+      <a class="wybor-mapy__opcja" data-mapy="google" href="#" target="_blank" rel="noopener">Mapy Google</a>
+      <a class="wybor-mapy__opcja" data-mapy="apple" href="#" target="_blank" rel="noopener">Mapy Apple</a>
+      <button class="wybor-mapy__anuluj" type="button">Anuluj</button>
+    </div>
+  </dialog>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
