@@ -1,3 +1,4 @@
+/* wersja 3 – płynne przewijanie, mapa, wybór map Google/Apple */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
