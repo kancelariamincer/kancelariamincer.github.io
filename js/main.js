@@ -1,4 +1,4 @@
-/* wersja 7 */
+/* wersja 8 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -25,6 +25,7 @@
         godziny w miejscu; znikanie przed stroną 3; gradient → 0.
      ========================================================= */
   const PROPORCJA = 343 / 497; // szerokość e-maila: mały / duży wariant
+  const blokKontaktu = document.querySelector(".kontakt");
 
   function aktualizujKontakt() {
     const vh = window.innerHeight;
@@ -37,10 +38,12 @@
     root.style.setProperty("--maly-skala", (1 / PROPORCJA - p * (1 / PROPORCJA - 1)).toFixed(4));
 
     const gora3 = strona3.getBoundingClientRect().top;
-    const k = ogranicz((gora3 - vh * 0.65) / (vh * 0.3));
+    let k = ogranicz((gora3 - vh * 0.65) / (vh * 0.3));
     const g = ogranicz((gora3 - vh * 0.4) / (vh * 0.6));
-    root.style.setProperty("--kontakt", k.toFixed(3));
-    root.style.setProperty("--kontakt-widocznosc", k > 0.01 ? "visible" : "hidden");
+    if (root.classList.contains("opis-otwarty")) k = 0;   // okienko usługi zasłania – chowamy
+    // krycie ustawiane wprost na elemencie (pewniejsze w Safari na iPadzie niż zmienne CSS)
+    blokKontaktu.style.opacity = k.toFixed(3);
+    blokKontaktu.style.visibility = k > 0.01 ? "visible" : "hidden";
     root.style.setProperty("--gradient", g.toFixed(3));
   }
 
@@ -61,7 +64,7 @@
   }
   dodajGrupe(
     [document.querySelector(".naglowek"), document.getElementById("kancelaria")],
-    [...document.querySelectorAll(".naglowek .linia, #kancelaria .linia, .kontakt .linia")]
+    [...document.querySelectorAll(".naglowek .linia, #kancelaria .linia"), document.querySelector(".kontakt__wnetrze")]
   );
   document.querySelectorAll(".sekcja--uslugi, .sekcja--kontakt, .stopka").forEach((el) =>
     dodajGrupe([el], [...el.querySelectorAll(".linia")])
@@ -243,8 +246,8 @@
      kafla; dolny rząd: do dołu kafla. Wysokość = długość treści.
      Okienko wchodzi na krycie w 0,5 s, a tekst w nim – linijka po linijce.
      ========================================================= */
-  const CZAS_OPISU = 600;                 // ms – jedna linijka w okienku
-  const ZAKLADKA_OPISU = 0.15 * CZAS_OPISU;
+  const CZAS_OPISU = 200;                 // ms – jedna linijka w okienku (3× szybciej niż wcześniej)
+  const ZAKLADKA_OPISU = 0.30 * CZAS_OPISU; // rozrzut 2× większy: 30% zamiast 15%
   root.style.setProperty("--czas-opisu", CZAS_OPISU + "ms");
 
   const kafle = [...document.querySelectorAll(".kafel")];
@@ -315,6 +318,7 @@
     opis.classList.remove("otwarty");
     kafel.classList.remove("kafel--otwarty");
     root.classList.remove("opis-otwarty");
+    aktualizujKontakt();
     const doUkrycia = opis;
     setTimeout(() => { if (!doUkrycia.classList.contains("otwarty")) doUkrycia.hidden = true; }, 500);
     otwarty = null;
@@ -332,6 +336,7 @@
     kafel.classList.add("kafel--otwarty");
     przycisk.setAttribute("aria-expanded", "true");
     root.classList.add("opis-otwarty");
+    aktualizujKontakt();
     animujOpis(opis);
     requestAnimationFrame(() => { opis.classList.add("otwarty"); pokazCaleOkienko(opis); });
     otwarty = { kafel, przycisk, opis };
@@ -348,6 +353,47 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && otwarty) { const p = otwarty.przycisk; zamknijOpis(); p.focus(); }
   });
+
+  /* =========================================================
+     4b. Przełącznik PL / ENG
+     Przejście do drugiej wersji językowej zachowuje miejsce na stronie
+     (ta sama sekcja) i nie odtwarza animacji wejścia (zob. js/start.js).
+     ========================================================= */
+  function biezacaSekcja() {
+    const srodek = window.innerHeight / 2;
+    let wynik = "#kancelaria";
+    ["#kancelaria", "#specjalizacje", "#kontakt"].forEach((h) => {
+      const el = document.querySelector(h);
+      if (el && el.getBoundingClientRect().top <= srodek) wynik = h;
+    });
+    return wynik;
+  }
+  document.querySelectorAll("[data-przelacznik]").forEach((a) => {
+    if (a.hasAttribute("aria-current")) return;
+    a.addEventListener("click", () => {
+      const bazowy = a.getAttribute("href").split("#")[0];
+      a.setAttribute("href", bazowy + biezacaSekcja());
+    });
+  });
+  // po wejściu z przełącznika: od razu w tym samym miejscu, bez animacji
+  if (!animacje && location.hash in CELE && document.referrer) {
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+      requestAnimationFrame(() => window.scrollTo(0, pozycjaCelu(location.hash)));
+    });
+  }
+
+  /* =========================================================
+     4c. Klauzula RODO – pełna treść w okienku
+     ========================================================= */
+  const oknoRodo = document.getElementById("okno-rodo");
+  const rozwin = document.querySelector(".rodo__rozwin");
+  if (oknoRodo && rozwin && typeof oknoRodo.showModal === "function") {
+    rozwin.addEventListener("click", () => oknoRodo.showModal());
+    oknoRodo.querySelector(".okno-rodo__zamknij").addEventListener("click", () => oknoRodo.close());
+    oknoRodo.addEventListener("click", (e) => { if (e.target === oknoRodo) oknoRodo.close(); });
+  } else if (rozwin) {
+    rozwin.hidden = true;
+  }
 
   /* =========================================================
      5. Wybór aplikacji map
@@ -407,12 +453,12 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
     }).addTo(mapa);
 
-    // pinezka: kółko 20 px (wygląd w CSS: .pinezka)
+    // pinezka: kółko 40 px (wygląd w CSS: .pinezka)
     const ikona = L.divIcon({
       className: "pinezka",
       html: "",
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
     });
     const granice = [];
     BIURA.forEach((b) => {

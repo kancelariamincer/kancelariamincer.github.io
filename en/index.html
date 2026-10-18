@@ -12,8 +12,8 @@
   <link rel="preload" href="../fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="../css/style.css?v=7">
-  <script src="../js/start.js?v=7"></script>
+  <link rel="stylesheet" href="../css/style.css?v=8">
+  <script src="../js/start.js?v=8"></script>
 </head>
 <body>
 
@@ -352,7 +352,9 @@
 
         <p class="formularz__status" role="status" aria-live="polite"></p>
         <button class="przycisk linia" type="submit">Send</button>
-        <p class="formularz__rodo linia">The controller of the data provided in this form is advocate Agnieszka Mincer-Madejska, Law Office, ul. Świętej Anny 9, Kraków. We process the data solely to reply to your message (Art.&nbsp;6(1)(b) and (f) GDPR). Details and your rights: <a href="privacy-policy.html">privacy policy</a>. Please do not send case details or documents via this form – electronic communication does not guarantee full confidentiality.</p>
+        <div class="formularz__rodo linia">
+          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-haspopup="dialog" aria-controls="okno-rodo">… more</button>The controller of the data provided in this form is advocate Agnieszka Mincer-Madejska, Law Office, ul. Świętej Anny 9, Kraków. We process the data solely to reply to your message (Art.&nbsp;6(1)(b) and (f) GDPR). Details and your rights: <a href="privacy-policy.html">privacy policy</a>. Please do not send case details or documents via this form – electronic communication does not guarantee full confidentiality.</p>
+        </div>
       </form>
     </section>
   </main>
@@ -383,12 +385,13 @@
   </footer>
 
   <aside class="kontakt" aria-label="Contact details">
-    <p class="kontakt__jezyk linia" aria-label="Language version">
-      <a href="../" lang="pl" hreflang="pl" data-tekst="PL">PL</a>
-      <a href="./" lang="en" aria-current="page" data-tekst="ENG">ENG</a>
+    <div class="kontakt__wnetrze">
+    <p class="kontakt__jezyk" aria-label="Language version">
+      <a href="../" lang="pl" hreflang="pl" data-tekst="PL" data-przelacznik>PL</a>
+      <a href="./" lang="en" aria-current="page" data-tekst="ENG" data-przelacznik>ENG</a>
     </p>
-    <p class="kontakt__godziny linia">Monday — Friday<br>9:00 — 17:00</p>
-    <div class="kontakt__dane linia">
+    <p class="kontakt__godziny">Monday — Friday<br>9:00 — 17:00</p>
+    <div class="kontakt__dane">
       <p class="kontakt__duzy">
         <a href="tel:+48780147406">+48 780 147 406</a><br>
         <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
@@ -398,7 +401,15 @@
         e-mail: <a href="mailto:kancelaria@adwokat-mincer.com" tabindex="-1">kancelaria@adwokat-mincer.com</a>
       </p>
     </div>
+    </div>
   </aside>
+
+  <!-- ===== PEŁNA KLAUZULA RODO (okienko) ===== -->
+  <dialog class="okno-rodo" id="okno-rodo" aria-labelledby="okno-rodo-tytul">
+    <h2 class="okno-rodo__tytul" id="okno-rodo-tytul">Personal data notice</h2>
+    <p>The controller of the data provided in this form is advocate Agnieszka Mincer-Madejska, Law Office, ul. Świętej Anny 9, Kraków. We process the data solely to reply to your message (Art.&nbsp;6(1)(b) and (f) GDPR). Details and your rights: <a href="privacy-policy.html">privacy policy</a>. Please do not send case details or documents via this form – electronic communication does not guarantee full confidentiality.</p>
+    <button class="okno-rodo__zamknij" type="button">Close</button>
+  </dialog>
 
   <dialog class="wybor-mapy" id="wybor-mapy" aria-labelledby="wybor-mapy-tytul">
     <p class="wybor-mapy__tytul" id="wybor-mapy-tytul">Open address in:</p>
@@ -411,6 +422,6 @@
   </dialog>
 
   <script src="../vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="../js/main.js?v=7"></script>
+  <script src="../js/main.js?v=8"></script>
 </body>
 </html>

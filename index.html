@@ -13,9 +13,9 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=7"></script>
+  <script src="js/start.js?v=8"></script>
 </head>
 <body>
 
@@ -378,7 +378,9 @@
 
         <p class="formularz__status" role="status" aria-live="polite"></p>
         <button class="przycisk linia" type="submit">Wyślij</button>
-        <p class="formularz__rodo linia">Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka Mincer-Madejska, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+        <div class="formularz__rodo linia">
+          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-haspopup="dialog" aria-controls="okno-rodo">… rozwiń</button>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka Mincer-Madejska, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+        </div>
       </form>
     </section>
   </main>
@@ -407,17 +409,18 @@
       <li class="linia"><a href="#">Link do bloga “Tytuł bloga 12”</a></li>  <!-- DO UZUPEŁNIENIA – nowy wpis -->
     </ul>
     <p class="stopka__polityka linia"><a href="polityka-prywatnosci.html">Polityka prywatności</a></p>
-    <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
+    <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska</p>
   </footer>
 
   <!-- ===== PŁYWAJĄCE DANE KONTAKTOWE (strona 1 i 2) ===== -->
   <aside class="kontakt" aria-label="Dane kontaktowe">
-    <p class="kontakt__jezyk linia" aria-label="Wersja językowa">
-      <a href="index.html" lang="pl" aria-current="page" data-tekst="PL">PL</a>
-      <a href="en/" lang="en" hreflang="en" data-tekst="ENG">ENG</a>
+    <div class="kontakt__wnetrze">
+    <p class="kontakt__jezyk" aria-label="Wersja językowa">
+      <a href="index.html" lang="pl" aria-current="page" data-tekst="PL" data-przelacznik>PL</a>
+      <a href="en/" lang="en" hreflang="en" data-tekst="ENG" data-przelacznik>ENG</a>
     </p>
-    <p class="kontakt__godziny linia">poniedziałek — piątek<br>od 9:00 — 17:00</p>
-    <div class="kontakt__dane linia">
+    <p class="kontakt__godziny">poniedziałek — piątek<br>od 9:00 — 17:00</p>
+    <div class="kontakt__dane">
       <p class="kontakt__duzy">
         <a href="tel:+48780147406">+48 780 147 406</a><br>
         <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
@@ -427,9 +430,17 @@
         e-mail: <a href="mailto:kancelaria@adwokat-mincer.com" tabindex="-1">kancelaria@adwokat-mincer.com</a>
       </p>
     </div>
+    </div>
   </aside>
 
   <!-- ===== WYBÓR APLIKACJI MAP (wygląd do dopracowania) ===== -->
+  <!-- ===== PEŁNA KLAUZULA RODO (okienko) ===== -->
+  <dialog class="okno-rodo" id="okno-rodo" aria-labelledby="okno-rodo-tytul">
+    <h2 class="okno-rodo__tytul" id="okno-rodo-tytul">Informacja o danych osobowych</h2>
+    <p>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka Mincer-Madejska, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+    <button class="okno-rodo__zamknij" type="button">Zamknij</button>
+  </dialog>
+
   <dialog class="wybor-mapy" id="wybor-mapy" aria-labelledby="wybor-mapy-tytul">
     <p class="wybor-mapy__tytul" id="wybor-mapy-tytul">Otwórz adres w:</p>
     <p class="wybor-mapy__adres"></p>
@@ -441,6 +452,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* wersja 7 */
+/* wersja 8 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -40,6 +40,7 @@
   --biel: #fff;
   --szary-ikona: #898989;
   --wypelnienie-pola: rgba(255, 255, 255, 0.3);
+  --zielen-adwokacka: #0f5a3a;          /* do podmiany na wartość z Księgi Znaku "Adwokatura Polska" */
   --szeryf: "Newsreader", "Times New Roman", Georgia, serif;
   --bezszeryf: "Inter", "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
@@ -295,7 +296,7 @@ main { position: relative; z-index: 2; }
 .kafel__przycisk:hover,
 .kafel__przycisk[aria-expanded="true"] {
   border-color: var(--biel);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);           /* czerń 30% */
 }
 .kafel__przycisk:focus-visible { outline-offset: 2px; }
 
@@ -418,13 +419,69 @@ html.anim .opis .jednostka.widoczna {
 .przycisk:hover { background: #e6e6e6; }
 /* klauzula RODO pod przyciskiem: najmniejsza czcionka strony, odstęp jak przycisk–pole wiadomości (20 px) */
 .formularz__rodo {
+  --lh: max(16px, calc(17 * var(--f)));
   grid-column: 1 / -1;
   margin-top: calc(4 * var(--u));
+  display: flex;                            /* potrzebne do triku z przyciskiem w 3. linijce */
   font-size: max(11px, calc(11.9 * var(--f)));
-  line-height: max(16px, calc(17 * var(--f)));
-  opacity: 0.85;
+  line-height: var(--lh);
 }
 .formularz__rodo a { text-decoration: underline; }
+/* tekst zwinięty do 3 linijek, "… rozwiń" na końcu 3. linijki */
+.rodo__skrot {
+  max-height: calc(3 * var(--lh));
+  overflow: hidden;
+  opacity: 0.85;
+}
+.rodo__skrot::before {
+  content: "";
+  float: right;
+  height: 100%;
+  margin-bottom: calc(-1 * var(--lh));
+}
+.rodo__rozwin {
+  float: right;
+  clear: right;
+  margin-left: 0.4em;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--biel);
+  font: inherit;
+  line-height: var(--lh);
+  text-decoration: underline;
+  cursor: pointer;
+}
+/* okienko z pełną klauzulą */
+.okno-rodo {
+  width: min(calc(470 * var(--u)), calc(100vw - 32px));
+  padding: calc(35 * var(--u));
+  border: 0;
+  border-radius: calc(10 * var(--u));
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  color: var(--biel);
+  font-family: var(--bezszeryf);
+  font-size: max(13px, calc(14 * var(--f)));
+  line-height: 1.5;
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);
+}
+.okno-rodo::backdrop { background: rgba(0, 0, 0, 0.35); }
+.okno-rodo__tytul { font-weight: 400; font-size: max(16px, calc(18 * var(--f))); margin-bottom: 12px; }
+.okno-rodo a { text-decoration: underline; }
+.okno-rodo__zamknij {
+  display: block;
+  margin: 20px 0 0 auto;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--biel);
+  color: var(--czern);
+  font: inherit;
+  cursor: pointer;
+}
+@media (max-width: 1099px) { .okno-rodo { padding: 24px 20px; background: rgba(0, 0, 0, 0.85); } }
 
 /* Adresy klikalne */
 .adres { text-decoration: none; }
@@ -433,11 +490,11 @@ html.anim .opis .jednostka.widoczna {
 /* ---------- Mapa interaktywna (Leaflet) ---------- */
 .mapa.leaflet-container { font-family: var(--bezszeryf); background: #f2f2f2; }
 .mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.88); }
-/* pinezka: kółko 20 px, obrys 2 px biały, wypełnienie czarne 30% */
+/* pinezka: kółko 40 px, obrys 2 px biały, wypełnienie zieleń adwokacka 100% */
 .pinezka {
   border: 2px solid var(--biel);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);           /* czerń 30%, obrys biały 100% */
+  background: var(--zielen-adwokacka);      /* zieleń adwokacka 100% */
 }
 .mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0,0,0,.25); border-radius: 6px; overflow: hidden; }
 .mapa .leaflet-control-zoom a { color: #222; width: 32px; height: 32px; line-height: 32px; }
@@ -520,9 +577,11 @@ html.anim .opis .jednostka.widoczna {
   bottom: calc(59 * var(--u));
   z-index: 4;
   text-align: right;
-  opacity: var(--kontakt, 1);
-  visibility: var(--kontakt-widocznosc, visible);
+  will-change: opacity;                     /* krycie ustawia skrypt (przewijanie) */
 }
+/* wejście bloku kontaktowego razem ze stroną 1 */
+html.anim .kontakt__wnetrze { opacity: 0; }
+html.anim .kontakt__wnetrze.widoczna { opacity: 1; transition: opacity 1s cubic-bezier(0.33, 0, 0.2, 1) var(--opoznienie, 0s); }
 .kontakt__jezyk {
   display: flex;
   justify-content: flex-end;
@@ -567,8 +626,7 @@ html.anim .opis .jednostka.widoczna {
   opacity: var(--maly-krycie, 0);
   transform: scale(var(--maly-skala, 1.45));
 }
-/* gdy otwarte jest okienko usługi – dane kontaktowe chowają się, by go nie zasłaniać */
-html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
+/* gdy otwarte jest okienko usługi, dane kontaktowe chowa skrypt (aktualizujKontakt) */
 
 /* =========================================================
    TELEFONY I TABLETY (< 1100 px)
@@ -656,7 +714,7 @@ html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
   .kontakt__jezyk { position: absolute; top: 10px; right: 20px; margin: 0; font-size: 13px; line-height: 16px; gap: 14px; }
   .jezyki { margin-top: 20px; gap: 14px; }
   .jezyki img { height: 16px; }
-  .formularz__rodo { margin-top: 8px; font-size: 12px; line-height: 17px; }
+  .formularz__rodo { --lh: 17px; margin-top: 8px; font-size: 12px; }
   .stopka__dane { width: auto; font-size: 12px; line-height: 18px; margin-bottom: 24px; }
   .stopka__polityka { margin-top: 16px; font-size: 13px; }
   .kontakt__dane { height: auto; width: auto; }
