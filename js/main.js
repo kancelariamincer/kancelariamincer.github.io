@@ -1,4 +1,4 @@
-/* wersja 5 */
+/* wersja 7 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -432,7 +432,9 @@
     formularz.addEventListener("submit", function (e) {
       e.preventDefault();
       formularz.querySelector(".formularz__status").textContent =
-        "Formularz nie jest jeszcze aktywny. Napisz na kancelaria@adwokat-mincer.com.";
+        root.lang === "en"
+          ? "The form is not active yet. Please write to kancelaria@adwokat-mincer.com."
+          : "Formularz nie jest jeszcze aktywny. Napisz na kancelaria@adwokat-mincer.com.";
     });
   }
 })();

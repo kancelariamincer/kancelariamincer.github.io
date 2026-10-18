@@ -1,4 +1,4 @@
-/* wersja 5 */
+/* wersja 7 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -238,6 +238,14 @@ main { position: relative; z-index: 2; }
 .tytul        { top: calc(var(--srodek) - 59 * var(--f)); }
 .podtytul     { top: calc(var(--srodek) + 39 * var(--f)); --x: 179; }
 .tekst--start { top: calc(var(--srodek) + 119 * var(--f)); }
+/* flagi języków: 20 px (2 kratki) pod opisem, wysokość = wysokość tekstu (18 px), 20 px odstępu */
+.jezyki {
+  top: calc(var(--srodek) + 218 * var(--f));
+  display: flex;
+  gap: calc(20 * var(--f));
+}
+.jezyki img { display: block; height: calc(18 * var(--f)); width: auto; }
+.jezyki li:first-child img { outline: 1px solid rgba(0, 0, 0, 0.15); outline-offset: -1px; }
 
 /* Strona 2 – zakres usług (sekcja zaczyna się na 1117 px) */
 .naglowek-sekcji--uslugi { --y: 244; }
@@ -300,8 +308,10 @@ main { position: relative; z-index: 2; }
   width: calc(470 * var(--u));
   height: auto;                              /* wysokość dopasowana do treści – bez przewijania */
   padding: calc(35 * var(--u));              /* dolny margines = górny */
-  background: #fff;
-  color: #000;
+  background: rgba(0, 0, 0, 0.3);           /* czerń 30% */
+  -webkit-backdrop-filter: blur(20px);      /* rozmycie tła pod okienkiem – czytelność tekstu; usuń, jeśli niepotrzebne */
+          backdrop-filter: blur(20px);
+  color: var(--biel);
   border-radius: calc(10 * var(--u));
   box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);
   font-family: var(--bezszeryf);
@@ -406,6 +416,15 @@ html.anim .opis .jednostka.widoczna {
   cursor: pointer;
 }
 .przycisk:hover { background: #e6e6e6; }
+/* klauzula RODO pod przyciskiem: najmniejsza czcionka strony, odstęp jak przycisk–pole wiadomości (20 px) */
+.formularz__rodo {
+  grid-column: 1 / -1;
+  margin-top: calc(4 * var(--u));
+  font-size: max(11px, calc(11.9 * var(--f)));
+  line-height: max(16px, calc(17 * var(--f)));
+  opacity: 0.85;
+}
+.formularz__rodo a { text-decoration: underline; }
 
 /* Adresy klikalne */
 .adres { text-decoration: none; }
@@ -414,11 +433,11 @@ html.anim .opis .jednostka.widoczna {
 /* ---------- Mapa interaktywna (Leaflet) ---------- */
 .mapa.leaflet-container { font-family: var(--bezszeryf); background: #f2f2f2; }
 .mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.88); }
-/* pinezka: kółko 20 px, obrys 2 px, wypełnienie białe 30% */
+/* pinezka: kółko 20 px, obrys 2 px biały, wypełnienie czarne 30% */
 .pinezka {
   border: 2px solid var(--biel);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);           /* czerń 30%, obrys biały 100% */
 }
 .mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0,0,0,.25); border-radius: 6px; overflow: hidden; }
 .mapa .leaflet-control-zoom a { color: #222; width: 32px; height: 32px; line-height: 32px; }
@@ -461,8 +480,24 @@ html.anim .opis .jednostka.widoczna {
   font-size: calc(21.3 * var(--f));
   line-height: 1.2;
 }
+.stopka__dane {
+  --y: 107;
+  width: calc(1370 * var(--u));
+  font-size: max(11px, calc(11.9 * var(--f)));
+  line-height: calc(24 * var(--f));
+}
+.do-uzupelnienia { color: #ff9c9c; }
+.stopka__polityka {
+  --y: 323; --x: 0;
+  width: 100%;
+  text-align: center;
+  font-size: max(11px, calc(11.9 * var(--f)));
+  line-height: calc(24 * var(--f));
+}
+.stopka__polityka a { text-decoration: underline; }
 .stopka__kolumna {
   --y: 193;
+  white-space: nowrap;
   width: calc(397 * var(--u));               /* 3 kolumny siatki */
   font-size: max(11px, calc(11.9 * var(--f)));
   line-height: calc(24 * var(--f));
@@ -488,6 +523,18 @@ html.anim .opis .jednostka.widoczna {
   opacity: var(--kontakt, 1);
   visibility: var(--kontakt-widocznosc, visible);
 }
+.kontakt__jezyk {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(20 * var(--u));
+  font-size: max(13px, calc(18 * var(--f)));
+  line-height: calc(28 * var(--f));
+  letter-spacing: -0.007em;
+  margin-bottom: calc(11 * var(--u));
+}
+.kontakt__jezyk a { display: inline-flex; flex-direction: column; align-items: center; }
+.kontakt__jezyk a::after { content: attr(data-tekst); font-weight: 600; height: 0; overflow: hidden; visibility: hidden; }
+.kontakt__jezyk a[aria-current], .kontakt__jezyk a:hover { font-weight: 600; text-decoration: none; }
 .kontakt__godziny {
   font-size: max(13px, calc(18 * var(--f)));
   line-height: calc(28 * var(--f));
@@ -583,6 +630,7 @@ html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
     font-size: 14px; line-height: 21px;
   }
   .opis h4 { font-size: 18px; margin: 18px 0 8px; }
+  .opis, .opis--dol { background: rgba(0, 0, 0, 0.85); }
   .opis ul { padding-left: 18px; }
 
   .info { margin-top: 20px; }
@@ -604,7 +652,13 @@ html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
     background: rgba(0,0,0,.85);
     text-align: left;
   }
-  .kontakt__godziny { font-size: 12px; margin-bottom: 4px; opacity: .8; }
+  .kontakt__godziny { font-size: 12px; line-height: 16px; margin-bottom: 4px; opacity: .8; }
+  .kontakt__jezyk { position: absolute; top: 10px; right: 20px; margin: 0; font-size: 13px; line-height: 16px; gap: 14px; }
+  .jezyki { margin-top: 20px; gap: 14px; }
+  .jezyki img { height: 16px; }
+  .formularz__rodo { margin-top: 8px; font-size: 12px; line-height: 17px; }
+  .stopka__dane { width: auto; font-size: 12px; line-height: 18px; margin-bottom: 24px; }
+  .stopka__polityka { margin-top: 16px; font-size: 13px; }
   .kontakt__dane { height: auto; width: auto; }
   .kontakt__duzy { display: none; }
   .kontakt__maly { position: static; opacity: 1; transform: none; font-size: 14px; line-height: 20px; letter-spacing: .02em; }
@@ -612,3 +666,24 @@ html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
 
 /* otwarty kafel leży nad sąsiednimi, żeby okienko ich nie chowało pod spód */
 .kafel--otwarty { z-index: 10; }
+
+/* ===================== PODSTRONA: DOKUMENT (polityka prywatności) ===================== */
+body.dokument { min-height: 0; }
+.dokument__tresc {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 80px 24px 96px;
+  font-size: 16px;
+  line-height: 26px;
+}
+.dokument__tresc h1 { font-family: var(--szeryf); font-weight: 400; font-size: clamp(32px, 5vw, 48px); line-height: 1.15; margin-bottom: 8px; }
+.dokument__tresc h2 { font-family: var(--szeryf); font-weight: 400; font-size: 24px; line-height: 1.25; margin: 40px 0 12px; }
+.dokument__tresc p, .dokument__tresc ul { margin: 0 0 14px; }
+.dokument__tresc ul { list-style: disc; padding-left: 22px; }
+.dokument__tresc a { text-decoration: underline; }
+.dokument__projekt { border: 1px solid #ff9c9c; color: #ffc9c9; padding: 12px 16px; border-radius: 8px; margin: 24px 0 32px; font-size: 14px; line-height: 21px; }
+.dokument__wstecz { display: inline-block; margin-bottom: 40px; font-size: 14px; }
+
+/* długie tytuły wpisów nie wchodzą na sąsiednią kolumnę (np. na mniejszych ekranach) */
+.stopka__kolumna li { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 1099px) { .stopka__kolumna { white-space: normal; } }
