@@ -1,4 +1,4 @@
-/* wersja 8 */
+/* wersja 11 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -249,10 +249,12 @@ main { position: relative; z-index: 2; }
 .jezyki li:first-child img { outline: 1px solid rgba(0, 0, 0, 0.15); outline-offset: -1px; }
 
 /* Strona 2 – zakres usług (sekcja zaczyna się na 1117 px) */
+/* Odstępy w pionie liczone od tytułu w jednostkach czcionek (--f), żeby na dużych
+   ekranach (gdzie czcionki już nie rosną) bloki nie rozjeżdżały się od siebie. */
 .naglowek-sekcji--uslugi { --y: 244; }
-.tekst--uslugi { --y: 298; }      /* 62 px pod tytułem, jak w projekcie */
+.tekst--uslugi { top: calc(244 * var(--u) + 54 * var(--f)); }   /* 62 px pod tytułem (litery) */
 .kafle {
-  --y: 483;                                  /* 1600 px strony */
+  top: calc(244 * var(--u) + 237 * var(--f));   /* 48 px pod opisem, wg podglądu */
   width: calc(1370 * var(--u));
   height: calc(545 * var(--u));              /* dół bloku 2145 px – ta sama wysokość bloku co na stronie kontaktu */
   display: grid;
@@ -291,7 +293,9 @@ main { position: relative; z-index: 2; }
   height: calc(120 * var(--u));
   margin-left: calc(-60 * var(--u));
   border-radius: 50%;
-  background: var(--szary-ikona);
+  background: #000;
+  display: grid;
+  place-items: center;
 }
 .kafel__przycisk:hover,
 .kafel__przycisk[aria-expanded="true"] {
@@ -344,13 +348,14 @@ html.anim .opis .jednostka.widoczna {
 
 /* Strona 3 – kontakt (sekcja zaczyna się na 2234 px) */
 .naglowek-sekcji--kontakt { --y: 282; }
-.info--1 { --y: 336; --x: 179; }     /* 62 px pod tytułem, jak w projekcie */
-.info--2 { --y: 336; --x: 596; }
-.info--3 { --y: 364; --x: 1013; }
+.info--1 { top: calc(282 * var(--u) + 54 * var(--f)); --x: 179; }   /* 62 px pod tytułem */
+.info--2 { top: calc(282 * var(--u) + 54 * var(--f)); --x: 596; }
+.info--3 { top: calc(282 * var(--u) + 82 * var(--f)); --x: 1013; }
 .mapa {
-  --x: 179; --y: 446;                        /* 2680–3300 px: od początku do końca wierszy siatki */
+  --x: 179;
+  top: calc(282 * var(--u) + 164 * var(--f));    /* 2680 px strony */
   width: calc(675 * var(--u));
-  height: calc(620 * var(--u));
+  height: calc(370 * var(--u));              /* 2680–3050 px, wg podglądu */
   border-radius: calc(8 * var(--u));
   overflow: hidden;
   background: #f2f2f2;
@@ -366,7 +371,8 @@ html.anim .opis .jednostka.widoczna {
 .mapa__zastepstwo a { text-decoration: underline; }
 
 .formularz {
-  --x: 1013; --y: 446;
+  --x: 1013;
+  top: calc(282 * var(--u) + 164 * var(--f));
   width: calc(536 * var(--u));
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -390,7 +396,7 @@ html.anim .opis .jednostka.widoczna {
 .pole:focus, .pole:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--biel); }
 .pole--pelne { grid-column: 1 / -1; }
 .pole--wiadomosc {
-  height: calc(310 * var(--u));
+  height: calc(130 * var(--u));              /* pole wiadomości kończy się równo z mapą */
   padding-top: calc(12 * var(--u));
   resize: none;
   line-height: 1.4;
@@ -545,7 +551,7 @@ html.anim .opis .jednostka.widoczna {
 }
 .do-uzupelnienia { color: #ff9c9c; }
 .stopka__polityka {
-  --y: 323; --x: 0;
+  --y: 274; --x: 0;
   width: 100%;
   text-align: center;
   font-size: max(11px, calc(11.9 * var(--f)));
@@ -745,3 +751,64 @@ body.dokument { min-height: 0; }
 /* długie tytuły wpisów nie wchodzą na sąsiednią kolumnę (np. na mniejszych ekranach) */
 .stopka__kolumna li { overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 1099px) { .stopka__kolumna { white-space: normal; } }
+
+/* ikony usług w czarnych kółkach (rozmiary jak na obecnej stronie, ×0,8) */
+.ikona img { display: block; height: auto; }
+.ikona--mediacje img    { width: calc(74 * var(--u)); }
+.ikona--spadek img      { width: calc(46 * var(--u)); }
+.ikona--mlotek img      { width: calc(59 * var(--u)); }
+.ikona--firma img       { width: calc(62 * var(--u)); }
+.ikona--kajdanki img    { width: calc(54 * var(--u)); }
+.ikona--waga img        { width: calc(56 * var(--u)); }
+.ikona--segregatory img { width: calc(59 * var(--u)); }
+.ikona--ksiega img      { width: calc(64 * var(--u)); }
+.ikona--pieniadze img   { width: calc(62 * var(--u)); }
+@media (max-width: 1099px) { .ikona img { transform: scale(0.55); } }
+
+/* ===================== PASEK MENU PRZY PRZEWIJANIU =====================
+   Na górze strony nagłówek wygląda jak w projekcie. Po zjechaniu niżej zamienia się
+   w smukły pasek przyklejony do góry: chowa się przy przewijaniu w dół,
+   wraca przy ruchu w górę. Aktualna sekcja jest w menu pogrubiona. */
+.naglowek { transition: transform .35s cubic-bezier(0.33, 0, 0.2, 1); }
+.naglowek.bez-przejscia, .naglowek.bez-przejscia * { transition: none !important; }
+.naglowek--pasek {
+  position: fixed;
+  top: 0;
+  height: max(56px, calc(64 * var(--f)));
+  padding-top: env(safe-area-inset-top, 0px);
+  box-sizing: content-box;
+  z-index: 6;
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+}
+.naglowek--pasek.naglowek--ukryty:not(:focus-within) { transform: translateY(-100%); }
+.naglowek--pasek .logo-adwokatura img { width: max(58px, calc(67 * var(--f))); }
+.naglowek--pasek .menu { font-size: max(14px, calc(17 * var(--f))); }
+.naglowek--pasek .menu a.aktywny { font-weight: 600; }
+.naglowek--pasek .logo-amm {
+  left: auto;
+  right: calc(50% - 685 * var(--u));
+  top: 50%;
+  transform: translateY(-50%);
+  width: max(40px, calc(44 * var(--f)));
+  height: max(40px, calc(44 * var(--f)));
+  border-width: 2px;
+  font-size: max(9px, calc(9.5 * var(--f)));
+}
+
+/* pasek menu na telefonie */
+@media (max-width: 1099px) {
+  .naglowek--pasek { height: auto; padding: calc(8px + env(safe-area-inset-top, 0px)) 16px 8px; flex-wrap: nowrap; }
+  .naglowek--pasek .logo-adwokatura img { width: 52px; }
+  .naglowek--pasek .menu { order: 0; width: auto; gap: 14px; font-size: 13px; }
+  .naglowek--pasek .logo-amm { display: none; }
+}
+
+/* dane adwokata pod mapą – na wysokości klauzuli RODO */
+.dane-biura {
+  --x: 179;
+  top: calc(282 * var(--u) + 164 * var(--f) + 453 * var(--u));
+}
+@media (max-width: 1099px) { .dane-biura { margin-top: 20px; } }
+@media (max-width: 1099px) { .dane-biura br { display: inline; } .dane-biura .linia::after { content: none; } }

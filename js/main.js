@@ -1,4 +1,4 @@
-/* wersja 8 */
+/* wersja 11 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -122,12 +122,50 @@
     grupy.forEach((gr) => pokazGrupe(gr, true));
   }
 
+  /* =========================================================
+     2b. Pasek menu przy przewijaniu
+     Po zjechaniu poniżej nagłówka: smukły pasek u góry ekranu.
+     W dół – chowa się, w górę – wraca. Pogrubiona aktualna sekcja.
+     ========================================================= */
+  const naglowek = document.querySelector(".naglowek");
+  const linkiMenu = [...document.querySelectorAll(".menu a")];
+  let ostatnieY = window.scrollY;
+  let ukryjPoKlikniecie = false;
+  let dolNaglowka = 0;
+
+  function aktualizujPasek() {
+    const y = window.scrollY;
+    const pasek = naglowek.classList.contains("naglowek--pasek");
+    if (!pasek) dolNaglowka = naglowek.offsetTop + naglowek.offsetHeight;  // naturalne położenie
+    const prog = dolNaglowka + 40;                                        // nagłówek już poza ekranem
+    if (!pasek && y > prog) {
+      // wejście w tryb paska – startuje schowany, bez mignięcia
+      naglowek.classList.add("bez-przejscia", "naglowek--pasek", "naglowek--ukryty");
+      void naglowek.offsetWidth;
+      naglowek.classList.remove("bez-przejscia");
+    } else if (pasek && y <= dolNaglowka && y < ostatnieY) {   // wracamy do góry – zwykły nagłówek
+      naglowek.classList.add("bez-przejscia");
+      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty");
+      void naglowek.offsetWidth;
+      naglowek.classList.remove("bez-przejscia");
+    } else if (pasek) {
+      if (ukryjPoKlikniecie || y > ostatnieY + 3) naglowek.classList.add("naglowek--ukryty");
+      else if (y < ostatnieY - 3) naglowek.classList.remove("naglowek--ukryty");
+    }
+    ostatnieY = y;
+    // pogrubienie aktualnej sekcji
+    if (naglowek.classList.contains("naglowek--pasek")) {
+      const h = biezacaSekcja();
+      linkiMenu.forEach((a) => a.classList.toggle("aktywny", a.getAttribute("href") === h));
+    }
+  }
+
   /* wspólna obsługa przewijania */
   let zaplanowane = false;
   function naPrzewiniecie() {
     if (zaplanowane) return;
     zaplanowane = true;
-    requestAnimationFrame(() => { aktualizujKontakt(); sprawdzWejscia(); zaplanowane = false; });
+    requestAnimationFrame(() => { aktualizujKontakt(); sprawdzWejscia(); aktualizujPasek(); zaplanowane = false; });
   }
   window.addEventListener("scroll", naPrzewiniecie, { passive: true });
   window.addEventListener("resize", naPrzewiniecie);
@@ -193,14 +231,22 @@
     const gora = goraLiter(tytul) + y;
     let dol = 0;
     dolne.forEach((el) => { dol = Math.max(dol, el.getBoundingClientRect().bottom + y); });
-    const blok = dol - gora;
+    let blok = dol - gora;
+    // "Nasze biura" dostaje tę samą wysokość bloku co "Zakres usług" –
+    // dzięki temu oba tytuły lądują dokładnie w tym samym miejscu ekranu
+    if (hash === "#kontakt") {
+      const [t2, d2] = CELE["#specjalizacje"]();
+      let dol2 = 0;
+      d2.forEach((el) => { dol2 = Math.max(dol2, el.getBoundingClientRect().bottom + y); });
+      blok = dol2 - (goraLiter(t2) + y);
+    }
     const margines = blok < vh - 48 ? (vh - blok) / 2 : 24;
     const maks = document.documentElement.scrollHeight - vh;
     return Math.min(maks, Math.max(0, gora - margines));
   }
 
   let animacja = null;
-  function przerwij() { if (animacja) { cancelAnimationFrame(animacja); animacja = null; } }
+  function przerwij() { if (animacja) { cancelAnimationFrame(animacja); animacja = null; ukryjPoKlikniecie = false; } }
 
   function przewin(hash) {
     przerwij();
@@ -209,10 +255,12 @@
     const roznica = cel - start;
     if (malyRuch.matches || Math.abs(roznica) < 2) { window.scrollTo(0, cel); return; }
     const t0 = performance.now();
+    ukryjPoKlikniecie = true;               // pasek nie zasłania sekcji, do której jedziemy
     function krok(teraz) {
       const t = Math.min(1, (teraz - t0) / CZAS_PRZEWIJANIA);
       window.scrollTo(0, start + roznica * krzywa(t));
       animacja = t < 1 ? requestAnimationFrame(krok) : null;
+      if (!animacja) setTimeout(() => { ukryjPoKlikniecie = false; }, 100);
     }
     animacja = requestAnimationFrame(krok);
   }
