@@ -1,4 +1,4 @@
-/* wersja 4 */
+/* wersja 5 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -39,7 +39,7 @@
   --czern: #000;
   --biel: #fff;
   --szary-ikona: #898989;
-  --wypelnienie-pola: rgba(255, 255, 255, 0.18);
+  --wypelnienie-pola: rgba(255, 255, 255, 0.3);
   --szeryf: "Newsreader", "Times New Roman", Georgia, serif;
   --bezszeryf: "Inter", "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
@@ -160,7 +160,7 @@ html.anim .tla {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   height: calc(717 * var(--u));
-  background: linear-gradient(150.07deg, rgba(0,0,0,0) 66.6%, rgba(0,0,0,.48) 93.9%);
+  background: linear-gradient(150.07deg, rgba(0,0,0,0) 66.6%, rgba(0,0,0,.96) 93.9%);  /* 2× ciemniej niż w pliku */
   z-index: 1;
   pointer-events: none;
   opacity: var(--gradient, 1);
@@ -194,6 +194,23 @@ html.anim .tla {
   line-height: 1.3;
   white-space: nowrap;
 }
+/* najechanie: pogrubienie (Inter SemiBold) zamiast podkreślenia;
+   ukryta pogrubiona kopia napisu rezerwuje szerokość, więc nic nie "skacze" */
+.menu a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.menu a::after {
+  content: attr(data-tekst);
+  font-weight: 600;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.menu a:hover { font-weight: 600; text-decoration: none; }
+
 .logo-amm {
   position: absolute;
   left: calc(1430 * var(--u));
@@ -214,23 +231,26 @@ html.anim .tla {
 main { position: relative; z-index: 2; }
 .sekcja { position: relative; height: calc(1117 * var(--u)); }
 
-/* Strona 1 (wartości --y = górna krawędź pola tekstu; litery wypadają na liniach siatki) */
-.tytul      { --y: 602; }
-.podtytul   { --y: 701; }
-.tekst--start { --y: 783; }
+/* Strona 1 – blok tytułu: linia bazowa "Kancelaria Adwokacka" zawsze na środku ekranu
+   (w granicach 320–760 px projektu, żeby nie wchodziła na nagłówek ani na stronę 2).
+   Odstępy tytuł → podtytuł → opis są sztywne, jak w projekcie (99 i 187 px między górami liter). */
+.sekcja--start { --srodek: clamp(calc(320 * var(--u)), 50vh, calc(760 * var(--u))); }
+.tytul        { top: calc(var(--srodek) - 59 * var(--f)); }
+.podtytul     { top: calc(var(--srodek) + 39 * var(--f)); --x: 179; }
+.tekst--start { top: calc(var(--srodek) + 119 * var(--f)); }
 
 /* Strona 2 – zakres usług (sekcja zaczyna się na 1117 px) */
 .naglowek-sekcji--uslugi { --y: 244; }
-.tekst--uslugi { --y: 296; }
+.tekst--uslugi { --y: 298; }      /* 62 px pod tytułem, jak w projekcie */
 .kafle {
   --y: 483;                                  /* 1600 px strony */
   width: calc(1370 * var(--u));
-  height: calc(545 * var(--u));              /* dół bloku = koniec wiersza siatki (2145 px) */
+  height: calc(545 * var(--u));              /* dół bloku 2145 px – ta sama wysokość bloku co na stronie kontaktu */
   display: grid;
   grid-template-columns: repeat(5, calc(258 * var(--u)));
   grid-auto-rows: calc(260 * var(--u));
   column-gap: calc(20 * var(--u));
-  row-gap: calc(70 * var(--u));              /* etykiety i kółka obu rzędów na liniach siatki */
+  row-gap: calc(20 * var(--u));              /* odstęp ramek w pionie = odstęp w poziomie */
 }
 .kafel { position: relative; }
 .kafel__przycisk {
@@ -267,7 +287,7 @@ main { position: relative; z-index: 2; }
 .kafel__przycisk:hover,
 .kafel__przycisk[aria-expanded="true"] {
   border-color: var(--biel);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.3);
 }
 .kafel__przycisk:focus-visible { outline-offset: 2px; }
 
@@ -276,12 +296,10 @@ main { position: relative; z-index: 2; }
   position: absolute;
   z-index: 5;
   left: calc(var(--opis-x, 278) * var(--u));
-  top: calc(var(--opis-y, 0) * var(--u));
+  top: 0;
   width: calc(470 * var(--u));
-  height: calc(470 * var(--u));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: calc(35 * var(--u)) calc(35 * var(--u)) calc(30 * var(--u));
+  height: auto;                              /* wysokość dopasowana do treści – bez przewijania */
+  padding: calc(35 * var(--u));              /* dolny margines = górny */
   background: #fff;
   color: #000;
   border-radius: calc(10 * var(--u));
@@ -292,9 +310,17 @@ main { position: relative; z-index: 2; }
   text-align: left;
   cursor: auto;
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity .5s ease;
 }
+.opis--dol { top: auto; bottom: 0; }         /* dolny rząd: okienko wyrównane do dołu kafla */
 .opis.otwarty { opacity: 1; }
+.opis > :last-child { margin-bottom: 0; }
+/* linijki w okienku pojawiają się kolejno, od góry */
+html.anim .opis .jednostka { opacity: 0; }
+html.anim .opis .jednostka.widoczna {
+  opacity: 1;
+  transition: opacity var(--czas-opisu, 600ms) cubic-bezier(0.33, 0, 0.2, 1) var(--opoznienie, 0s);
+}
 .opis h4 {
   font-weight: 400;
   font-size: max(16px, calc(18 * var(--f)));
@@ -307,9 +333,9 @@ main { position: relative; z-index: 2; }
 
 /* Strona 3 – kontakt (sekcja zaczyna się na 2234 px) */
 .naglowek-sekcji--kontakt { --y: 282; }
-.info--1 { --y: 339; --x: 179; }
-.info--2 { --y: 339; --x: 596; }
-.info--3 { --y: 367; --x: 1013; }
+.info--1 { --y: 336; --x: 179; }     /* 62 px pod tytułem, jak w projekcie */
+.info--2 { --y: 336; --x: 596; }
+.info--3 { --y: 364; --x: 1013; }
 .mapa {
   --x: 179; --y: 446;                        /* 2680–3300 px: od początku do końca wierszy siatki */
   width: calc(675 * var(--u));
@@ -388,7 +414,12 @@ main { position: relative; z-index: 2; }
 /* ---------- Mapa interaktywna (Leaflet) ---------- */
 .mapa.leaflet-container { font-family: var(--bezszeryf); background: #f2f2f2; }
 .mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.88); }
-.pinezka svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+/* pinezka: kółko 20 px, obrys 2 px, wypełnienie białe 30% */
+.pinezka {
+  border: 2px solid var(--biel);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
 .mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0,0,0,.25); border-radius: 6px; overflow: hidden; }
 .mapa .leaflet-control-zoom a { color: #222; width: 32px; height: 32px; line-height: 32px; }
 .mapa .leaflet-control-attribution { font-size: 10px; background: rgba(255,255,255,.8); color: #333; }
@@ -459,9 +490,9 @@ main { position: relative; z-index: 2; }
 }
 .kontakt__godziny {
   font-size: max(13px, calc(18 * var(--f)));
-  line-height: 1;
+  line-height: calc(28 * var(--f));
   letter-spacing: -0.007em;
-  margin-bottom: calc(17 * var(--u));
+  margin-bottom: calc(16 * var(--u));
 }
 .kontakt__dane {
   position: relative;
@@ -540,11 +571,14 @@ html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
   .ikona { top: 64px; width: 64px; height: 64px; margin-left: -32px; }
 
   /* okienko usługi na telefonie: na środku ekranu */
-  .opis {
+  .opis, .opis--dol {
     position: fixed;
     left: 16px; right: 16px; top: 50%;
     width: auto; height: auto; max-height: 80vh;
+    bottom: auto;
     transform: translateY(-50%);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 24px 20px;
     font-size: 14px; line-height: 21px;
   }

@@ -13,9 +13,9 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=4"></script>
+  <script src="js/start.js?v=5"></script>
 </head>
 <body>
 
@@ -37,9 +37,9 @@
       <img src="img/logo-adwokatura.png" width="187" height="122" alt="Adwokatura Polska">
     </a>
     <nav class="menu" aria-label="Menu główne">
-      <a class="linia" href="#kancelaria">KANCELARIA</a>
-      <a class="linia" href="#specjalizacje">SPECJALIZACJE</a>
-      <a class="linia" href="#kontakt">KONTAKT</a>
+      <a class="linia" href="#kancelaria" data-tekst="KANCELARIA">KANCELARIA</a>
+      <a class="linia" href="#specjalizacje" data-tekst="SPECJALIZACJE">SPECJALIZACJE</a>
+      <a class="linia" href="#kontakt" data-tekst="KONTAKT">KONTAKT</a>
     </nav>
     <!-- Miejsce na logo kancelarii (tymczasowo kółko z napisem, jak w projekcie) -->
     <div class="logo-amm linia">LOGO<br>AMM</div>
@@ -381,22 +381,31 @@
   <!-- ===== STOPKA ===== -->
   <footer class="stopka grupa">
     <h2 class="stopka__tytul linia">Blog</h2>
-    <!-- Na obecnym blogu są 3 wpisy – po jednym w kolumnie. Kolejne dopisujemy pod spodem. -->
+    <!-- 3 kolumny × 4 linki. Na obecnym blogu (Wix) są 3 wpisy – pozostałe miejsca czekają na nowe wpisy. -->
     <ul class="stopka__kolumna">
       <li class="linia"><a href="https://www.adwokat-mincer.com/post/zachowek-kiedy-przys%C5%82uguje-i-jak-skutecznie-go-dochodzi%C4%87">Zachowek – kiedy przysługuje i&nbsp;jak skutecznie go dochodzić?</a></li>
-    </ul>
-    <ul class="stopka__kolumna">
       <li class="linia"><a href="https://www.adwokat-mincer.com/post/jak-napisa%C4%87-testament-w-polsce-rodzaje-testament%C3%B3w-i-ich-znaczenie">Jak napisać testament w&nbsp;Polsce? Rodzaje testamentów i&nbsp;ich znaczenie</a></li>
+      <li class="linia"><a href="https://www.adwokat-mincer.com/post/rozdzielno%C5%9B%C4%87-maj%C4%85tkowa-mo%C5%BCliwo%C5%9Bci-procedury-i-wymogi-prawne">Rozdzielność majątkowa: możliwości, procedury i&nbsp;wymogi prawne</a></li>
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 4”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
     </ul>
     <ul class="stopka__kolumna">
-      <li class="linia"><a href="https://www.adwokat-mincer.com/post/rozdzielno%C5%9B%C4%87-maj%C4%85tkowa-mo%C5%BCliwo%C5%9Bci-procedury-i-wymogi-prawne">Rozdzielność majątkowa: możliwości, procedury i&nbsp;wymogi prawne</a></li>
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 5”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 6”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 7”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 8”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+    </ul>
+    <ul class="stopka__kolumna">
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 9”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 10”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 11”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
+      <li class="linia"><a href="#">Link do bloga “Tytuł bloga 12”</a></li>  <!-- DO UZUPEŁNIENIA po przeniesieniu bloga -->
     </ul>
     <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
   </footer>
 
   <!-- ===== PŁYWAJĄCE DANE KONTAKTOWE (strona 1 i 2) ===== -->
   <aside class="kontakt" aria-label="Dane kontaktowe">
-    <p class="kontakt__godziny linia">od 9:00 — 17:00</p>
+    <p class="kontakt__godziny linia">poniedziałek — piątek<br>od 9:00 — 17:00</p>
     <div class="kontakt__dane linia">
       <p class="kontakt__duzy">
         <a href="tel:+48780147406">+48 780 147 406</a><br>
@@ -421,6 +430,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=4"></script>
+  <script src="js/main.js?v=5"></script>
 </body>
 </html>

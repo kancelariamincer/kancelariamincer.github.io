@@ -1,4 +1,4 @@
-/* wersja 4 */
+/* wersja 5 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -240,10 +240,73 @@
      4. Okienka z opisem usług
      Pojawiają się obok klikniętego kafla (po prawej, a przy dwóch
      ostatnich kolumnach – po lewej). Górny rząd: wyrównane do góry
-     kafla; dolny rząd: wyrównane do dołu kafla.
+     kafla; dolny rząd: do dołu kafla. Wysokość = długość treści.
+     Okienko wchodzi na krycie w 0,5 s, a tekst w nim – linijka po linijce.
      ========================================================= */
+  const CZAS_OPISU = 600;                 // ms – jedna linijka w okienku
+  const ZAKLADKA_OPISU = 0.15 * CZAS_OPISU;
+  root.style.setProperty("--czas-opisu", CZAS_OPISU + "ms");
+
   const kafle = [...document.querySelectorAll(".kafel")];
   let otwarty = null;
+
+  // dzieli akapit na słowa (raz), żeby dało się pokazywać go linijkami
+  function podzielNaSlowa(p) {
+    if (p.dataset.podzielony) return;
+    const slowa = p.textContent.trim().split(/ +/);
+    p.textContent = "";
+    slowa.forEach((w, i) => {
+      const s = document.createElement("span");
+      s.className = "slowo";
+      s.textContent = w;
+      p.appendChild(s);
+      if (i < slowa.length - 1) p.appendChild(document.createTextNode(" "));
+    });
+    p.dataset.podzielony = "1";
+  }
+
+  // zwraca listę "linijek" (tablice elementów) w kolejności od góry
+  function linijkiOpisu(opis) {
+    const linie = [];
+    [...opis.children].forEach((el) => {
+      if (el.classList.contains("ukryte")) return;
+      if (el.tagName === "P") {
+        podzielNaSlowa(el);
+        let gora = null, biezaca = null;
+        el.querySelectorAll(".slowo").forEach((s) => {
+          if (s.offsetTop !== gora) { gora = s.offsetTop; biezaca = []; linie.push(biezaca); }
+          biezaca.push(s);
+        });
+      } else if (el.tagName === "UL") {
+        el.querySelectorAll("li").forEach((li) => linie.push([li]));
+      } else {
+        linie.push([el]);
+      }
+    });
+    return linie;
+  }
+
+  function animujOpis(opis) {
+    if (!animacje) return;
+    const linie = linijkiOpisu(opis);
+    linie.forEach((elementy, i) => elementy.forEach((el) => {
+      el.classList.add("jednostka");
+      el.classList.remove("widoczna");
+      el.style.setProperty("--opoznienie", Math.round(i * ZAKLADKA_OPISU) + "ms");
+    }));
+    void opis.offsetWidth;                // wymusza start animacji od zera
+    linie.forEach((elementy) => elementy.forEach((el) => el.classList.add("widoczna")));
+  }
+
+  // jeśli okienko wystaje poza ekran – delikatnie przewijamy stronę
+  function pokazCaleOkienko(opis) {
+    const r = opis.getBoundingClientRect();
+    const vh = window.innerHeight, m = 24;
+    let dy = 0;
+    if (r.height > vh - 2 * m || r.top < m) dy = r.top - m;
+    else if (r.bottom > vh - m) dy = r.bottom - (vh - m);
+    if (Math.abs(dy) > 1) window.scrollBy({ top: dy, behavior: malyRuch.matches ? "auto" : "smooth" });
+  }
 
   function zamknijOpis() {
     if (!otwarty) return;
@@ -253,7 +316,7 @@
     kafel.classList.remove("kafel--otwarty");
     root.classList.remove("opis-otwarty");
     const doUkrycia = opis;
-    setTimeout(() => { if (!doUkrycia.classList.contains("otwarty")) doUkrycia.hidden = true; }, 250);
+    setTimeout(() => { if (!doUkrycia.classList.contains("otwarty")) doUkrycia.hidden = true; }, 500);
     otwarty = null;
   }
 
@@ -264,13 +327,13 @@
     zamknijOpis();
     const kol = i % 5, rzad = Math.floor(i / 5);
     opis.style.setProperty("--opis-x", kol <= 2 ? 278 : -490);
-    opis.style.setProperty("--opis-y", rzad === 0 ? 0 : 260 - 470);
+    opis.classList.toggle("opis--dol", rzad > 0);
     opis.hidden = false;
-    opis.scrollTop = 0;
     kafel.classList.add("kafel--otwarty");
     przycisk.setAttribute("aria-expanded", "true");
     root.classList.add("opis-otwarty");
-    requestAnimationFrame(() => opis.classList.add("otwarty"));
+    animujOpis(opis);
+    requestAnimationFrame(() => { opis.classList.add("otwarty"); pokazCaleOkienko(opis); });
     otwarty = { kafel, przycisk, opis };
   }
 
@@ -344,11 +407,12 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
     }).addTo(mapa);
 
+    // pinezka: kółko 20 px (wygląd w CSS: .pinezka)
     const ikona = L.divIcon({
       className: "pinezka",
-      html: '<svg viewBox="0 0 24 34" aria-hidden="true"><path fill="#E53935" d="M12 0C5.4 0 0 5.3 0 11.9 0 20.8 12 34 12 34s12-13.2 12-22.1C24 5.3 18.6 0 12 0z"/><circle cx="12" cy="12" r="4.2" fill="#8E1B18"/></svg>',
-      iconSize: [28, 40],
-      iconAnchor: [14, 40],
+      html: "",
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
     });
     const granice = [];
     BIURA.forEach((b) => {
