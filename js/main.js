@@ -1,4 +1,4 @@
-/* wersja 11 */
+/* wersja 12 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -294,8 +294,8 @@
      kafla; dolny rząd: do dołu kafla. Wysokość = długość treści.
      Okienko wchodzi na krycie w 0,5 s, a tekst w nim – linijka po linijce.
      ========================================================= */
-  const CZAS_OPISU = 200;                 // ms – jedna linijka w okienku (3× szybciej niż wcześniej)
-  const ZAKLADKA_OPISU = 0.30 * CZAS_OPISU; // rozrzut 2× większy: 30% zamiast 15%
+  const CZAS_OPISU = 100;                 // ms – jedna linijka w okienku
+  const ZAKLADKA_OPISU = 0.45 * CZAS_OPISU; // kolejna linijka startuje po 45% czasu poprzedniej
   root.style.setProperty("--czas-opisu", CZAS_OPISU + "ms");
 
   const kafle = [...document.querySelectorAll(".kafel")];
@@ -416,13 +416,6 @@
     });
     return wynik;
   }
-  document.querySelectorAll("[data-przelacznik]").forEach((a) => {
-    if (a.hasAttribute("aria-current")) return;
-    a.addEventListener("click", () => {
-      const bazowy = a.getAttribute("href").split("#")[0];
-      a.setAttribute("href", bazowy + biezacaSekcja());
-    });
-  });
   // po wejściu z przełącznika: od razu w tym samym miejscu, bez animacji
   if (!animacje && location.hash in CELE && document.referrer) {
     (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
@@ -436,12 +429,155 @@
   const oknoRodo = document.getElementById("okno-rodo");
   const rozwin = document.querySelector(".rodo__rozwin");
   if (oknoRodo && rozwin && typeof oknoRodo.showModal === "function") {
-    rozwin.addEventListener("click", () => oknoRodo.showModal());
+    // delegacja – przycisk może zostać podmieniony przy zmianie języka
+    document.addEventListener("click", (e) => { if (e.target.closest(".rodo__rozwin")) oknoRodo.showModal(); });
     oknoRodo.querySelector(".okno-rodo__zamknij").addEventListener("click", () => oknoRodo.close());
     oknoRodo.addEventListener("click", (e) => { if (e.target === oknoRodo) oknoRodo.close(); });
   } else if (rozwin) {
     rozwin.hidden = true;
   }
+
+  /* =========================================================
+     4d. Zmiana języka bez przeładowania strony
+     Teksty bieżącego języka "przewracają się" litera po literze jak karty
+     (1 s, rozrzut 10 liter), a tuż po zniknięciu w ich miejsce tak samo
+     wchodzą teksty drugiego języka – wszystkie bloki tekstu naraz.
+     Druga wersja jest pobierana z serwera (ta sama witryna) i podmieniana w miejscu.
+     ========================================================= */
+  const CZAS_ZMIANY = 1000;     // ms – zejście (i osobno wejście) tekstu jednego bloku
+  const ROZRZUT = 10;           // ile liter naraz jest w trakcie obrotu
+  const ATRYBUTY = ["href", "title", "aria-label", "placeholder", "data-tekst", "alt", "lang", "hreflang", "aria-current", "src", "data-adres"];
+  let trwaZmiana = false;
+
+  // elementy dodane przez skrypty (mapa Leaflet, podział na słowa/litery) – pomijamy
+  const dynamiczny = (el) => !el.classList.contains("mapa") &&
+    [...el.classList].some((c) => c.startsWith("leaflet-") || c === "slowo" || c.startsWith("zj-"));
+  const dzieci = (el) => [...el.children].filter((c) => !dynamiczny(c));
+  const maWlasnyTekst = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+
+  function zgodne(a, b) {
+    if (a.tagName !== b.tagName) return false;
+    const da = dzieci(a), db = dzieci(b);
+    if (maWlasnyTekst(b)) return true;           // blok tekstu – treść i tak podmieniamy w całości
+    if (da.length !== db.length) return false;
+    return da.every((x, i) => zgodne(x, db[i]));
+  }
+
+  function paruj(zywy, wzor, bloki) {
+    ATRYBUTY.forEach((n) => {
+      if (wzor.hasAttribute(n)) { if (zywy.getAttribute(n) !== wzor.getAttribute(n)) zywy.setAttribute(n, wzor.getAttribute(n)); }
+      else if (zywy.hasAttribute(n)) zywy.removeAttribute(n);
+    });
+    if (maWlasnyTekst(wzor)) {
+      if (zywy.textContent.replace(/\s+/g, " ").trim() !== wzor.textContent.replace(/\s+/g, " ").trim()) bloki.push([zywy, wzor]);
+      return;
+    }
+    const da = dzieci(zywy), db = dzieci(wzor);
+    da.forEach((x, i) => paruj(x, db[i], bloki));
+  }
+
+  // owija litery w elementy do animacji; zwraca litery w kolejności czytania
+  function rozbijNaLitery(el) {
+    const wezly = [];
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    while (w.nextNode()) if (w.currentNode.textContent.trim()) wezly.push(w.currentNode);
+    const litery = [];
+    wezly.forEach((wezel) => {
+      const frag = document.createDocumentFragment();
+      wezel.textContent.split(/(\s+)/).forEach((kawalek) => {
+        if (!kawalek) return;
+        if (/^\s+$/.test(kawalek)) { frag.appendChild(document.createTextNode(kawalek)); return; }
+        const slowo = document.createElement("span");
+        slowo.className = "zj-slowo";
+        Array.from(kawalek).forEach((z) => {
+          const l = document.createElement("span");
+          l.className = "zj-litera";
+          l.textContent = z;
+          slowo.appendChild(l);
+          litery.push(l);
+        });
+        frag.appendChild(slowo);
+      });
+      wezel.parentNode.replaceChild(frag, wezel);
+    });
+    return litery;
+  }
+
+  function rozplanuj(litery) {
+    const n = litery.length;
+    const krok = CZAS_ZMIANY / (n + ROZRZUT - 1);
+    litery.forEach((l, i) => {
+      l.style.setProperty("--zj-czas", Math.round(krok * ROZRZUT) + "ms");
+      l.style.setProperty("--zj-opoznienie", Math.round(krok * i) + "ms");
+    });
+  }
+
+  function widoczny(el) {
+    if (!el.getClientRects().length) return false;
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight && getComputedStyle(el).visibility !== "hidden";
+  }
+
+  function podmien(zywy, wzor) {
+    zywy.innerHTML = wzor.innerHTML;
+    zywy.removeAttribute("data-podzielony");
+  }
+
+  async function zmienJezyk(url, doHistorii) {
+    if (trwaZmiana) return;
+    trwaZmiana = true;
+    try {
+      const odp = await fetch(url, { credentials: "same-origin" });
+      if (!odp.ok) throw new Error("brak strony");
+      const nowy = new DOMParser().parseFromString(await odp.text(), "text/html");
+      if (nowy.documentElement.lang === root.lang) { trwaZmiana = false; return; }
+      if (!zgodne(document.body, nowy.body)) throw new Error("inna struktura");
+      zamknijOpis();
+      if (doHistorii) history.pushState({ jezyk: nowy.documentElement.lang }, "", url);
+
+      root.lang = nowy.documentElement.lang;
+      document.title = nowy.title;
+      const opisMeta = document.querySelector('meta[name="description"]');
+      const opisNowy = nowy.querySelector('meta[name="description"]');
+      if (opisMeta && opisNowy) opisMeta.setAttribute("content", opisNowy.getAttribute("content"));
+
+      const bloki = [];
+      paruj(document.body, nowy.body, bloki);
+      const animowane = [];
+      bloki.forEach(([zywy, wzor]) => {
+        if (malyRuch.matches || !widoczny(zywy)) podmien(zywy, wzor);
+        else animowane.push([zywy, wzor]);
+      });
+      // zejście
+      animowane.forEach(([zywy]) => { rozplanuj(rozbijNaLitery(zywy)); zywy.classList.add("zj-out"); });
+      setTimeout(() => {
+        // wejście drugiego języka
+        animowane.forEach(([zywy, wzor]) => {
+          podmien(zywy, wzor);
+          zywy.classList.remove("zj-out");
+          rozplanuj(rozbijNaLitery(zywy));
+          zywy.classList.add("zj-in");
+        });
+        setTimeout(() => {
+          animowane.forEach(([zywy, wzor]) => { podmien(zywy, wzor); zywy.classList.remove("zj-in"); });
+          aktualizujKontakt();
+          trwaZmiana = false;
+        }, CZAS_ZMIANY + 50);
+      }, animowane.length ? CZAS_ZMIANY : 0);
+      if (!animowane.length) trwaZmiana = false;
+    } catch (blad) {
+      window.location.href = url;   // awaryjnie: zwykłe przejście na drugą stronę
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-przelacznik]");
+    if (!a) return;
+    e.preventDefault();
+    if (a.hasAttribute("aria-current")) return;
+    zmienJezyk(a.href.split("#")[0], true);
+  });
+  window.addEventListener("popstate", () => zmienJezyk(location.href.split("#")[0], false));
 
   /* =========================================================
      5. Wybór aplikacji map

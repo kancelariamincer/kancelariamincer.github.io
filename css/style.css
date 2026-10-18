@@ -1,4 +1,4 @@
-/* wersja 11 */
+/* wersja 12 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -774,7 +774,7 @@ body.dokument { min-height: 0; }
 .naglowek--pasek {
   position: fixed;
   top: 0;
-  height: max(56px, calc(64 * var(--f)));
+  height: max(84px, calc(96 * var(--f)));    /* 1,5× wyżej niż wcześniej – więcej "oddechu" */
   padding-top: env(safe-area-inset-top, 0px);
   box-sizing: content-box;
   z-index: 6;
@@ -812,3 +812,51 @@ body.dokument { min-height: 0; }
 }
 @media (max-width: 1099px) { .dane-biura { margin-top: 20px; } }
 @media (max-width: 1099px) { .dane-biura br { display: inline; } .dane-biura .linia::after { content: none; } }
+
+/* ===================== NAGŁÓWEK v12: logo kancelarii po lewej, znak Adwokatury po prawej ===================== */
+.logo-kancelarii {
+  position: absolute;
+  left: calc(179 * var(--u));
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+}
+.logo-kancelarii:hover { text-decoration: none; }
+.logo-kancelarii__pelne { display: block; width: calc(252 * var(--f)); height: auto; }
+.logo-kancelarii__sygnet { display: none; height: max(40px, calc(44 * var(--f))); width: auto; }
+.logo-adwokatura { left: auto; right: calc(50% - 685 * var(--u)); }
+
+/* pasek: sam sygnet po lewej, mniejszy znak Adwokatury po prawej */
+.naglowek--pasek .logo-kancelarii__pelne { display: none; }
+.naglowek--pasek .logo-kancelarii__sygnet { display: block; }
+.naglowek--pasek .logo-adwokatura img { width: max(84px, calc(98 * var(--f))); }
+
+@media (max-width: 1099px) {
+  .logo-kancelarii { position: static; transform: none; }
+  .logo-kancelarii__pelne { width: 150px; }
+  .logo-adwokatura img { width: 84px; }
+  .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
+  .naglowek--pasek .logo-adwokatura { display: none; }
+}
+
+/* ===================== ZMIANA JĘZYKA: litery "przewracają się" jak karty ===================== */
+.zj-slowo { display: inline-block; white-space: nowrap; }
+.zj-litera {
+  display: inline-block;
+  white-space: pre;
+  backface-visibility: hidden;
+  animation-duration: var(--zj-czas, 300ms);
+  animation-delay: var(--zj-opoznienie, 0ms);
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  animation-fill-mode: both;
+}
+.zj-out .zj-litera { animation-name: zj-znikanie; }
+.zj-in .zj-litera  { animation-name: zj-pojawianie; }
+@keyframes zj-znikanie {
+  from { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+  to   { opacity: 0; transform: perspective(400px) rotateX(90deg); }
+}
+@keyframes zj-pojawianie {
+  from { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
+  to   { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+}

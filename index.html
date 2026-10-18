@@ -13,9 +13,9 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/style.css?v=12">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=11"></script>
+  <script src="js/start.js?v=12"></script>
 </head>
 <body>
 
@@ -33,16 +33,18 @@
 
   <!-- ===== NAGŁÓWEK ===== -->
   <header class="naglowek grupa" data-grupa="start">
-    <a class="logo-adwokatura linia" href="#kancelaria">
-      <img src="img/logo-adwokatura.png" width="187" height="122" alt="Adwokatura Polska">
+    <a class="logo-kancelarii linia" href="#kancelaria" aria-label="Adwokat Agnieszka Mincer-Madejska – strona główna">
+      <img class="logo-kancelarii__pelne" src="img/logo-kancelarii.png" width="252" height="80" alt="">
+      <img class="logo-kancelarii__sygnet" src="img/sygnet-kancelarii.png" width="44" height="53" alt="">
     </a>
     <nav class="menu" aria-label="Menu główne">
       <a class="linia" href="#kancelaria" data-tekst="KANCELARIA">KANCELARIA</a>
       <a class="linia" href="#specjalizacje" data-tekst="SPECJALIZACJE">SPECJALIZACJE</a>
       <a class="linia" href="#kontakt" data-tekst="KONTAKT">KONTAKT</a>
     </nav>
-    <!-- Miejsce na logo kancelarii (tymczasowo kółko z napisem, jak w projekcie) -->
-    <div class="logo-amm linia">LOGO<br>AMM</div>
+    <span class="logo-adwokatura linia">
+      <img src="img/logo-adwokatura.png" width="187" height="122" alt="Adwokatura Polska">
+    </span>
   </header>
 
   <main>
@@ -450,6 +452,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/main.js?v=12"></script>
 </body>
 </html>

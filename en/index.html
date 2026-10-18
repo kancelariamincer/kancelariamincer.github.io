@@ -12,8 +12,8 @@
   <link rel="preload" href="../fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="../css/style.css?v=11">
-  <script src="../js/start.js?v=11"></script>
+  <link rel="stylesheet" href="../css/style.css?v=12">
+  <script src="../js/start.js?v=12"></script>
 </head>
 <body>
 
@@ -27,15 +27,18 @@
   <div class="gradient-kontakt" aria-hidden="true"></div>
 
   <header class="naglowek grupa" data-grupa="start">
-    <a class="logo-adwokatura linia" href="#kancelaria">
-      <img src="../img/logo-adwokatura.png" width="187" height="122" alt="Polish Bar (Adwokatura Polska)">
+    <a class="logo-kancelarii linia" href="#kancelaria" aria-label="Advocate Agnieszka Mincer-Madejska – home">
+      <img class="logo-kancelarii__pelne" src="../img/logo-kancelarii.png" width="252" height="80" alt="">
+      <img class="logo-kancelarii__sygnet" src="../img/sygnet-kancelarii.png" width="44" height="53" alt="">
     </a>
     <nav class="menu" aria-label="Main menu">
       <a class="linia" href="#kancelaria" data-tekst="OFFICE">OFFICE</a>
       <a class="linia" href="#specjalizacje" data-tekst="PRACTICE AREAS">PRACTICE AREAS</a>
       <a class="linia" href="#kontakt" data-tekst="CONTACT">CONTACT</a>
     </nav>
-    <div class="logo-amm linia">LOGO<br>AMM</div>
+    <span class="logo-adwokatura linia">
+      <img src="../img/logo-adwokatura.png" width="187" height="122" alt="Polish Bar (Adwokatura Polska)">
+    </span>
   </header>
 
   <main>
@@ -366,7 +369,7 @@
   </main>
 
   <footer class="stopka grupa">
-    <h2 class="stopka__tytul linia">Blog <span lang="en">(articles in Polish)</span></h2>
+    <h2 class="stopka__tytul linia">Blog (articles in Polish)</h2>
     <ul class="stopka__kolumna">
       <li class="linia"><a href="https://www.adwokat-mincer.com/post/zachowek-kiedy-przys%C5%82uguje-i-jak-skutecznie-go-dochodzi%C4%87" hreflang="pl" title="Legitime (zachowek) – when is it due and how to claim it? (article in Polish)">Legitime (zachowek) – when is it due and how to claim it?</a></li>
       <li class="linia"><a href="https://www.adwokat-mincer.com/post/jak-napisa%C4%87-testament-w-polsce-rodzaje-testament%C3%B3w-i-ich-znaczenie" hreflang="pl" title="How to make a will in Poland? Types of wills and their significance (article in Polish)">How to make a will in Poland? Types of wills and their significance</a></li>
@@ -421,6 +424,6 @@
   </dialog>
 
   <script src="../vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="../js/main.js?v=11"></script>
+  <script src="../js/main.js?v=12"></script>
 </body>
 </html>
