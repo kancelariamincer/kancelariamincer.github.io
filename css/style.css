@@ -1,10 +1,9 @@
-/* wersja 3 */
+/* wersja 4 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
-   Układ odwzorowany 1:1 z projektu Figma (szerokość 1728 px).
-   Wszystkie wymiary podane są w "pikselach projektu" (u):
-   1u = 1/1728 szerokości okna, więc strona skaluje się
-   proporcjonalnie na każdym monitorze.
+   Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
+   Wymiary w "pikselach projektu": --u skaluje układ z szerokością okna,
+   --f to samo dla czcionek, ale nigdy powyżej rozmiaru z projektu.
    ========================================================= */
 
 /* ---------- Czcionki (hostowane lokalnie – bez Google Fonts, zgodnie z RODO) ---------- */
@@ -35,7 +34,8 @@
 
 /* ---------- Zmienne ---------- */
 :root {
-  --u: calc(100vw / 1728);           /* 1 piksel projektu */
+  --u: calc(100vw / 1728);              /* 1 piksel projektu – UKŁAD (skaluje się z szerokością okna) */
+  --f: min(var(--u), 1px);              /* 1 piksel projektu – CZCIONKI (nie rosną powyżej MacBooka Pro 16") */
   --czern: #000;
   --biel: #fff;
   --szary-ikona: #898989;
@@ -44,11 +44,13 @@
   --bezszeryf: "Inter", "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
 }
+/* Siatka projektu (1728 px): 12 kolumn × 119 px, margines 40, odstęp 20
+   → początki kolumn: 40, 179, 318, 457, 596, 735, 874, 1013, 1152, 1291, 1430, 1569
+   Wiersze: wysokość 125, przesunięcie 40, odstęp 40 → początki co 165 px (…1360, 1525, 1690…),
+   linia bazowa co 10 px. Treść strony: kolumny 2–11 (179–1549). */
 
 /* ---------- Podstawy ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-/* Płynne przewijanie do sekcji realizuje js/main.js (dłuższe, z długim wyhamowaniem) */
-
 body {
   margin: 0;
   position: relative;
@@ -59,45 +61,61 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-h1, h2, p, ul { margin: 0; padding: 0; }
+h1, h2, h3, h4, p, ul { margin: 0; padding: 0; }
 ul { list-style: none; }
 a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 :focus-visible { outline: 2px solid var(--biel); outline-offset: 4px; border-radius: 2px; }
+button { font: inherit; color: inherit; }
 
 .ukryte {
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
 }
 
 /* Pozycjonowanie w układzie projektu: --x i --y w pikselach projektu */
-.naglowek > *, .sekcja > *, .stopka > * {
+.sekcja > *, .stopka > * {
   position: absolute;
-  left: calc(var(--x, 180) * var(--u));
+  left: calc(var(--x, 179) * var(--u));
   top: calc(var(--y, 0) * var(--u));
 }
 
-/* ---------- Typografia ---------- */
-.tekst {
+/* ---------- Typografia (wg projektu) ---------- */
+.tekst {                                   /* Inter Regular 18 / 28 */
   font-family: var(--bezszeryf);
-  font-size: max(14px, calc(18 * var(--u)));
-  line-height: max(22px, calc(28 * var(--u)));
+  font-size: max(14px, calc(18 * var(--f)));
+  line-height: max(22px, calc(28 * var(--f)));
   letter-spacing: -0.007em;
   font-weight: 400;
 }
-.tytul {
+.tytul {                                   /* Newsreader Regular 80 / auto */
   font-family: var(--szeryf);
   font-weight: 400;
-  font-size: calc(80 * var(--u));
-  line-height: 1;
+  font-size: calc(80 * var(--f));
+  line-height: normal;
   white-space: nowrap;
 }
-.podtytul, .naglowek-sekcji {
+.podtytul, .naglowek-sekcji {              /* Newsreader Regular 36 / auto */
   font-family: var(--szeryf);
   font-weight: 400;
-  font-size: calc(36 * var(--u));
-  line-height: 1;
+  font-size: calc(36 * var(--f));
+  line-height: normal;
   white-space: nowrap;
+}
+
+/* ===================== ANIMACJE WEJŚCIA ===================== */
+/* Linijki tekstu i elementy pojawiają się kolejno, z zakładką (opóźnienie = 15% czasu) */
+html.anim .linia { opacity: 0; }
+html.anim .linia.widoczna {
+  opacity: 1;
+  transition: opacity var(--czas-linii, 1s) cubic-bezier(0.33, 0, 0.2, 1) var(--opoznienie, 0s);
+}
+html.anim .linia.bez-animacji { transition: none; }
+
+/* Tła odsłaniane gradientem (strefa przejścia = 1/3 wysokości ekranu) */
+html.anim .tla {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(var(--odkryj, 0px) - var(--pas, 300px)), transparent var(--odkryj, 0px));
+          mask-image: linear-gradient(to bottom, #000 0, #000 calc(var(--odkryj, 0px) - var(--pas, 300px)), transparent var(--odkryj, 0px));
 }
 
 /* ===================== TŁA ===================== */
@@ -110,101 +128,76 @@ a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
   pointer-events: none;
 }
 .tlo { position: absolute; left: 0; width: 100%; }
-
-/* Zdjęcie 1 – Rynek: wysokość 1150, wyśrodkowane, krycie 90% na czerni */
 .tlo--rynek {
   top: 0;
   height: calc(1150 * var(--u));
   background: url("../img/zdjecie-1-rynek.webp") center top / auto 100% no-repeat;
   opacity: 0.9;
 }
-/* Zdjęcie 3 – dachy: od początku strony 3, na całą szerokość */
 .tlo--dachy {
   top: calc(2234 * var(--u));
   height: calc(1475 * var(--u));
   background: url("../img/zdjecie-3-dachy.webp") center top / 100% auto no-repeat;
 }
-/* Zdjęcie 2 – waga (PNG z alfą) – leży NAD pozostałymi, dzięki czemu płynnie w nie przechodzi */
 .tlo--waga {
   top: calc(890 * var(--u));
   height: calc(1679 * var(--u));
   background: url("../img/zdjecie-2-waga.webp") center top / 100% auto no-repeat;
 }
-/* Gradient pod nagłówkiem – odtworzony kodem (czerń 20%, wygaszana od 235 do 390 px) */
 .tlo--gradient-header {
   top: 0;
   height: calc(390 * var(--u));
-  background: linear-gradient(to bottom,
-    rgba(0, 0, 0, 0.2) 0,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,.2) 0, rgba(0,0,0,.2) 60%, rgba(0,0,0,0) 100%);
 }
-/* Przejście dolnego zdjęcia w czerń przy stopce */
 .tlo--wygaszenie {
   top: calc(2944 * var(--u));
   height: calc(848 * var(--u));
   background: linear-gradient(to bottom,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.14) 26%,
-    rgba(0, 0, 0, 0.45) 43%,
-    rgba(0, 0, 0, 0.70) 61%,
-    rgba(0, 0, 0, 0.95) 78%,
-    #000 87%);
+    rgba(0,0,0,0) 0%, rgba(0,0,0,.14) 26%, rgba(0,0,0,.45) 43%,
+    rgba(0,0,0,.70) 61%, rgba(0,0,0,.95) 78%, #000 87%);
 }
-
-/* Gradient pod danymi kontaktowymi – przyklejony do dołu ekranu.
-   Odtworzony kodem 1:1 z pliku Web_01_Gradient.png (lżejszy niż PNG). */
 .gradient-kontakt {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   height: calc(717 * var(--u));
-  background: linear-gradient(150.07deg,
-    rgba(0, 0, 0, 0) 66.6%,
-    rgba(0, 0, 0, 0.48) 93.9%);
+  background: linear-gradient(150.07deg, rgba(0,0,0,0) 66.6%, rgba(0,0,0,.48) 93.9%);
   z-index: 1;
   pointer-events: none;
   opacity: var(--gradient, 1);
 }
 
 /* ===================== NAGŁÓWEK ===================== */
+/* pas nagłówka = wysokość kółka (119 px), wszystko wyśrodkowane w pionie */
 .naglowek {
   position: absolute;
-  inset: 0 0 auto 0;
-  height: calc(300 * var(--u));
+  left: 0; right: 0;
+  top: calc(100 * var(--u));
+  height: calc(119 * var(--u));
   z-index: 3;
 }
 .logo-adwokatura {
-  --x: 181; --y: 96;
-  width: calc(186 * var(--u));
+  position: absolute;
+  left: calc(179 * var(--u));
+  top: 50%;
+  transform: translateY(-50%);
   display: block;
-  text-align: center;
-  font-family: var(--szeryf);
-  font-size: calc(25.7 * var(--u));
-  line-height: calc(28 * var(--u));
 }
-.logo-adwokatura:hover { text-decoration: none; }
-.logo-adwokatura img {
-  display: block;
-  margin: 0 auto calc(15 * var(--u));
-  height: calc(57 * var(--u));
-  width: auto;
-}
-/* gdy nie ma jeszcze pliku znaku – zachowujemy miejsce */
-.logo-adwokatura span { display: block; }
-/* bez znaku: napis wyśrodkowany w pionie względem przycisków menu */
-.logo-adwokatura:not(:has(img)) span { margin-top: calc(35 * var(--u)); }
-
+.logo-adwokatura img { display: block; width: calc(187 * var(--f)); height: auto; }
 .menu {
-  --x: 581; --y: 141;
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   gap: calc(61 * var(--u));
   font-family: var(--bezszeryf);
-  font-size: calc(23.4 * var(--u));
+  font-size: calc(23.4 * var(--f));
   line-height: 1.3;
   white-space: nowrap;
 }
 .logo-amm {
-  --x: 1429; --y: 97;
+  position: absolute;
+  left: calc(1430 * var(--u));
+  top: 0;
   width: calc(119 * var(--u));
   height: calc(119 * var(--u));
   border: calc(3 * var(--u)) solid var(--biel);
@@ -213,7 +206,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
   place-items: center;
   text-align: center;
   font-family: var(--bezszeryf);
-  font-size: calc(23 * var(--u));
+  font-size: calc(23.4 * var(--f));
   line-height: 1.15;
 }
 
@@ -221,64 +214,106 @@ a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 main { position: relative; z-index: 2; }
 .sekcja { position: relative; height: calc(1117 * var(--u)); }
 
-/* Strona 1 */
-.tytul { --y: 601; }
-.podtytul { --y: 699; --x: 182; }
-.tekst--start { --y: 779; --x: 183; }
+/* Strona 1 (wartości --y = górna krawędź pola tekstu; litery wypadają na liniach siatki) */
+.tytul      { --y: 602; }
+.podtytul   { --y: 701; }
+.tekst--start { --y: 783; }
 
-/* Strona 2 – zakres usług */
+/* Strona 2 – zakres usług (sekcja zaczyna się na 1117 px) */
 .naglowek-sekcji--uslugi { --y: 244; }
-.tekst--uslugi { --y: 298; }
+.tekst--uslugi { --y: 296; }
 .kafle {
-  --x: 178; --y: 469;
-  width: calc(1371 * var(--u));
+  --y: 483;                                  /* 1600 px strony */
+  width: calc(1370 * var(--u));
+  height: calc(545 * var(--u));              /* dół bloku = koniec wiersza siatki (2145 px) */
   display: grid;
-  grid-template-columns: repeat(5, calc(259 * var(--u)));
-  column-gap: calc(19 * var(--u));
-  row-gap: calc(22 * var(--u));
+  grid-template-columns: repeat(5, calc(258 * var(--u)));
+  grid-auto-rows: calc(260 * var(--u));
+  column-gap: calc(20 * var(--u));
+  row-gap: calc(70 * var(--u));              /* etykiety i kółka obu rzędów na liniach siatki */
 }
-.kafel {
-  position: relative;
-  height: calc(259 * var(--u));
+.kafel { position: relative; }
+.kafel__przycisk {
+  position: absolute; inset: 0;
+  width: 100%;
+  padding: 0;
+  background: transparent;
   border: calc(2 * var(--u)) solid transparent;
   border-radius: calc(10 * var(--u));
-  font-size: max(13px, calc(18 * var(--u)));
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.kafel__nazwa {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(47 * var(--u));                  /* litery 50 px od góry kafla */
+  font-family: var(--bezszeryf);
+  font-size: max(13px, calc(18 * var(--f)));
   letter-spacing: -0.007em;
   line-height: 1;
   text-align: center;
-  transition: background-color .2s ease, border-color .2s ease;
-}
-.kafel span {
-  position: absolute;
-  left: 0; right: 0;
-  top: calc(48 * var(--u));
   white-space: nowrap;
 }
 .ikona {
   position: absolute;
   left: 50%;
-  top: calc(89 * var(--u));
-  width: calc(119 * var(--u));
-  height: calc(119 * var(--u));
-  margin-left: calc(-59.5 * var(--u));
+  top: calc(88 * var(--u));                  /* kółko 90 px od góry kafla = początek wiersza siatki */
+  width: calc(120 * var(--u));
+  height: calc(120 * var(--u));
+  margin-left: calc(-60 * var(--u));
   border-radius: 50%;
   background: var(--szary-ikona);
 }
-/* Stan zaznaczenia kafla (jak "Prawo cywilne" w projekcie) – po najechaniu myszą */
-.kafel:hover {
+.kafel__przycisk:hover,
+.kafel__przycisk[aria-expanded="true"] {
   border-color: var(--biel);
   background: rgba(255, 255, 255, 0.06);
 }
+.kafel__przycisk:focus-visible { outline-offset: 2px; }
 
-/* Strona 3 – kontakt */
+/* ---------- Okienko z opisem usługi ---------- */
+.opis {
+  position: absolute;
+  z-index: 5;
+  left: calc(var(--opis-x, 278) * var(--u));
+  top: calc(var(--opis-y, 0) * var(--u));
+  width: calc(470 * var(--u));
+  height: calc(470 * var(--u));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: calc(35 * var(--u)) calc(35 * var(--u)) calc(30 * var(--u));
+  background: #fff;
+  color: #000;
+  border-radius: calc(10 * var(--u));
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);
+  font-family: var(--bezszeryf);
+  font-size: max(12px, calc(12 * var(--f)));
+  line-height: max(18px, calc(18 * var(--f)));
+  text-align: left;
+  cursor: auto;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.opis.otwarty { opacity: 1; }
+.opis h4 {
+  font-weight: 400;
+  font-size: max(16px, calc(18 * var(--f)));
+  line-height: 1.3;
+  margin: calc(24 * var(--f)) 0 calc(10 * var(--f));
+}
+.opis ul { list-style: disc; padding-left: calc(18 * var(--f)); }
+.opis li { padding-left: calc(2 * var(--f)); }
+.opis a { color: inherit; text-decoration: underline; }
+
+/* Strona 3 – kontakt (sekcja zaczyna się na 2234 px) */
 .naglowek-sekcji--kontakt { --y: 282; }
-.info--1 { --y: 336; --x: 178; }
-.info--2 { --y: 336; --x: 596; }
-.info--3 { --y: 364; --x: 1013; }
+.info--1 { --y: 339; --x: 179; }
+.info--2 { --y: 339; --x: 596; }
+.info--3 { --y: 367; --x: 1013; }
 .mapa {
-  --x: 178; --y: 458;
-  width: calc(674 * var(--u));
-  height: calc(539 * var(--u));
+  --x: 179; --y: 446;                        /* 2680–3300 px: od początku do końca wierszy siatki */
+  width: calc(675 * var(--u));
+  height: calc(620 * var(--u));
   border-radius: calc(8 * var(--u));
   overflow: hidden;
   background: #f2f2f2;
@@ -289,16 +324,16 @@ main { position: relative; z-index: 2; }
   height: 100%;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   gap: calc(16 * var(--u));
-  font-size: max(14px, calc(18 * var(--u)));
+  font-size: max(14px, calc(18 * var(--f)));
 }
 .mapa__zastepstwo a { text-decoration: underline; }
 
 .formularz {
-  --x: 1013; --y: 463;
-  width: calc(535 * var(--u));
+  --x: 1013; --y: 446;
+  width: calc(536 * var(--u));
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: calc(21 * var(--u));
+  column-gap: calc(20 * var(--u));
   row-gap: calc(12 * var(--u));
 }
 .pole {
@@ -310,7 +345,7 @@ main { position: relative; z-index: 2; }
   background: var(--wypelnienie-pola);
   color: var(--biel);
   font: inherit;
-  font-size: max(13px, calc(18 * var(--u)));
+  font-size: max(13px, calc(18 * var(--f)));
   letter-spacing: -0.007em;
 }
 .pole::placeholder { color: var(--biel); opacity: 1; }
@@ -318,29 +353,29 @@ main { position: relative; z-index: 2; }
 .pole:focus, .pole:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--biel); }
 .pole--pelne { grid-column: 1 / -1; }
 .pole--wiadomosc {
-  height: calc(229 * var(--u));
+  height: calc(310 * var(--u));
   padding-top: calc(12 * var(--u));
-  resize: vertical;
+  resize: none;
   line-height: 1.4;
 }
 .formularz__status {
   grid-column: 1;
   align-self: center;
-  font-size: max(12px, calc(14 * var(--u)));
-  min-height: 1em;
+  margin-top: calc(8 * var(--u));
+  font-size: max(12px, calc(14 * var(--f)));
 }
 .przycisk {
   grid-column: 2;
   justify-self: end;
-  margin-top: calc(4 * var(--u));
+  margin-top: calc(8 * var(--u));            /* przycisk kończy się na 3300 px = koniec wiersza */
   width: calc(97 * var(--u));
-  height: calc(49 * var(--u));
+  height: calc(50 * var(--u));
   border: 0;
   border-radius: calc(8 * var(--u));
   background: var(--biel);
   color: var(--czern);
   font-family: var(--bezszeryf);
-  font-size: max(13px, calc(18 * var(--u)));
+  font-size: max(13px, calc(18 * var(--f)));
   letter-spacing: -0.007em;
   cursor: pointer;
 }
@@ -352,17 +387,16 @@ main { position: relative; z-index: 2; }
 
 /* ---------- Mapa interaktywna (Leaflet) ---------- */
 .mapa.leaflet-container { font-family: var(--bezszeryf); background: #f2f2f2; }
-/* szare kafelki – jak w projekcie */
 .mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.88); }
-.pinezka svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)); }
-.mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); border-radius: 6px; overflow: hidden; }
+.pinezka svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.mapa .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(0,0,0,.25); border-radius: 6px; overflow: hidden; }
 .mapa .leaflet-control-zoom a { color: #222; width: 32px; height: 32px; line-height: 32px; }
-.mapa .leaflet-control-attribution { font-size: 10px; background: rgba(255, 255, 255, 0.8); color: #333; }
+.mapa .leaflet-control-attribution { font-size: 10px; background: rgba(255,255,255,.8); color: #333; }
 .mapa .leaflet-control-attribution a { color: #333; text-decoration: underline; }
 
 /* ---------- Okienko wyboru map (wygląd do dopracowania) ---------- */
 .wybor-mapy {
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255,255,255,.6);
   border-radius: 10px;
   background: #1c1c1c;
   color: var(--biel);
@@ -370,9 +404,9 @@ main { position: relative; z-index: 2; }
   width: min(360px, calc(100vw - 40px));
   font-family: var(--bezszeryf);
 }
-.wybor-mapy::backdrop { background: rgba(0, 0, 0, 0.6); }
+.wybor-mapy::backdrop { background: rgba(0,0,0,.6); }
 .wybor-mapy__tytul { font-size: 18px; margin-bottom: 4px; }
-.wybor-mapy__adres { font-size: 14px; opacity: 0.75; margin-bottom: 18px; }
+.wybor-mapy__adres { font-size: 14px; opacity: .75; margin-bottom: 18px; }
 .wybor-mapy__przyciski { display: grid; gap: 10px; }
 .wybor-mapy__opcja, .wybor-mapy__anuluj {
   display: block; text-align: center;
@@ -381,7 +415,7 @@ main { position: relative; z-index: 2; }
 }
 .wybor-mapy__opcja { background: var(--biel); color: var(--czern); }
 .wybor-mapy__opcja:hover { text-decoration: none; background: #e6e6e6; }
-.wybor-mapy__anuluj { background: transparent; color: var(--biel); border: 1px solid rgba(255, 255, 255, 0.5); }
+.wybor-mapy__anuluj { background: transparent; color: var(--biel); border: 1px solid rgba(255,255,255,.5); }
 
 /* ===================== STOPKA ===================== */
 .stopka {
@@ -390,32 +424,33 @@ main { position: relative; z-index: 2; }
   height: calc(441 * var(--u));
 }
 .stopka__tytul {
-  --y: 150;
+  --y: 150;                                  /* litery na 3505 px = początek wiersza */
   font-family: var(--bezszeryf);
   font-weight: 400;
-  font-size: calc(21.3 * var(--u));
+  font-size: calc(21.3 * var(--f));
   line-height: 1.2;
 }
 .stopka__kolumna {
-  --y: 189;
-  font-size: max(11px, calc(11.9 * var(--u)));
-  line-height: calc(24 * var(--u));
+  --y: 193;
+  width: calc(397 * var(--u));               /* 3 kolumny siatki */
+  font-size: max(11px, calc(11.9 * var(--f)));
+  line-height: calc(24 * var(--f));
 }
-.stopka__kolumna:nth-of-type(2) { --x: 599; }
-.stopka__kolumna:nth-of-type(3) { --x: 1014; }
+.stopka__kolumna:nth-of-type(2) { --x: 596; }
+.stopka__kolumna:nth-of-type(3) { --x: 1013; }
 .stopka__prawa {
-  --y: 359; --x: 0;
+  --y: 363; --x: 0;
   width: 100%;
   text-align: center;
-  font-size: max(13px, calc(18 * var(--u)));
-  line-height: calc(28 * var(--u));
+  font-size: max(13px, calc(18 * var(--f)));
+  line-height: calc(28 * var(--f));
   letter-spacing: -0.007em;
 }
 
 /* ===================== PŁYWAJĄCE DANE KONTAKTOWE ===================== */
 .kontakt {
   position: fixed;
-  right: calc(50% - 684 * var(--u));   /* prawa krawędź treści (1548 px w projekcie) */
+  right: calc(50% - 685 * var(--u));        /* prawa krawędź treści = 1549 px (koniec 11. kolumny) */
   bottom: calc(59 * var(--u));
   z-index: 4;
   text-align: right;
@@ -423,14 +458,14 @@ main { position: relative; z-index: 2; }
   visibility: var(--kontakt-widocznosc, visible);
 }
 .kontakt__godziny {
-  font-size: max(13px, calc(18 * var(--u)));
+  font-size: max(13px, calc(18 * var(--f)));
   line-height: 1;
   letter-spacing: -0.007em;
   margin-bottom: calc(17 * var(--u));
 }
 .kontakt__dane {
   position: relative;
-  height: calc(80 * var(--u));         /* stała wysokość = godziny zostają w miejscu */
+  height: calc(80 * var(--u));
   width: calc(500 * var(--u));
 }
 .kontakt__duzy, .kontakt__maly {
@@ -439,23 +474,23 @@ main { position: relative; z-index: 2; }
   white-space: nowrap;
   transform-origin: top right;
 }
-/* wariant na stronie 1 */
 .kontakt__duzy {
   font-family: var(--szeryf);
-  font-size: calc(36 * var(--u));
-  line-height: calc(41 * var(--u));
+  font-size: calc(36 * var(--f));
+  line-height: calc(41 * var(--f));
   opacity: var(--duzy-krycie, 1);
   transform: scale(var(--duzy-skala, 1));
 }
-/* wariant na stronie 2 */
 .kontakt__maly {
   font-family: var(--bezszeryf);
-  font-size: max(13px, calc(18 * var(--u)));
-  line-height: max(20px, calc(28 * var(--u)));
+  font-size: max(13px, calc(18 * var(--f)));
+  line-height: max(20px, calc(28 * var(--f)));
   letter-spacing: -0.007em;
   opacity: var(--maly-krycie, 0);
   transform: scale(var(--maly-skala, 1.45));
 }
+/* gdy otwarte jest okienko usługi – dane kontaktowe chowają się, by go nie zasłaniać */
+html.opis-otwarty .kontakt { opacity: 0; visibility: hidden; }
 
 /* =========================================================
    TELEFONY I TABLETY (< 1100 px)
@@ -463,80 +498,83 @@ main { position: relative; z-index: 2; }
    prosty układ jednokolumnowy do czasu projektu mobilnego.
    ========================================================= */
 @media (max-width: 1099px) {
-  :root { --u: 1px; }
+  :root { --u: 1px; --f: 1px; }
   body { min-height: 0; }
-  .naglowek > *, .sekcja > *, .stopka > * { position: static; }
-
+  .sekcja > *, .stopka > * { position: static; left: auto; top: auto; }
   .tla, .gradient-kontakt { display: none; }
 
   .naglowek {
-    position: absolute;
-    height: auto;
+    top: 0; height: auto;
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-    gap: 16px;
-    padding: 24px 20px;
+    gap: 16px; padding: 24px 20px;
   }
-  .logo-adwokatura { width: auto; font-size: 16px; line-height: 1.2; }
-  .logo-adwokatura img { height: 40px; margin-bottom: 4px; }
-  .logo-adwokatura:not(:has(img)) span { margin-top: 0; }
+  .logo-adwokatura, .menu, .logo-amm { position: static; transform: none; }
+  .logo-adwokatura img { width: 110px; }
   .menu { order: 3; width: 100%; justify-content: space-between; gap: 12px; font-size: 14px; }
   .logo-amm { width: 64px; height: 64px; border-width: 2px; font-size: 12px; }
 
   main { position: static; }
   .sekcja { height: auto; padding: 48px 20px; }
   .sekcja--start {
-    background:
-      linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.6)),
-      url("../img/zdjecie-1-rynek.webp") center / cover no-repeat;
-    padding-top: 200px; padding-bottom: 48px;
+    background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.6)), url("../img/zdjecie-1-rynek.webp") center / cover no-repeat;
+    padding-top: 220px; padding-bottom: 48px;
   }
   .sekcja--uslugi {
-    background:
-      linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.75)),
-      url("../img/zdjecie-2-waga.webp") center / cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.75)), url("../img/zdjecie-2-waga.webp") center / cover no-repeat;
   }
   .sekcja--kontakt {
-    background:
-      linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.85)),
-      url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.85)), url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
   }
   .tytul { font-size: clamp(36px, 9vw, 64px); white-space: normal; }
   .podtytul, .naglowek-sekcji { font-size: clamp(18px, 4.6vw, 28px); white-space: normal; line-height: 1.2; }
   .podtytul { margin-top: 12px; }
-  .tekst { font-size: 15px; line-height: 24px; letter-spacing: 0.03em; margin-top: 20px; }
+  .tekst { font-size: 15px; line-height: 24px; letter-spacing: 0.01em; margin-top: 20px; }
   .tekst br { display: none; }
+  .tekst .linia::after { content: " "; }
   .info br { display: inline; }
+  .info .linia::after { content: none; }
 
-  .kafle { width: auto; margin-top: 32px; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .kafel { height: 150px; border-width: 1px; border-color: rgba(255,255,255,.35); border-radius: 10px; font-size: 14px; }
-  .kafel span { top: 20px; white-space: normal; padding: 0 8px; }
+  .kafle { width: auto; height: auto; margin-top: 32px; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; gap: 12px; }
+  .kafel__przycisk { border-width: 1px; border-color: rgba(255,255,255,.35); border-radius: 10px; }
+  .kafel__nazwa { top: 20px; font-size: 14px; white-space: normal; padding: 0 8px; }
   .ikona { top: 64px; width: 64px; height: 64px; margin-left: -32px; }
 
+  /* okienko usługi na telefonie: na środku ekranu */
+  .opis {
+    position: fixed;
+    left: 16px; right: 16px; top: 50%;
+    width: auto; height: auto; max-height: 80vh;
+    transform: translateY(-50%);
+    padding: 24px 20px;
+    font-size: 14px; line-height: 21px;
+  }
+  .opis h4 { font-size: 18px; margin: 18px 0 8px; }
+  .opis ul { padding-left: 18px; }
+
   .info { margin-top: 20px; }
-  .mapa { width: 100%; height: 280px; margin-top: 28px; border-radius: 8px; }
+  .mapa { width: 100%; height: 320px; margin-top: 28px; border-radius: 8px; }
   .formularz { width: 100%; margin-top: 28px; column-gap: 12px; row-gap: 12px; }
   .pole { height: 48px; border-width: 1px; border-radius: 8px; padding: 0 14px; font-size: 16px; }
   .pole--wiadomosc { height: 180px; padding-top: 12px; }
   .przycisk { width: 110px; height: 48px; border-radius: 8px; font-size: 16px; }
 
-  .stopka { height: auto; padding: 40px 20px 32px; }
+  .stopka { height: auto; padding: 40px 20px 110px; }
   .stopka__tytul { font-size: 20px; margin-bottom: 12px; }
-  .stopka__kolumna { font-size: 13px; line-height: 24px; margin-bottom: 12px; }
+  .stopka__kolumna { width: auto; font-size: 13px; line-height: 20px; margin-bottom: 12px; }
   .stopka__prawa { margin-top: 28px; font-size: 13px; line-height: 20px; }
 
   /* dane kontaktowe na telefonie – mały pasek przyklejony do dołu ekranu */
   .kontakt {
     left: 0; right: 0; bottom: 0;
     padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0,0,0,.85);
     text-align: left;
   }
   .kontakt__godziny { font-size: 12px; margin-bottom: 4px; opacity: .8; }
   .kontakt__dane { height: auto; width: auto; }
   .kontakt__duzy { display: none; }
-  .kontakt__maly {
-    position: static; opacity: 1; transform: none;
-    font-size: 14px; line-height: 20px; letter-spacing: 0.02em;
-  }
-  .stopka { padding-bottom: 110px; }
+  .kontakt__maly { position: static; opacity: 1; transform: none; font-size: 14px; line-height: 20px; letter-spacing: .02em; }
 }
+
+/* otwarty kafel leży nad sąsiednimi, żeby okienko ich nie chowało pod spód */
+.kafel--otwarty { z-index: 10; }

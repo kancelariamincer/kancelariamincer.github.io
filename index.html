@@ -9,11 +9,13 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków</title>
-  <meta name="description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, szkody osobowe, odzyskiwanie długów.">
+  <meta name="description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, prawo rzeczowe, szkody osobowe, obsługa przedsiębiorców, odzyskiwanie długów.">
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
+  <!-- włącza animacje wejścia zanim strona się narysuje -->
+  <script src="js/start.js?v=4"></script>
 </head>
 <body>
 
@@ -30,75 +32,320 @@
   <div class="gradient-kontakt" aria-hidden="true"></div>
 
   <!-- ===== NAGŁÓWEK ===== -->
-  <header class="naglowek">
-    <a class="logo-adwokatura" href="#kancelaria" aria-label="Adwokatura Polska – strona główna">
-      <!-- Tu trafi znak Adwokatury (plik PNG) – dodamy go, gdy będzie gotowy -->
-      <span>ADWOKATURA<br>POLSKA</span>
+  <header class="naglowek grupa" data-grupa="start">
+    <a class="logo-adwokatura linia" href="#kancelaria">
+      <img src="img/logo-adwokatura.png" width="187" height="122" alt="Adwokatura Polska">
     </a>
     <nav class="menu" aria-label="Menu główne">
-      <a href="#kancelaria">KANCELARIA</a>
-      <a href="#specjalizacje">SPECJALIZACJE</a>
-      <a href="#kontakt">KONTAKT</a>
+      <a class="linia" href="#kancelaria">KANCELARIA</a>
+      <a class="linia" href="#specjalizacje">SPECJALIZACJE</a>
+      <a class="linia" href="#kontakt">KONTAKT</a>
     </nav>
     <!-- Miejsce na logo kancelarii (tymczasowo kółko z napisem, jak w projekcie) -->
-    <div class="logo-amm">LOGO<br>AMM</div>
+    <div class="logo-amm linia">LOGO<br>AMM</div>
   </header>
 
   <main>
     <!-- ===== STRONA 1: KANCELARIA ===== -->
-    <section class="sekcja sekcja--start" id="kancelaria">
-      <h1 class="tytul">Kancelaria Adwokacka</h1>
-      <p class="podtytul">ADWOKAT AGNIESZKA MINCER-MADEJSKA</p>
+    <section class="sekcja sekcja--start grupa" id="kancelaria" data-grupa="start">
+      <h1 class="tytul linia">Kancelaria Adwokacka</h1>
+      <p class="podtytul linia">ADWOKAT AGNIESZKA MINCER-MADEJSKA</p>
       <p class="tekst tekst--start">
-        Jestem członkiem Krakowskiej Izby Adwokackiej od 2018&nbsp;roku.<br>
-        Swoje doświadczenie zawodowe od 2016&nbsp;roku zdobywałam<br>
-        w&nbsp;renomowanych kancelariach adwokackich na terenie Krakowa.
+        <span class="linia">Jestem członkiem Krakowskiej Izby Adwokackiej od 2018&nbsp;roku.</span><br>
+        <span class="linia">Swoje doświadczenie zawodowe od 2016&nbsp;roku zdobywałam</span><br>
+        <span class="linia">w&nbsp;renomowanych kancelariach adwokackich na terenie Krakowa.</span>
       </p>
     </section>
 
     <!-- ===== STRONA 2: ZAKRES USŁUG ===== -->
-    <section class="sekcja sekcja--uslugi" id="specjalizacje">
-      <h2 class="naglowek-sekcji naglowek-sekcji--uslugi">ZAKRES USŁUG</h2>
+    <section class="sekcja sekcja--uslugi grupa" id="specjalizacje">
+      <h2 class="naglowek-sekcji naglowek-sekcji--uslugi linia">ZAKRES USŁUG</h2>
       <p class="tekst tekst--uslugi">
-        Wiele lat pracy w&nbsp;kancelariach adwokackich pozwoliło mi na zdobycie<br>
-        bogatego doświadczenia procesowego przed sądami, zarówno w&nbsp;roli<br>
-        pełnomocnika w&nbsp;sprawach cywilnych, rodzinnych, czy gospodarczych,<br>
-        jak również jako obrońca, pełnomocnik oskarżyciela posiłkowego/<br><!--
-        -->prywatnego w&nbsp;sprawach karnych.
+        <span class="linia">Wiele lat pracy w&nbsp;kancelariach adwokackich pozwoliło mi na zdobycie</span><br>
+        <span class="linia">bogatego doświadczenia procesowego przed sądami, zarówno w&nbsp;roli</span><br>
+        <span class="linia">pełnomocnika w&nbsp;sprawach cywilnych, rodzinnych, czy gospodarczych,</span><br>
+        <span class="linia">jak również jako obrońca, pełnomocnik oskarżyciela posiłkowego/</span><br>
+        <span class="linia">prywatnego w&nbsp;sprawach karnych.</span>
       </p>
+
       <ul class="kafle">
-        <li class="kafel"><span>Prawo cywilne</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo spadkowe</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Szkody osobowe</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo spadkowe</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo karne</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo rodzinne</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo pracy</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Prawo rzeczowe</span><i class="ikona"></i></li>
-        <li class="kafel"><span>Odzyskiwanie długów</span><i class="ikona"></i></li>
+        <!-- ========== PRAWO CYWILNE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-cywilne">
+            <span class="kafel__nazwa">Prawo cywilne</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-cywilne" role="region" aria-label="Prawo cywilne – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo cywilne</h3>
+            <p>Kancelaria oferuje wszechstronną obsługę prawną w&nbsp;zakresie szeroko pojętego prawa cywilnego, w&nbsp;tym udzielanie porad prawnych, sporządzanie analiz i&nbsp;opinii. Prawo cywilne jest najobszerniejszą z&nbsp;gałęzi prawa polskiego, obejmującą zarówno sprawy dotyczące odzyskiwania długów, jak i&nbsp;prawa spadkowego czy naruszenia prawa własności nieruchomości. Oferujemy nie tylko profesjonalną pomoc prawną, ale przede wszystkim reprezentację przed sądami i&nbsp;urzędami.</p>
+            <h4>Zakres pomocy</h4>
+            <p>Uzyskają Państwo pomoc w&nbsp;zakresie:</p>
+            <ul>
+              <li>przygotowywania i&nbsp;negocjowania projektów umów, sporządzania różnego rodzaju pism i&nbsp;dokumentów</li>
+              <li>reprezentacji na etapie przedprocesowym, prowadzenia negocjacji, zawarcia ugody</li>
+              <li>reprezentacji podczas mediacji</li>
+              <li>odzyskania długów i&nbsp;przeprowadzenia postępowania egzekucyjnego</li>
+              <li>spraw z&nbsp;zakresu prawa zobowiązań – w&nbsp;szczególności wynikających z&nbsp;niewykonania lub niewłaściwego wykonania umów, opartych o&nbsp;czyny niedozwolone (sprawy odszkodowawcze) oraz tzw. skarg pauliańskich</li>
+              <li>spraw z&nbsp;zakresu prawa rzeczowego – w&nbsp;szczególności związanych z&nbsp;prawem własności nieruchomości, zniesieniem współwłasności, naruszeniem posiadania</li>
+              <li>spraw związanych z&nbsp;prawem spółek, w&nbsp;tym odpowiedzialności członków zarządów i&nbsp;rad nadzorczych</li>
+              <li>spraw dotyczących czynów nieuczciwej konkurencji</li>
+              <li>spraw o&nbsp;ochronę dóbr osobistych</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== PRAWO SPADKOWE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-spadkowe">
+            <span class="kafel__nazwa">Prawo spadkowe</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-spadkowe" role="region" aria-label="Prawo spadkowe – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo spadkowe</h3>
+            <p>Z&nbsp;pełnym profesjonalizmem i&nbsp;zaangażowaniem zajmujemy się sprawami z&nbsp;zakresu prawa spadkowego. Udzielamy pomocy prawnej już na etapie sporządzania testamentu. Po otwarciu spadku, prowadzimy postępowania od stwierdzenia nabycia spadku, aż po dział spadku, a&nbsp;także dochodzimy w&nbsp;imieniu klientów roszczeń o&nbsp;wypłatę zachowku.</p>
+            <h4>Pozwy i&nbsp;wnioski</h4>
+            <p>Pomożemy w&nbsp;przygotowaniu pism procesowych:</p>
+            <ul>
+              <li>Wniosek o&nbsp;stwierdzenie nabycia spadku</li>
+              <li>Pozew wierzyciela spadkodawcy przeciwko spadkobiercy o&nbsp;zapłatę</li>
+              <li>Wniosek o&nbsp;dział spadku</li>
+              <li>Pozew o&nbsp;zachowek</li>
+              <li>Pozew o&nbsp;uznanie spadkobiercy za niegodnego dziedziczenia</li>
+              <li>Pozew o&nbsp;wyłączenie małżonka od dziedziczenia</li>
+              <li>Pozew o&nbsp;ustalenie nieważności testamentu</li>
+              <li>Pozew o&nbsp;wykonanie zapisu</li>
+              <li>Pozew o&nbsp;zobowiązanie do wykonania polecenia testamentowego</li>
+              <li>Wniosek o&nbsp;zmianę postanowienia o&nbsp;stwierdzeniu nabycia spadku</li>
+              <li>Wniosek o&nbsp;uzupełnienie stwierdzenia nabycia spadku</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== SZKODY OSOBOWE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-szkody">
+            <span class="kafel__nazwa">Szkody osobowe</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-szkody" role="region" aria-label="Szkody osobowe – zakres pomocy" hidden>
+            <h3 class="ukryte">Szkody osobowe i&nbsp;odszkodowania</h3>
+            <p>Oferujemy profesjonalną pomoc prawną w&nbsp;zakresie odzyskania odszkodowań. Pomagamy uzyskać należne odszkodowanie od firm ubezpieczeniowych w&nbsp;przypadkach odmowy jego wypłaty. Nieuzasadniona odmowa odszkodowania lub jego znacznie zaniżona wartość to częste praktyki zakładów ubezpieczeń, z&nbsp;którymi walczymy. Wspieramy klientów od momentu powstania szkody, przez proces likwidacyjny, aż do procesu sądowego i&nbsp;wypłaty ostatecznej kwoty odszkodowania.</p>
+            <h4>Zakres spraw</h4>
+            <p>Zajmujemy się m.in. uzyskiwaniem odszkodowań za szkody spowodowane:</p>
+            <ul>
+              <li>wypadkami komunikacyjnymi</li>
+              <li>wypadkami przy pracy</li>
+              <li>wypadkami w&nbsp;gospodarstwach rolnych</li>
+              <li>błędami w&nbsp;sztuce medycznej</li>
+              <li>niewłaściwą opieką nad osobą chorą lub niepełnosprawną</li>
+              <li>upadkiem na nierównym lub nieodśnieżonym chodniku</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== OBSŁUGA PRZEDSIĘBIORCÓW ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-przedsiebiorcy">
+            <span class="kafel__nazwa">Obsługa przedsiębiorców</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-przedsiebiorcy" role="region" aria-label="Obsługa przedsiębiorców – zakres pomocy" hidden>
+            <h3 class="ukryte">Obsługa przedsiębiorców</h3>
+            <p>Kancelaria Adwokacka świadczy pomoc prawną w&nbsp;zakresie stałej obsługi prawnej podmiotów prowadzących działalność gospodarczą, w&nbsp;tym osobowych i&nbsp;kapitałowych spółek prawa handlowego. Zapewniamy kompleksowe doradztwo prawne we wszystkich aspektach prowadzonej przez naszych klientów działalności.</p>
+            <h4>Stała obsługa prawna</h4>
+            <p>Stała obsługa prawna firm obejmuje m.in.:</p>
+            <ul>
+              <li>udzielanie informacji prawnych o&nbsp;zmianach w&nbsp;obowiązujących przepisach prawa</li>
+              <li>sporządzanie i&nbsp;konsultowanie umów gospodarczych</li>
+              <li>sporządzanie opinii prawnych oraz informacji w&nbsp;zakresie stosowania prawa</li>
+              <li>przygotowywanie protokołów posiedzeń organów spółki</li>
+              <li>sporządzanie i&nbsp;zgłaszanie wniosków o&nbsp;założenie spółki oraz zmiany w&nbsp;rejestrze w&nbsp;sądzie rejestrowym</li>
+              <li>przeprowadzanie czynności przy rozwiązywaniu i&nbsp;likwidacji spółek, a&nbsp;także przy ich przekształceniach i&nbsp;podziałach</li>
+              <li>przygotowywanie i&nbsp;uczestnictwo w&nbsp;posiedzeniach organów spółki</li>
+              <li>prowadzenie rejestrów umów i&nbsp;dokumentów prawnych</li>
+              <li>występowanie przed organami i&nbsp;sądami administracyjnymi, a&nbsp;także sądami powszechnymi</li>
+              <li>sporządzanie umów o&nbsp;pracę, wypowiedzeń umów o&nbsp;pracę oraz uczestnictwo w&nbsp;rozmowach ze związkami zawodowymi</li>
+              <li>bieżącą obsługę należności – od wezwania do zapłaty, przez reprezentację przed sądem, po nadzór nad egzekucją komorniczą</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== PRAWO KARNE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-karne">
+            <span class="kafel__nazwa">Prawo karne</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-karne" role="region" aria-label="Prawo karne – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo karne</h3>
+            <p>Reprezentujemy klientów na wszystkich etapach postępowania karnego, karnego skarbowego oraz postępowania w&nbsp;sprawach o&nbsp;wykroczenia.</p>
+            <h4>Występujemy</h4>
+            <ul>
+              <li>jako obrońca obwinionego</li>
+              <li>jako pełnomocnik pokrzywdzonego, oskarżyciela posiłkowego, oskarżyciela prywatnego oraz osoby niebędącej stroną</li>
+              <li>jako obrońca osoby zatrzymanej lub tymczasowo aresztowanej</li>
+              <li>jako obrońca skazanego w&nbsp;postępowaniu wykonawczym</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== PRAWO RODZINNE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-rodzinne">
+            <span class="kafel__nazwa">Prawo rodzinne</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-rodzinne" role="region" aria-label="Prawo rodzinne – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo rodzinne i&nbsp;opiekuńcze</h3>
+            <p>Kancelaria Adwokacka prowadzi kompleksową obsługę w&nbsp;sprawach z&nbsp;zakresu prawa rodzinnego. Świadczymy profesjonalną pomoc w&nbsp;zakresie wszystkich czynności prawnych związanych z&nbsp;postępowaniem rozwodowym, przyznaniem, ograniczeniem lub pozbawieniem władzy rodzicielskiej, kontaktami z&nbsp;dzieckiem oraz określeniem obowiązku alimentacyjnego. Z&nbsp;największą dbałością zajmujemy się również sprawami o&nbsp;separację.</p>
+            <h4>Pozwy i&nbsp;wnioski</h4>
+            <p>W&nbsp;ramach pomocy prawnej z&nbsp;zakresu prawa rodzinnego przygotowujemy pisma procesowe, takie jak:</p>
+            <ul>
+              <li>Pozew o&nbsp;rozwód</li>
+              <li>Pozew o&nbsp;separację</li>
+              <li>Wniosek o&nbsp;zniesienie separacji</li>
+              <li>Pozew o&nbsp;alimenty</li>
+              <li>Pozew o&nbsp;podwyższenie/obniżenie alimentów</li>
+              <li>Pozew o&nbsp;przyczynianie się do zaspokajania potrzeb rodziny</li>
+              <li>Pozew małżonka rozwiedzionego o&nbsp;dostarczanie środków utrzymania</li>
+              <li>Wniosek o&nbsp;podział majątku wspólnego</li>
+              <li>Pozew małżonka o&nbsp;ustalenie nierównych udziałów małżonków w&nbsp;majątku wspólnym</li>
+              <li>Pozew o&nbsp;ustanowienie rozdzielności majątkowej</li>
+              <li>Wniosek o&nbsp;pozbawienie małżonka samodzielnego zarządu majątkiem wspólnym</li>
+              <li>Wniosek o&nbsp;zezwolenie na dokonanie czynności, do której jest potrzebna zgoda drugiego małżonka</li>
+              <li>Wniosek o&nbsp;rozstrzygnięcie o&nbsp;istotnych sprawach rodziny</li>
+              <li>Wniosek o&nbsp;nakazanie wypłacenia małżonkowi wynagrodzenia</li>
+              <li>Pozew małżonka o&nbsp;dopuszczenie do korzystania z&nbsp;mieszkania</li>
+              <li>Pozew o&nbsp;unieważnienie małżeństwa</li>
+              <li>Wniosek cudzoziemca o&nbsp;udzielenie zezwolenia na zawarcie małżeństwa przez pełnomocnika</li>
+              <li>Wniosek o&nbsp;udzielenie zgody na zawarcie małżeństwa przez małoletniego</li>
+              <li>Wniosek o&nbsp;powierzenie wykonywania władzy rodzicielskiej jednemu z&nbsp;rodziców</li>
+              <li>Wniosek o&nbsp;ograniczenie władzy rodzicielskiej</li>
+              <li>Wniosek o&nbsp;pozbawienie/zawieszenie/przywrócenie władzy rodzicielskiej</li>
+              <li>Wniosek o&nbsp;ustalenie kontaktów z&nbsp;dzieckiem</li>
+              <li>Wniosek o&nbsp;zakazanie utrzymywania kontaktów z&nbsp;dzieckiem</li>
+              <li>Wniosek o&nbsp;zezwolenie na dokonanie czynności przekraczającej zakres zwykłego zarządu majątkiem dziecka</li>
+              <li>Pozew o&nbsp;ustalenie/zaprzeczenie macierzyństwa</li>
+              <li>Pozew o&nbsp;ustalenie/zaprzeczenie ojcostwa</li>
+              <li>Pozew o&nbsp;ustalenie bezskuteczności uznania dziecka</li>
+              <li>Wniosek o&nbsp;przysposobienie</li>
+              <li>Pozew o&nbsp;rozwiązanie przysposobienia</li>
+              <li>Wniosek o&nbsp;ustanowienie opieki prawnej i&nbsp;opiekuna prawnego dla małoletniego</li>
+              <li>Wniosek o&nbsp;ustanowienie opieki</li>
+              <li>Wniosek o&nbsp;ubezwłasnowolnienie/uchylenie ubezwłasnowolnienia</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== PRAWO PRACY ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-pracy">
+            <span class="kafel__nazwa">Prawo pracy</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-pracy" role="region" aria-label="Prawo pracy – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo pracy</h3>
+            <p>W&nbsp;ramach pomocy prawnej obejmującej prawo pracy reprezentujemy zarówno klientów indywidualnych, jak i&nbsp;zbiorowych. Doradzamy, jak efektywnie i&nbsp;zgodnie z&nbsp;przepisami prawa prowadzić politykę zatrudnienia w&nbsp;danej firmie. Sporządzamy ekspertyzy prawne, umowy i&nbsp;dokumenty, a&nbsp;także zajmujemy się sprawami o&nbsp;odszkodowania za wypadki w&nbsp;miejscu pracy.</p>
+            <h4>Pozwy i&nbsp;wnioski</h4>
+            <p>W&nbsp;dziedzinie prawa pracy przygotowujemy pisma procesowe, takie jak:</p>
+            <ul>
+              <li>Odwołanie od wypowiedzenia umowy o&nbsp;pracę</li>
+              <li>Pozew o&nbsp;uznanie wypowiedzenia za bezskuteczne</li>
+              <li>Pozew o&nbsp;uznanie wypowiedzenia zmieniającego warunki pracy i&nbsp;płacy za bezskuteczne</li>
+              <li>Pozew o&nbsp;przywrócenie do pracy</li>
+              <li>Pozew o&nbsp;odszkodowanie za niezgodne z&nbsp;prawem rozwiązanie umowy o&nbsp;pracę</li>
+              <li>Pozew o&nbsp;ustalenie istnienia stosunku pracy</li>
+              <li>Pozew o&nbsp;wypłatę odprawy</li>
+              <li>Pozew o&nbsp;ukształtowanie wynagrodzenia (naruszenie zasady równego traktowania)</li>
+              <li>Pozew o&nbsp;odszkodowanie z&nbsp;tytułu dyskryminacji w&nbsp;pracy</li>
+              <li>Pozew o&nbsp;odszkodowanie z&nbsp;tytułu naruszenia obowiązku równego traktowania w&nbsp;zatrudnieniu</li>
+              <li>Pozew o&nbsp;zapłatę zadośćuczynienia i&nbsp;odszkodowania z&nbsp;tytułu naruszenia pracowniczych dóbr osobistych</li>
+              <li>Pozew o&nbsp;zadośćuczynienie z&nbsp;tytułu mobbingu</li>
+              <li>Pozew o&nbsp;zapłatę świadczeń po zmarłym pracowniku</li>
+              <li>Pozew o&nbsp;odszkodowanie z&nbsp;tytułu śmierci pracodawcy</li>
+              <li>Pozew o&nbsp;ponowne zatrudnienie w&nbsp;związku z&nbsp;wygaśnięciem umowy o&nbsp;pracę z&nbsp;powodu tymczasowego aresztowania</li>
+              <li>Pozew o&nbsp;zwrot nadpłaconego pracownikowi wynagrodzenia</li>
+              <li>Pozew o&nbsp;sprostowanie świadectwa pracy</li>
+              <li>Pozew o&nbsp;odszkodowanie z&nbsp;tytułu naruszenia umowy o&nbsp;zakazie konkurencji</li>
+              <li>Pozew o&nbsp;uchylenie kary porządkowej</li>
+              <li>Pozew o&nbsp;odszkodowanie za szkodę wyrządzoną pracodawcy</li>
+              <li>Pozew o&nbsp;ustalenie prawa do urlopu wypoczynkowego</li>
+              <li>Pozew o&nbsp;wypłatę ekwiwalentu za urlop wypoczynkowy</li>
+              <li>Pozew o&nbsp;udzielenie urlopu wychowawczego</li>
+              <li>Pozew o&nbsp;uznanie zdarzenia za wypadek przy pracy</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== PRAWO RZECZOWE ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-rzeczowe">
+            <span class="kafel__nazwa">Prawo rzeczowe</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-rzeczowe" role="region" aria-label="Prawo rzeczowe – zakres pomocy" hidden>
+            <h3 class="ukryte">Prawo rzeczowe</h3>
+            <p>Kancelaria Adwokacka ma doświadczenie w&nbsp;prowadzeniu spraw z&nbsp;zakresu szeroko pojętego prawa rzeczowego. Udzielamy porad prawnych i&nbsp;reprezentujemy klientów w&nbsp;sądach, gdzie przedmiotem postępowania są prawa własności ruchomości i&nbsp;nieruchomości. Zajmujemy się również sprawami dotyczącymi ograniczonych praw rzeczowych, w&nbsp;tym użytkowania wieczystego, użytkowania, służebności, zastawu, hipoteki oraz spółdzielczego własnościowego prawa do lokalu.</p>
+            <h4>Pozwy i&nbsp;wnioski</h4>
+            <p>Sporządzamy m.in. pisma inicjujące postępowanie sądowe:</p>
+            <ul>
+              <li>Wniosek o&nbsp;zniesienie współwłasności</li>
+              <li>Wniosek o&nbsp;stwierdzenie zasiedzenia własności</li>
+              <li>Wniosek o&nbsp;ustanowienie służebności drogi koniecznej oraz innych służebności</li>
+              <li>Pozew o&nbsp;zniesienie służebności gruntowej za wynagrodzeniem</li>
+              <li>Pozew o&nbsp;ustalenie prawa własności</li>
+              <li>Pozew właściciela o&nbsp;wydanie rzeczy (powództwo windykacyjne)</li>
+              <li>Pozew właściciela o&nbsp;zaniechanie naruszeń (powództwo negatoryjne)</li>
+              <li>Pozew przeciwko właścicielowi nieruchomości o&nbsp;zaniechanie naruszeń (immisji)</li>
+              <li>Pozew o&nbsp;rozgraniczenie nieruchomości</li>
+              <li>Pozew o&nbsp;wykupienie zajętej części gruntu</li>
+              <li>Pozew o&nbsp;zobowiązanie do przeniesienia własności nieruchomości</li>
+              <li>Pozew o&nbsp;uzgodnienie treści księgi wieczystej z&nbsp;rzeczywistym stanem prawnym</li>
+              <li>Pozew o&nbsp;ustalenie nabycia rzeczy od osoby nieuprawnionej</li>
+              <li>Wniosek o&nbsp;wyznaczenie zarządcy rzeczy</li>
+              <li>Pozew o&nbsp;wynagrodzenie za korzystanie z&nbsp;rzeczy, o&nbsp;zwrot pożytków oraz odszkodowanie za zużycie rzeczy</li>
+              <li>Pozew samoistnego posiadacza o&nbsp;zwrot nakładów</li>
+              <li>Pozew samoistnego posiadacza o&nbsp;przeniesienie własności działki zajętej pod budynek za odpowiednim wynagrodzeniem</li>
+              <li>Pozew przeciwko użytkownikowi wieczystemu o&nbsp;odszkodowanie za szkody wynikłe z&nbsp;niewłaściwego korzystania z&nbsp;gruntu</li>
+              <li>Pozew użytkownika przeciwko właścicielowi o&nbsp;zwrot nakładów</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ========== ODZYSKIWANIE DŁUGÓW ========== -->
+        <li class="kafel linia">
+          <button class="kafel__przycisk" type="button" aria-expanded="false" aria-controls="opis-dlugi">
+            <span class="kafel__nazwa">Odzyskiwanie długów</span><i class="ikona" aria-hidden="true"></i>
+          </button>
+          <div class="opis" id="opis-dlugi" role="region" aria-label="Odzyskiwanie długów – zakres pomocy" hidden>
+            <h3 class="ukryte">Odzyskiwanie długów</h3>
+            <!-- TREŚĆ ROBOCZA – złożona z istniejących opisów kancelarii, do akceptacji -->
+            <p>Pomagamy wierzycielom – zarówno osobom prywatnym, jak i&nbsp;przedsiębiorcom – w&nbsp;odzyskaniu należności. Prowadzimy sprawę od etapu przedsądowego aż po egzekucję.</p>
+            <h4>Zakres pomocy</h4>
+            <ul>
+              <li>bieżąca obsługa należności – od wezwania do zapłaty, przez reprezentację przed sądem, po nadzór nad egzekucją komorniczą</li>
+              <li>reprezentacja na etapie przedprocesowym, prowadzenie negocjacji, zawarcie ugody</li>
+              <li>odzyskanie długów i&nbsp;przeprowadzenie postępowania egzekucyjnego</li>
+              <li>sprawy wynikające z&nbsp;niewykonania lub niewłaściwego wykonania umów</li>
+              <li>tzw. skargi pauliańskie</li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </section>
 
     <!-- ===== STRONA 3: KONTAKT ===== -->
-    <section class="sekcja sekcja--kontakt" id="kontakt">
-      <h2 class="naglowek-sekcji naglowek-sekcji--kontakt">NASZE BIURA NA MAPIE KRAKOWA</h2>
+    <section class="sekcja sekcja--kontakt grupa" id="kontakt">
+      <h2 class="naglowek-sekcji naglowek-sekcji--kontakt linia">NASZE BIURA NA MAPIE KRAKOWA</h2>
 
       <div class="info info--1 tekst">
-        Dwie lokalizacje:<br>
-        <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20%C5%9Awi%C4%99tej%20Anny%209%2C%20Krak%C3%B3w" data-adres="ul. Świętej Anny 9, Kraków">ul. Świętej Anny 9 Kraków</a><br>
-        <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Urz%C4%99dnicza%2020%2C%20Krak%C3%B3w" data-adres="ul. Urzędnicza 20, Kraków">ul. Urzędnicza 20/8 Kraków</a>
+        <span class="linia">Dwie lokalizacje:</span><br>
+        <span class="linia"><a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20%C5%9Awi%C4%99tej%20Anny%209%2C%20Krak%C3%B3w" data-adres="ul. Świętej Anny 9, Kraków">ul. Świętej Anny 9 Kraków</a></span><br>
+        <span class="linia"><a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Urz%C4%99dnicza%2020%2C%20Krak%C3%B3w" data-adres="ul. Urzędnicza 20, Kraków">ul. Urzędnicza 20/8 Kraków</a></span>
       </div>
       <div class="info info--2 tekst">
-        Czynne:<br>
-        poniedziałek — piątek<br>
-        od 9:00 — 17:00
+        <span class="linia">Czynne:</span><br>
+        <span class="linia">poniedziałek — piątek</span><br>
+        <span class="linia">od 9:00 — 17:00</span>
       </div>
       <div class="info info--3 tekst">
-        tel: <a href="tel:+48780147406">780-147-406</a><br>
-        e-mail: <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
+        <span class="linia">tel: <a href="tel:+48780147406">780-147-406</a></span><br>
+        <span class="linia">e-mail: <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a></span>
       </div>
 
-      <div class="mapa" id="mapa" role="region" aria-label="Mapa Krakowa z biurami kancelarii">
+      <div class="mapa linia" id="mapa" role="region" aria-label="Mapa Krakowa z biurami kancelarii">
         <!-- Mapa interaktywna (Leaflet + OpenStreetMap). Bez JavaScriptu widać poniższe linki. -->
         <div class="mapa__zastepstwo">
           <a class="adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20%C5%9Awi%C4%99tej%20Anny%209%2C%20Krak%C3%B3w" data-adres="ul. Świętej Anny 9, Kraków">ul. Świętej Anny 9 – pokaż na mapie</a>
@@ -108,47 +355,49 @@
 
       <form class="formularz" id="formularz" action="#" method="post">
         <label class="ukryte" for="f-imie">Imię i nazwisko</label>
-        <input class="pole pole--pelne" id="f-imie" name="imie" type="text" placeholder="Imię i nazwisko" autocomplete="name" required>
+        <input class="pole pole--pelne linia" id="f-imie" name="imie" type="text" placeholder="Imię i nazwisko" autocomplete="name" required>
 
         <label class="ukryte" for="f-adres">Adres</label>
-        <input class="pole pole--pelne" id="f-adres" name="adres" type="text" placeholder="Adres" autocomplete="street-address">
+        <input class="pole pole--pelne linia" id="f-adres" name="adres" type="text" placeholder="Adres" autocomplete="street-address">
 
         <label class="ukryte" for="f-email">e-mail</label>
-        <input class="pole" id="f-email" name="email" type="email" placeholder="e-mail" autocomplete="email" required>
+        <input class="pole linia" id="f-email" name="email" type="email" placeholder="e-mail" autocomplete="email" required>
 
         <label class="ukryte" for="f-telefon">Telefon</label>
-        <input class="pole" id="f-telefon" name="telefon" type="tel" placeholder="Telefon" autocomplete="tel">
+        <input class="pole linia" id="f-telefon" name="telefon" type="tel" placeholder="Telefon" autocomplete="tel">
 
         <label class="ukryte" for="f-temat">Temat</label>
-        <input class="pole pole--pelne" id="f-temat" name="temat" type="text" placeholder="Temat">
+        <input class="pole pole--pelne linia" id="f-temat" name="temat" type="text" placeholder="Temat">
 
         <label class="ukryte" for="f-wiadomosc">Wiadomość</label>
-        <textarea class="pole pole--pelne pole--wiadomosc" id="f-wiadomosc" name="wiadomosc" placeholder="Tutaj wpisz swoją wiadomość" required></textarea>
+        <textarea class="pole pole--pelne pole--wiadomosc linia" id="f-wiadomosc" name="wiadomosc" placeholder="Tutaj wpisz swoją wiadomość" required></textarea>
 
         <p class="formularz__status" role="status" aria-live="polite"></p>
-        <button class="przycisk" type="submit">Wyślij</button>
+        <button class="przycisk linia" type="submit">Wyślij</button>
       </form>
     </section>
   </main>
 
   <!-- ===== STOPKA ===== -->
-  <footer class="stopka">
-    <h2 class="stopka__tytul">Blog</h2>
+  <footer class="stopka grupa">
+    <h2 class="stopka__tytul linia">Blog</h2>
+    <!-- Na obecnym blogu są 3 wpisy – po jednym w kolumnie. Kolejne dopisujemy pod spodem. -->
     <ul class="stopka__kolumna">
-      <li><a href="https://www.adwokat-mincer.com/post/zachowek-kiedy-przys%C5%82uguje-i-jak-skutecznie-go-dochodzi%C4%87">Zachowek – kiedy przysługuje i jak skutecznie go dochodzić?</a></li>
-      <li><a href="https://www.adwokat-mincer.com/post/jak-napisa%C4%87-testament-w-polsce-rodzaje-testament%C3%B3w-i-ich-znaczenie">Jak napisać testament w Polsce? Rodzaje testamentów i ich znaczenie</a></li>
-      <li><a href="https://www.adwokat-mincer.com/post/rozdzielno%C5%9B%C4%87-maj%C4%85tkowa-mo%C5%BCliwo%C5%9Bci-procedury-i-wymogi-prawne">Rozdzielność majątkowa: możliwości, procedury i wymogi prawne</a></li>
+      <li class="linia"><a href="https://www.adwokat-mincer.com/post/zachowek-kiedy-przys%C5%82uguje-i-jak-skutecznie-go-dochodzi%C4%87">Zachowek – kiedy przysługuje i&nbsp;jak skutecznie go dochodzić?</a></li>
     </ul>
-    <!-- Kolumny 2 i 3 – na kolejne wpisy po przeniesieniu bloga -->
-    <ul class="stopka__kolumna"></ul>
-    <ul class="stopka__kolumna"></ul>
-    <p class="stopka__prawa">Wszystkie prawa @ Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
+    <ul class="stopka__kolumna">
+      <li class="linia"><a href="https://www.adwokat-mincer.com/post/jak-napisa%C4%87-testament-w-polsce-rodzaje-testament%C3%B3w-i-ich-znaczenie">Jak napisać testament w&nbsp;Polsce? Rodzaje testamentów i&nbsp;ich znaczenie</a></li>
+    </ul>
+    <ul class="stopka__kolumna">
+      <li class="linia"><a href="https://www.adwokat-mincer.com/post/rozdzielno%C5%9B%C4%87-maj%C4%85tkowa-mo%C5%BCliwo%C5%9Bci-procedury-i-wymogi-prawne">Rozdzielność majątkowa: możliwości, procedury i&nbsp;wymogi prawne</a></li>
+    </ul>
+    <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Mincer-Madejska</p>
   </footer>
 
   <!-- ===== PŁYWAJĄCE DANE KONTAKTOWE (strona 1 i 2) ===== -->
   <aside class="kontakt" aria-label="Dane kontaktowe">
-    <p class="kontakt__godziny">od 9:00 — 17:00</p>
-    <div class="kontakt__dane">
+    <p class="kontakt__godziny linia">od 9:00 — 17:00</p>
+    <div class="kontakt__dane linia">
       <p class="kontakt__duzy">
         <a href="tel:+48780147406">+48 780 147 406</a><br>
         <a href="mailto:kancelaria@adwokat-mincer.com">kancelaria@adwokat-mincer.com</a>
@@ -172,6 +421,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="js/main.js?v=4"></script>
 </body>
 </html>
