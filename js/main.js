@@ -1,4 +1,4 @@
-/* wersja 14 */
+/* wersja 16 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -450,9 +450,9 @@
 
   /* =========================================================
      4d. Zmiana języka bez przeładowania strony
-     Teksty bieżącego języka gasną litera po literze (1 s, rozrzut 10 liter),
-     a zanim całkiem znikną, w tym samym miejscu zaczynają się zapalać teksty
-     drugiego języka (nałożenie od 70% zejścia) – wszystkie bloki naraz.
+     Teksty bieżącego języka gasną falą litera po literze (rozrzut 10 liter),
+     a gdy fala dojdzie do 7. litery, za nią tą samą falą zapala się tekst
+     drugiego języka – przez 3 litery oba się nakładają. Wszystkie bloki naraz.
      Druga wersja jest pobierana z serwera (ta sama witryna) i podmieniana w miejscu.
      ========================================================= */
   const CZAS_ZMIANY = 1000;     // ms – zejście (i osobno wejście) tekstu jednego bloku
@@ -494,7 +494,10 @@
     while (w.nextNode()) if (w.currentNode.textContent.trim()) wezly.push(w.currentNode);
     const litery = [];
     wezly.forEach((wezel) => {
-      const frag = document.createDocumentFragment();
+      // całość tekstu z jednego węzła w jednym elemencie – w kontenerach flex (np. menu)
+      // nie rozsypie się na osobne elementy
+      const frag = document.createElement("span");
+      frag.className = "zj-tekst";
       wezel.textContent.split(/(\s+)/).forEach((kawalek) => {
         if (!kawalek) return;
         if (/^\s+$/.test(kawalek)) { frag.appendChild(document.createTextNode(kawalek)); return; }
@@ -514,13 +517,24 @@
     return litery;
   }
 
-  function rozplanuj(litery, start) {
-    const n = litery.length;
-    const krok = CZAS_ZMIANY / (n + ROZRZUT - 1);
+  // fala krycia: każda litera gaśnie/zapala się przez czas 10 "kroków" (rozrzut 10 liter),
+  // kolejna startuje o 1 krok później
+  function rozplanuj(litery, krok, start) {
     litery.forEach((l, i) => {
       l.style.setProperty("--zj-czas", Math.round(krok * ROZRZUT) + "ms");
-      l.style.setProperty("--zj-opoznienie", Math.round((start || 0) + krok * i) + "ms");
+      l.style.setProperty("--zj-opoznienie", Math.round(start + krok * i) + "ms");
     });
+  }
+
+  // gdy kopia z rozbitymi literami wyszła wyższa od oryginału (dodatkowe złamanie linii),
+  // poszerzamy ją minimalnie, aż wysokości się zgodzą
+  function dopasujSzerokosc(kopia, oryginal) {
+    if (kopia.style.position === "absolute" && kopia.style.left.endsWith("px") && getComputedStyle(oryginal).position === "relative") return;
+    const cel = oryginal.getBoundingClientRect().height;
+    const baza = parseFloat(getComputedStyle(kopia).width) || 0;
+    for (let dodatek = 0; dodatek <= 40 && kopia.getBoundingClientRect().height > cel + 0.5; dodatek += 2) {
+      kopia.style.width = baza + dodatek + "px";
+    }
   }
 
   function widoczny(el) {
@@ -597,15 +611,24 @@
       const nowe = jednostki.map(klonuj);
 
       if (jednostki.length) {
-        const NAKLADKA = 0.7 * CZAS_ZMIANY;   // nowy tekst zaczyna wchodzić przy 70% zejścia starego
+        // Nowy tekst rusza, gdy fala gaśnięcia starego dojdzie do 7. litery,
+        // więc obie fale idą razem, a przez 3 litery nakładają się na siebie.
+        const START_NOWEGO = 7;
+        let najdluzej = 0;
         jednostki.forEach((j, i) => {
           j.classList.add("zj-ukryty");
           j.after(stare[i], nowe[i]);
-          rozplanuj(rozbijNaLitery(stare[i]), 0);
-          rozplanuj(rozbijNaLitery(nowe[i]), NAKLADKA);
+          const ls = rozbijNaLitery(stare[i]), ln = rozbijNaLitery(nowe[i]);
+          // kopie nie mogą łamać linii inaczej niż oryginał (inaczej tekst "skacze")
+          [stare[i], nowe[i]].forEach((k) => dopasujSzerokosc(k, j));
+          const krok = CZAS_ZMIANY / (Math.max(ls.length, ln.length) + ROZRZUT - 1);
+          rozplanuj(ls, krok, 0);
+          rozplanuj(ln, krok, START_NOWEGO * krok);
+          najdluzej = Math.max(najdluzej, START_NOWEGO * krok + CZAS_ZMIANY);
           stare[i].classList.add("zj-out");
           nowe[i].classList.add("zj-in");
         });
+        const NAKLADKA = najdluzej - CZAS_ZMIANY;
         setTimeout(() => {
           jednostki.forEach((j, i) => {
             j.classList.add("zj-bez-przejscia");   // oryginał wraca od razu, bez ponownego wygaszania

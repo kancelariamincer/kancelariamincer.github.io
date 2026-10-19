@@ -1,4 +1,4 @@
-/* wersja 14 */
+/* wersja 16 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -272,6 +272,7 @@ main { position: relative; z-index: 2; }
   border: calc(2 * var(--u)) solid transparent;
   border-radius: calc(10 * var(--u));
   cursor: pointer;
+  overflow: hidden;                          /* puls jest maskowany przez kafel */
   transition: background-color .2s ease, border-color .3s ease;   /* odznaczenie: ramka gaśnie */
 }
 .kafel__nazwa {
@@ -316,7 +317,7 @@ main { position: relative; z-index: 2; }
   height: calc(120 * var(--u));
   margin-left: calc(-60 * var(--u));
   border-radius: 50%;
-  border: calc(2 * var(--u)) solid rgba(255, 255, 255, 0.95);
+  border: calc(10 * var(--u)) solid rgba(255, 255, 255, 0.95);   /* 5× grubszy */
   pointer-events: none;
   animation: puls .9s linear forwards;
 }
@@ -871,7 +872,7 @@ body.dokument { min-height: 0; }
 
 /* ===================== ZMIANA JĘZYKA: litery gasną i zapalają się (tylko krycie) =====================
    Na czas zmiany nad blokiem leżą dwie kopie: stary tekst (gaśnie) i nowy (wchodzi z lekkim nałożeniem). */
-.zj-slowo { display: inline-block; white-space: nowrap; }
+.zj-slowo { white-space: nowrap; }          /* zwykły element liniowy – nie zmienia wysokości linii */
 .zj-litera {
   white-space: pre;
   animation-duration: var(--zj-czas, 300ms);
@@ -927,6 +928,6 @@ body.dokument { min-height: 0; }
 }
 
 @media (max-width: 1099px) {
-  .puls { top: auto; bottom: 26px; width: 64px; height: 64px; margin-left: -32px; border-width: 2px; }
+  .puls { top: auto; bottom: 26px; width: 64px; height: 64px; margin-left: -32px; border-width: 6px; }
   .opis, .opis--dol { max-height: 80vh; }
 }
