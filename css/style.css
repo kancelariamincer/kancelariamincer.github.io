@@ -1,4 +1,4 @@
-/* wersja 13 */
+/* wersja 14 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -272,7 +272,7 @@ main { position: relative; z-index: 2; }
   border: calc(2 * var(--u)) solid transparent;
   border-radius: calc(10 * var(--u));
   cursor: pointer;
-  transition: background-color .2s ease, border-color .2s ease;
+  transition: background-color .2s ease, border-color .3s ease;   /* odznaczenie: ramka gaśnie */
 }
 .kafel__nazwa {
   position: absolute;
@@ -297,11 +297,35 @@ main { position: relative; z-index: 2; }
   display: grid;
   place-items: center;
 }
+/* najechanie: tylko czarne wypełnienie 30%, bez ramki */
 .kafel__przycisk:hover,
 .kafel__przycisk[aria-expanded="true"] {
-  border-color: var(--biel);
-  background: rgba(0, 0, 0, 0.3);           /* czerń 30% */
+  background: rgba(0, 0, 0, 0.3);
 }
+/* kliknięty kafel: ramka zapala się, gdy puls dojdzie do krawędzi kafla */
+.kafel__przycisk[aria-expanded="true"] {
+  border-color: var(--biel);
+  transition: background-color .2s ease, border-color .3s ease var(--opoznienie-ramki, .55s);
+}
+/* biały puls spod czarnego koła */
+.puls {
+  position: absolute;
+  left: 50%;
+  top: calc(88 * var(--u));                  /* jak kółko z ikoną */
+  width: calc(120 * var(--u));
+  height: calc(120 * var(--u));
+  margin-left: calc(-60 * var(--u));
+  border-radius: 50%;
+  border: calc(2 * var(--u)) solid rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+  animation: puls .9s linear forwards;
+}
+@keyframes puls {
+  0%   { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  60%  { opacity: 0.9; }
+  100% { transform: scale(4.6); opacity: 0; box-shadow: 0 0 calc(10 * var(--u)) calc(3 * var(--u)) rgba(255, 255, 255, 0.35); }
+}
+.ikona { z-index: 1; }
 .kafel__przycisk:focus-visible { outline-offset: 2px; }
 
 /* ---------- Okienko z opisem usługi ---------- */
@@ -311,7 +335,13 @@ main { position: relative; z-index: 2; }
   left: calc(var(--opis-x, 278) * var(--u));
   top: 0;
   width: calc(470 * var(--u));
-  height: auto;                              /* wysokość dopasowana do treści – bez przewijania */
+  height: auto;                              /* wysokość dopasowana do treści… */
+  max-height: calc(540 * var(--u));         /* …ale najwyżej 2 kafle (2 × 260 + 20) – dłuższe przewijają się */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  border: 2px solid var(--biel);
   padding: calc(35 * var(--u));              /* dolny margines = górny */
   background: rgba(0, 0, 0, 0.3);           /* czerń 30% */
   -webkit-backdrop-filter: blur(20px);      /* rozmycie tła pod okienkiem – czytelność tekstu; usuń, jeśli niepotrzebne */
@@ -894,4 +924,9 @@ body.dokument { min-height: 0; }
     font-size: clamp(11px, 3.3vw, 14px);
   }
   .ikona { position: static; margin: 0 auto 26px; flex: none; }
+}
+
+@media (max-width: 1099px) {
+  .puls { top: auto; bottom: 26px; width: 64px; height: 64px; margin-left: -32px; border-width: 2px; }
+  .opis, .opis--dol { max-height: 80vh; }
 }

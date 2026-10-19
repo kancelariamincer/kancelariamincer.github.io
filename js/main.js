@@ -1,4 +1,4 @@
-/* wersja 13 */
+/* wersja 14 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -382,6 +382,17 @@
     opis.classList.toggle("opis--dol", rzad > 0);
     opis.hidden = false;
     kafel.classList.add("kafel--otwarty");
+    // puls spod kółka – ramka kafla zapala się, gdy puls dojdzie do jego krawędzi (CSS)
+    if (!malyRuch.matches) {
+      przycisk.querySelectorAll(".puls").forEach((p) => p.remove());
+      const puls = document.createElement("span");
+      puls.className = "puls";
+      puls.setAttribute("aria-hidden", "true");
+      przycisk.insertBefore(puls, przycisk.querySelector(".ikona"));
+      puls.addEventListener("animationend", () => puls.remove());
+    } else {
+      przycisk.style.setProperty("--opoznienie-ramki", "0s");
+    }
     przycisk.setAttribute("aria-expanded", "true");
     root.classList.add("opis-otwarty");
     aktualizujKontakt();
@@ -451,7 +462,7 @@
 
   // elementy dodane przez skrypty (mapa Leaflet, podział na słowa/litery) – pomijamy
   const dynamiczny = (el) => !el.classList.contains("mapa") &&
-    [...el.classList].some((c) => c.startsWith("leaflet-") || c === "slowo" || c.startsWith("zj-"));
+    [...el.classList].some((c) => c.startsWith("leaflet-") || c === "slowo" || c === "puls" || c.startsWith("zj-"));
   const dzieci = (el) => [...el.children].filter((c) => !dynamiczny(c));
   const maWlasnyTekst = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
 
