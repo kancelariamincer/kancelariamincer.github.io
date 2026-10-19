@@ -1,4 +1,4 @@
-/* wersja 18 */
+/* wersja 19 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -159,6 +159,12 @@
       linkiMenu.forEach((a) => a.classList.toggle("aktywny", a.getAttribute("href") === h));
     }
   }
+
+  /* bieżący rok w stopce (nie trzeba go zmieniać co roku) */
+  function ustawRok() {
+    document.querySelectorAll(".rok").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
+  }
+  ustawRok();
 
   /* wspólna obsługa przewijania */
   let zaplanowane = false;
@@ -638,9 +644,11 @@
             j.classList.remove("zj-bez-przejscia");
           });
           aktualizujKontakt();
+          ustawRok();
           trwaZmiana = false;
         }, NAKLADKA + CZAS_ZMIANY + 60);
       } else {
+        ustawRok();
         trwaZmiana = false;
       }
     } catch (blad) {
@@ -721,19 +729,19 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
     }).addTo(mapa);
 
-    // pinezka: kółko 40 px (wygląd w CSS: .pinezka)
+    // pinezka: kółko 20 px (wygląd w CSS: .pinezka)
     const ikona = L.divIcon({
       className: "pinezka",
       html: "",
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
     });
     const granice = [];
     const znaczniki = {};
     BIURA.forEach((b) => {
       const m = L.marker(b.wsp, { icon: ikona, title: b.nazwa, alt: b.nazwa, keyboard: true }).addTo(mapa);
       // podpis z adresem nad pinezką (stały)
-      m.bindTooltip(b.nazwa, { permanent: true, direction: "top", offset: [0, -22], className: "podpis-biura" });
+      m.bindTooltip(b.nazwa, { permanent: true, direction: "top", offset: [0, -12], className: "podpis-biura" });
       m.on("click", () => pokazWybor(b.adres));
       znaczniki[b.adres] = m;
       granice.push(b.wsp);
@@ -746,7 +754,7 @@
       mapa.flyTo(m.getLatLng(), 16, { duration: malyRuch.matches ? 0 : 1 });
       return true;
     };
-    mapa.fitBounds(granice, { padding: [60, 60] });
+    mapa.fitBounds(granice, { paddingTopLeft: [60, 100], paddingBottomRight: [60, 40] });   // miejsce na podpisy nad pinezkami
     window.addEventListener("resize", () => mapa.invalidateSize());
   }
 
