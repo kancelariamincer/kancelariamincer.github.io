@@ -1,4 +1,4 @@
-/* wersja 16 */
+/* wersja 17 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -309,22 +309,29 @@ main { position: relative; z-index: 2; }
   transition: background-color .2s ease, border-color .3s ease var(--opoznienie-ramki, .55s);
 }
 /* biały puls spod czarnego koła */
+/* pierścień 10 px z miękkim przejściem 20 px po obu stronach;
+   element ma 160 px (kółko 120 + 2 × 20 na zewnętrzny gradient), środek = środek kółka */
 .puls {
   position: absolute;
   left: 50%;
-  top: calc(88 * var(--u));                  /* jak kółko z ikoną */
-  width: calc(120 * var(--u));
-  height: calc(120 * var(--u));
-  margin-left: calc(-60 * var(--u));
+  top: calc(68 * var(--u));
+  width: calc(160 * var(--u));
+  height: calc(160 * var(--u));
+  margin-left: calc(-80 * var(--u));
   border-radius: 50%;
-  border: calc(10 * var(--u)) solid rgba(255, 255, 255, 0.95);   /* 5× grubszy */
+  background: radial-gradient(closest-side,
+    rgba(255, 255, 255, 0) 37.5%,           /* 30 px – początek wewnętrznego gradientu */
+    #fff 62.5%,                             /* 50 px – pierścień */
+    #fff 75%,                               /* 60 px – krawędź kółka */
+    rgba(255, 255, 255, 0) 100%);           /* 80 px – koniec zewnętrznego gradientu */
   pointer-events: none;
   animation: puls .9s linear forwards;
 }
+/* krycie 0 → 100% w chwili zetknięcia z krawędzią kafla (boki: ok. 32% czasu) */
 @keyframes puls {
-  0%   { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-  60%  { opacity: 0.9; }
-  100% { transform: scale(4.6); opacity: 0; box-shadow: 0 0 calc(10 * var(--u)) calc(3 * var(--u)) rgba(255, 255, 255, 0.35); }
+  0%   { transform: scale(1);   opacity: 0; }
+  32%  { opacity: 1; }
+  100% { transform: scale(4.6); opacity: 1; }
 }
 .ikona { z-index: 1; }
 .kafel__przycisk:focus-visible { outline-offset: 2px; }
@@ -568,10 +575,10 @@ html.anim .opis .jednostka.widoczna {
   height: calc(441 * var(--u));
 }
 .stopka__tytul {
-  --y: 150;                                  /* litery na 3505 px = początek wiersza */
+  --y: 149;                            /* litery na 3505 px = początek wiersza */
   font-family: var(--bezszeryf);
   font-weight: 400;
-  font-size: calc(21.3 * var(--f));
+  font-size: calc(24 * var(--f));
   line-height: 1.2;
 }
 .stopka__dane {
@@ -582,20 +589,21 @@ html.anim .opis .jednostka.widoczna {
 }
 .do-uzupelnienia { color: #ff9c9c; }
 .stopka__polityka {
-  --y: 274; --x: 0;
+  --y: 323; --x: 0;
   width: 100%;
   text-align: center;
   font-size: max(11px, calc(11.9 * var(--f)));
   line-height: calc(24 * var(--f));
 }
 .stopka__polityka a { text-decoration: underline; }
+/* linki do wpisów: pełne tytuły, zawijane w kolumnie (3 kolumny siatki), 12 px odstępu między wpisami */
 .stopka__kolumna {
   --y: 193;
-  white-space: nowrap;
-  width: calc(397 * var(--u));               /* 3 kolumny siatki */
-  font-size: max(11px, calc(11.9 * var(--f)));
+  width: calc(397 * var(--u));
+  font-size: max(11px, calc(12 * var(--f)));
   line-height: calc(24 * var(--f));
 }
+.stopka__kolumna li + li { margin-top: calc(12 * var(--f)); }
 .stopka__kolumna:nth-of-type(2) { --x: 596; }
 .stopka__kolumna:nth-of-type(3) { --x: 1013; }
 .stopka__prawa {
@@ -780,7 +788,7 @@ body.dokument { min-height: 0; }
 .dokument__wstecz { display: inline-block; margin-bottom: 40px; font-size: 14px; }
 
 /* długie tytuły wpisów nie wchodzą na sąsiednią kolumnę (np. na mniejszych ekranach) */
-.stopka__kolumna li { overflow: hidden; text-overflow: ellipsis; }
+
 @media (max-width: 1099px) { .stopka__kolumna { white-space: normal; } }
 
 /* ikony usług w czarnych kółkach (rozmiary jak na obecnej stronie, ×0,8) */
@@ -930,4 +938,17 @@ body.dokument { min-height: 0; }
 @media (max-width: 1099px) {
   .puls { top: auto; bottom: 26px; width: 64px; height: 64px; margin-left: -32px; border-width: 6px; }
   .opis, .opis--dol { max-height: 80vh; }
+}
+
+/* ===================== SYGNETY W PASKU MENU ===================== */
+.logo-adwokatura .logo-adwokatura__sygnet { display: none; }
+.naglowek--pasek .logo-adwokatura .logo-adwokatura__pelne { display: none; }
+.naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { display: block; width: auto; height: max(52px, calc(62 * var(--f))); }
+.naglowek--pasek .logo-kancelarii__sygnet { height: max(48px, calc(56 * var(--f))); }
+@media (max-width: 1099px) {
+  .naglowek--pasek .logo-adwokatura { display: block; }
+  .naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { height: 30px; }
+  .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
+  .naglowek--pasek .menu { gap: 10px; font-size: 12px; }
+  .puls { top: auto; bottom: calc(26px - 64px / 6); width: calc(64px * 4 / 3); height: calc(64px * 4 / 3); margin-left: calc(-64px * 2 / 3); }
 }
