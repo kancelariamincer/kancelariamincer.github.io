@@ -1,4 +1,4 @@
-/* wersja 12 */
+/* wersja 13 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -439,9 +439,9 @@
 
   /* =========================================================
      4d. Zmiana języka bez przeładowania strony
-     Teksty bieżącego języka "przewracają się" litera po literze jak karty
-     (1 s, rozrzut 10 liter), a tuż po zniknięciu w ich miejsce tak samo
-     wchodzą teksty drugiego języka – wszystkie bloki tekstu naraz.
+     Teksty bieżącego języka gasną litera po literze (1 s, rozrzut 10 liter),
+     a zanim całkiem znikną, w tym samym miejscu zaczynają się zapalać teksty
+     drugiego języka (nałożenie od 70% zejścia) – wszystkie bloki naraz.
      Druga wersja jest pobierana z serwera (ta sama witryna) i podmieniana w miejscu.
      ========================================================= */
   const CZAS_ZMIANY = 1000;     // ms – zejście (i osobno wejście) tekstu jednego bloku
@@ -503,12 +503,12 @@
     return litery;
   }
 
-  function rozplanuj(litery) {
+  function rozplanuj(litery, start) {
     const n = litery.length;
     const krok = CZAS_ZMIANY / (n + ROZRZUT - 1);
     litery.forEach((l, i) => {
       l.style.setProperty("--zj-czas", Math.round(krok * ROZRZUT) + "ms");
-      l.style.setProperty("--zj-opoznienie", Math.round(krok * i) + "ms");
+      l.style.setProperty("--zj-opoznienie", Math.round((start || 0) + krok * i) + "ms");
     });
   }
 
@@ -543,28 +543,72 @@
 
       const bloki = [];
       paruj(document.body, nowy.body, bloki);
-      const animowane = [];
-      bloki.forEach(([zywy, wzor]) => {
-        if (malyRuch.matches || !widoczny(zywy)) podmien(zywy, wzor);
-        else animowane.push([zywy, wzor]);
+
+      // Jednostki animacji: najbliższy pozycjonowany blok wokół zmienianego tekstu
+      // (nad nim kładziemy kopie – starą i nową – więc oryginał z obsługą kliknięć zostaje nietknięty).
+      const jednostka = (el) => {
+        let x = el;
+        while (x && x !== document.body) {
+          const st = getComputedStyle(x);
+          if (st.display !== "inline" && st.position !== "static") return x;
+          x = x.parentElement;
+        }
+        return null;
+      };
+      let jednostki = [];
+      bloki.forEach(([zywy]) => {
+        if (malyRuch.matches || !widoczny(zywy)) return;
+        const j = jednostka(zywy);
+        if (j && !jednostki.includes(j)) jednostki.push(j);
       });
-      // zejście
-      animowane.forEach(([zywy]) => { rozplanuj(rozbijNaLitery(zywy)); zywy.classList.add("zj-out"); });
-      setTimeout(() => {
-        // wejście drugiego języka
-        animowane.forEach(([zywy, wzor]) => {
-          podmien(zywy, wzor);
-          zywy.classList.remove("zj-out");
-          rozplanuj(rozbijNaLitery(zywy));
-          zywy.classList.add("zj-in");
+      jednostki = jednostki.filter((j) => !jednostki.some((k) => k !== j && k.contains(j)));
+
+      const klonuj = (j) => {
+        const k = j.cloneNode(true);
+        k.classList.add("zj-klon");
+        k.removeAttribute("id");
+        k.querySelectorAll("[id]").forEach((x) => x.removeAttribute("id"));
+        k.setAttribute("aria-hidden", "true");
+        k.classList.remove("zj-ukryty");
+        const st = getComputedStyle(j);
+        if (st.position === "relative") {
+          Object.assign(k.style, { position: "absolute", left: j.offsetLeft + "px", top: j.offsetTop + "px", width: j.offsetWidth + "px", margin: "0" });
+        } else {
+          // przypinamy kopię dokładnie w miejscu oryginału (niezależnie od reguł typu :nth-of-type)
+          Object.assign(k.style, { left: st.left, top: st.top, right: "auto", bottom: "auto", width: st.width });
+        }
+        return k;
+      };
+      // kopie ze starym tekstem (przed podmianą)
+      const stare = jednostki.map(klonuj);
+      // podmiana treści w oryginałach
+      bloki.forEach(([zywy, wzor]) => podmien(zywy, wzor));
+      const nowe = jednostki.map(klonuj);
+
+      if (jednostki.length) {
+        const NAKLADKA = 0.7 * CZAS_ZMIANY;   // nowy tekst zaczyna wchodzić przy 70% zejścia starego
+        jednostki.forEach((j, i) => {
+          j.classList.add("zj-ukryty");
+          j.after(stare[i], nowe[i]);
+          rozplanuj(rozbijNaLitery(stare[i]), 0);
+          rozplanuj(rozbijNaLitery(nowe[i]), NAKLADKA);
+          stare[i].classList.add("zj-out");
+          nowe[i].classList.add("zj-in");
         });
         setTimeout(() => {
-          animowane.forEach(([zywy, wzor]) => { podmien(zywy, wzor); zywy.classList.remove("zj-in"); });
+          jednostki.forEach((j, i) => {
+            j.classList.add("zj-bez-przejscia");   // oryginał wraca od razu, bez ponownego wygaszania
+            j.classList.remove("zj-ukryty");
+            void j.offsetWidth;
+            stare[i].remove(); nowe[i].remove();
+            j.classList.remove("zj-bez-przejscia");
+          });
           aktualizujKontakt();
           trwaZmiana = false;
-        }, CZAS_ZMIANY + 50);
-      }, animowane.length ? CZAS_ZMIANY : 0);
-      if (!animowane.length) trwaZmiana = false;
+        }, NAKLADKA + CZAS_ZMIANY + 60);
+      } else {
+        trwaZmiana = false;
+      }
     } catch (blad) {
       window.location.href = url;   // awaryjnie: zwykłe przejście na drugą stronę
     }
@@ -604,8 +648,14 @@
     okno.querySelectorAll(".wybor-mapy__opcja").forEach((a) => a.addEventListener("click", () => okno.close()));
     okno.addEventListener("click", (e) => { if (e.target === okno) okno.close(); }); // klik w tło
   }
-  document.querySelectorAll(".adres[data-adres]").forEach((a) => {
-    a.addEventListener("click", (e) => { e.preventDefault(); pokazWybor(a.dataset.adres); });
+  // kliknięcie adresu: mapa centruje się na biurze (bez mapy – wybór aplikacji map)
+  let pokazNaMapie = null;
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest(".adres[data-adres]");
+    if (!a) return;
+    e.preventDefault();
+    if (pokazNaMapie && pokazNaMapie(a.dataset.adres)) return;
+    pokazWybor(a.dataset.adres);
   });
 
   /* =========================================================
@@ -645,11 +695,23 @@
       iconAnchor: [20, 20],
     });
     const granice = [];
+    const znaczniki = {};
     BIURA.forEach((b) => {
       const m = L.marker(b.wsp, { icon: ikona, title: b.nazwa, alt: b.nazwa, keyboard: true }).addTo(mapa);
+      // podpis z adresem nad pinezką (stały)
+      m.bindTooltip(b.nazwa, { permanent: true, direction: "top", offset: [0, -22], className: "podpis-biura" });
       m.on("click", () => pokazWybor(b.adres));
+      znaczniki[b.adres] = m;
       granice.push(b.wsp);
     });
+    pokazNaMapie = (adres) => {
+      const m = znaczniki[adres];
+      if (!m) return false;
+      const r = elMapy.getBoundingClientRect();
+      if (r.top < 0 || r.bottom > window.innerHeight) elMapy.scrollIntoView({ behavior: malyRuch.matches ? "auto" : "smooth", block: "center" });
+      mapa.flyTo(m.getLatLng(), 16, { duration: malyRuch.matches ? 0 : 1 });
+      return true;
+    };
     mapa.fitBounds(granice, { padding: [60, 60] });
     window.addEventListener("resize", () => mapa.invalidateSize());
   }

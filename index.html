@@ -13,9 +13,9 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=13">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=12"></script>
+  <script src="js/start.js?v=13"></script>
 </head>
 <body>
 
@@ -51,15 +51,15 @@
     <!-- ===== STRONA 1: KANCELARIA ===== -->
     <section class="sekcja sekcja--start grupa" id="kancelaria" data-grupa="start">
       <h1 class="tytul linia">Kancelaria Adwokacka</h1>
-      <p class="podtytul linia">ADWOKAT AGNIESZKA MINCER-MADEJSKA</p>
+      <p class="podtytul linia">ADWOKAT AGNIESZKA <span class="bez-lamania">MINCER-MADEJSKA</span></p>
       <p class="tekst tekst--start">
         <span class="linia">Jestem członkiem Krakowskiej Izby Adwokackiej od 2018&nbsp;roku.</span><br>
         <span class="linia">Swoje doświadczenie zawodowe od 2016&nbsp;roku zdobywałam</span><br>
         <span class="linia">w&nbsp;renomowanych kancelariach adwokackich na terenie Krakowa.</span>
       </p>
       <ul class="jezyki linia" aria-label="Pomoc prawna w językach">
-        <li><img src="img/flaga-pl.svg" alt="polski" title="Pomoc prawna w języku polskim"></li>
-        <li><img src="img/flaga-gb.svg" alt="angielski" title="Pomoc prawna w języku angielskim"></li>
+        <li><a href="index.html" lang="pl" hreflang="pl" data-przelacznik aria-current="page" title="Wersja polska – pomoc prawna w języku polskim"><img src="img/flaga-pl.svg" alt="polski"></a></li>
+        <li><a href="en/" lang="en" hreflang="en" data-przelacznik title="English version – legal assistance in English"><img src="img/flaga-gb.svg" alt="angielski"></a></li>
       </ul>
     </section>
 
@@ -387,7 +387,7 @@
         <p class="formularz__status" role="status" aria-live="polite"></p>
         <button class="przycisk linia" type="submit">Wyślij</button>
         <div class="formularz__rodo linia">
-          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-haspopup="dialog" aria-controls="okno-rodo">… rozwiń</button>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka Mincer-Madejska, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-haspopup="dialog" aria-controls="okno-rodo">… rozwiń</button>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka <span class="bez-lamania">Mincer-Madejska</span>, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
         </div>
       </form>
     </section>
@@ -409,7 +409,7 @@
       <li class="linia"><a href="https://www.adwokat-mincer.com/post/testament-w-polskim-prawie-rodzaje-warunki-wa%C5%BCno%C5%9Bci-i-mo%C5%BCliwo%C5%9B%C4%87-podwa%C5%BCenia" title="Testament w polskim prawie – rodzaje, warunki ważności i możliwość podważenia">Testament – rodzaje, warunki ważności i&nbsp;możliwość podważenia</a></li>
     </ul>
     <p class="stopka__polityka linia"><a href="polityka-prywatnosci.html">Polityka prywatności</a></p>
-    <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska</p>
+    <p class="stopka__prawa linia">Wszystkie prawa © Kancelaria Adwokacka Adwokat Agnieszka <span class="bez-lamania">Mincer-Madejska</span></p>
   </footer>
 
   <!-- ===== PŁYWAJĄCE DANE KONTAKTOWE (strona 1 i 2) ===== -->
@@ -437,7 +437,7 @@
   <!-- ===== PEŁNA KLAUZULA RODO (okienko) ===== -->
   <dialog class="okno-rodo" id="okno-rodo" aria-labelledby="okno-rodo-tytul">
     <h2 class="okno-rodo__tytul" id="okno-rodo-tytul">Informacja o danych osobowych</h2>
-    <p>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka Mincer-Madejska, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+    <p>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka <span class="bez-lamania">Mincer-Madejska</span>, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
     <button class="okno-rodo__zamknij" type="button">Zamknij</button>
   </dialog>
 
@@ -452,6 +452,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=12"></script>
+  <script src="js/main.js?v=13"></script>
 </body>
 </html>

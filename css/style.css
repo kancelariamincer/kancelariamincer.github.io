@@ -1,4 +1,4 @@
-/* wersja 12 */
+/* wersja 13 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -839,12 +839,11 @@ body.dokument { min-height: 0; }
   .naglowek--pasek .logo-adwokatura { display: none; }
 }
 
-/* ===================== ZMIANA JĘZYKA: litery "przewracają się" jak karty ===================== */
+/* ===================== ZMIANA JĘZYKA: litery gasną i zapalają się (tylko krycie) =====================
+   Na czas zmiany nad blokiem leżą dwie kopie: stary tekst (gaśnie) i nowy (wchodzi z lekkim nałożeniem). */
 .zj-slowo { display: inline-block; white-space: nowrap; }
 .zj-litera {
-  display: inline-block;
   white-space: pre;
-  backface-visibility: hidden;
   animation-duration: var(--zj-czas, 300ms);
   animation-delay: var(--zj-opoznienie, 0ms);
   animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
@@ -852,11 +851,47 @@ body.dokument { min-height: 0; }
 }
 .zj-out .zj-litera { animation-name: zj-znikanie; }
 .zj-in .zj-litera  { animation-name: zj-pojawianie; }
-@keyframes zj-znikanie {
-  from { opacity: 1; transform: perspective(400px) rotateX(0deg); }
-  to   { opacity: 0; transform: perspective(400px) rotateX(90deg); }
+@keyframes zj-znikanie  { from { opacity: 1; } to { opacity: 0; } }
+@keyframes zj-pojawianie { from { opacity: 0; } to { opacity: 1; } }
+.zj-klon { pointer-events: none !important; }
+.zj-ukryty, .zj-ukryty * { opacity: 0 !important; transition: none !important; }
+.zj-bez-przejscia, .zj-bez-przejscia * { transition: none !important; }
+
+/* nazwisko nie łamie się na dywizie */
+.bez-lamania { white-space: nowrap; }
+
+/* flagi = przełącznik języka */
+.jezyki a { display: block; }
+.jezyki a:hover { opacity: 0.8; }
+
+/* ===================== MAPA: podpisy nad pinezkami ===================== */
+.mapa .podpis-biura {
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  color: var(--biel);
+  font-family: var(--bezszeryf);
+  font-size: 12px;
+  line-height: 1.3;
+  box-shadow: none;
+  white-space: nowrap;
 }
-@keyframes zj-pojawianie {
-  from { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
-  to   { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+.mapa .podpis-biura::before { border-top-color: rgba(0, 0, 0, 0.75); }
+
+/* ===================== KAFLE NA TELEFONIE: kwadratowe ===================== */
+@media (max-width: 1099px) {
+  .kafle { grid-auto-rows: auto; }
+  .kafel { aspect-ratio: 1 / 1; }
+  .kafel__przycisk { display: flex; flex-direction: column; align-items: center; }
+  .kafel__nazwa {
+    position: static;
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    width: 100%;
+    padding: 0 6px;
+    white-space: nowrap;                     /* zawsze jedna linijka */
+    font-size: clamp(11px, 3.3vw, 14px);
+  }
+  .ikona { position: static; margin: 0 auto 26px; flex: none; }
 }
