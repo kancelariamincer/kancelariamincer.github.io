@@ -1,4 +1,4 @@
-/* wersja 21 */
+/* wersja 22 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -325,7 +325,7 @@
   // zwraca listę "linijek" (tablice elementów) w kolejności od góry
   function linijkiOpisu(opis) {
     const linie = [];
-    [...opis.children].forEach((el) => {
+    [...(opis.querySelector(".opis__tresc") || opis).children].forEach((el) => {
       if (el.classList.contains("ukryte")) return;
       if (el.tagName === "P") {
         podzielNaSlowa(el);
@@ -388,18 +388,10 @@
     opis.style.setProperty("--opis-x", kol <= 2 ? 278 : -490);
     opis.classList.toggle("opis--dol", rzad > 0);
     opis.hidden = false;
+    const tresc = opis.querySelector(".opis__tresc");
+    tresc.scrollTop = 0;
+    zanikOpisu(tresc);
     kafel.classList.add("kafel--otwarty");
-    // puls spod kółka – ramka kafla zapala się, gdy puls dojdzie do jego krawędzi (CSS)
-    if (!malyRuch.matches) {
-      przycisk.querySelectorAll(".puls").forEach((p) => p.remove());
-      const puls = document.createElement("span");
-      puls.className = "puls";
-      puls.setAttribute("aria-hidden", "true");
-      przycisk.insertBefore(puls, przycisk.querySelector(".ikona"));
-      puls.addEventListener("animationend", () => puls.remove());
-    } else {
-      przycisk.style.setProperty("--opoznienie-ramki", "0s");
-    }
     przycisk.setAttribute("aria-expanded", "true");
     root.classList.add("opis-otwarty");
     aktualizujKontakt();
@@ -407,6 +399,15 @@
     requestAnimationFrame(() => { opis.classList.add("otwarty"); pokazCaleOkienko(opis); });
     otwarty = { kafel, przycisk, opis };
   }
+
+  // dolny zanik tekstu (20 px), gdy treść sięga dolnego marginesu;
+  // zmniejsza się do 0 przy dojściu do końca treści
+  function zanikOpisu(tresc) {
+    const reszta = tresc.scrollHeight - tresc.clientHeight - tresc.scrollTop;
+    tresc.style.setProperty("--zanik", Math.max(0, Math.min(20, reszta)).toFixed(1) + "px");
+  }
+  document.querySelectorAll(".opis__tresc").forEach((t) =>
+    t.addEventListener("scroll", () => zanikOpisu(t), { passive: true }));
 
   kafle.forEach((kafel, i) => {
     kafel.querySelector(".kafel__przycisk").addEventListener("click", (e) => {
@@ -470,7 +471,7 @@
 
   // elementy dodane przez skrypty (mapa Leaflet, podział na słowa/litery) – pomijamy
   const dynamiczny = (el) => !el.classList.contains("mapa") &&
-    [...el.classList].some((c) => c.startsWith("leaflet-") || c === "slowo" || c === "puls" || c.startsWith("zj-"));
+    [...el.classList].some((c) => c.startsWith("leaflet-") || c === "slowo" || c.startsWith("zj-"));
   const dzieci = (el) => [...el.children].filter((c) => !dynamiczny(c));
   const maWlasnyTekst = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
 

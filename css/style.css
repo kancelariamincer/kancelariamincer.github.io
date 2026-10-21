@@ -1,4 +1,4 @@
-/* wersja 21 */
+/* wersja 22 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -183,7 +183,7 @@ html.anim .tla {
   transform: translateY(-50%);
   display: block;
 }
-.logo-adwokatura img { display: block; width: calc(141 * var(--f)); height: auto; }   /* tylko trochę wyższe od logo AMM (92 vs 80 px) */
+.logo-adwokatura img { display: block; width: calc(113 * var(--f)); height: auto; }   /* −20% (73 px wysokości) */
 .menu {
   position: absolute;
   left: 50%; top: 50%;
@@ -272,7 +272,6 @@ main { position: relative; z-index: 2; }
   border: calc(2 * var(--u)) solid transparent;
   border-radius: calc(10 * var(--u));
   cursor: pointer;
-  overflow: hidden;                          /* puls jest maskowany przez kafel */
   transition: background-color .2s ease, border-color .3s ease;   /* odznaczenie: ramka gaśnie */
 }
 .kafel__nazwa {
@@ -298,46 +297,13 @@ main { position: relative; z-index: 2; }
   display: grid;
   place-items: center;
 }
-/* najechanie: tylko czarne wypełnienie 30%, bez ramki */
+/* najechanie: białe wypełnienie 30%, bez ramki */
 .kafel__przycisk:hover,
 .kafel__przycisk[aria-expanded="true"] {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
-/* kliknięty kafel: ramka zapala się, gdy puls dojdzie do krawędzi kafla */
-.kafel__przycisk[aria-expanded="true"] {
-  border-color: var(--biel);
-  transition: background-color .2s ease, border-color .3s ease var(--opoznienie-ramki, .55s);
-}
-/* biały puls spod czarnego koła */
-/* puls = miękka, szeroka poświata (nie obrys): najjaśniej na krawędzi kółka (60 px),
-   łagodnie wygaszana 45 px do środka i 40 px na zewnątrz; element 200 px, środek = środek kółka */
-.puls {
-  position: absolute;
-  left: 50%;
-  top: calc(48 * var(--u));
-  width: calc(200 * var(--u));
-  height: calc(200 * var(--u));
-  margin-left: calc(-100 * var(--u));
-  border-radius: 50%;
-  background: radial-gradient(closest-side,
-    rgba(255, 255, 255, 0) 15%,
-    rgba(255, 255, 255, 0.12) 35%,
-    rgba(255, 255, 255, 0.55) 50%,
-    #fff 60%,
-    rgba(255, 255, 255, 0.55) 70%,
-    rgba(255, 255, 255, 0.12) 85%,
-    rgba(255, 255, 255, 0) 100%);
-  pointer-events: none;
-  animation: puls .9s linear forwards;
-}
-/* krycie długo bliskie zeru, gwałtownie do 100% tuż przed dotknięciem boków kafla (ok. 32% czasu) */
-@keyframes puls {
-  0%   { transform: scale(1);   opacity: 0; }
-  20%  { opacity: 0.0075; }
-  27%  { opacity: 0.0375; }
-  31%  { opacity: 0.25; }                   /* widoczność 4× mniejsza */
-  100% { transform: scale(4.6); opacity: 0.25; }
-}
+/* kliknięty kafel: biała ramka */
+.kafel__przycisk[aria-expanded="true"] { border-color: var(--biel); }
 .ikona { z-index: 1; }
 .kafel__przycisk:focus-visible { outline-offset: 2px; }
 
@@ -350,11 +316,8 @@ main { position: relative; z-index: 2; }
   width: calc(470 * var(--u));
   height: auto;                              /* wysokość dopasowana do treści… */
   max-height: calc(540 * var(--u));         /* …ale najwyżej 2 kafle (2 × 260 + 20) – dłuższe przewijają się */
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
-  border: 2px solid var(--biel);
+  display: flex; flex-direction: column;
+  overflow: hidden;
   padding: calc(35 * var(--u));              /* dolny margines = górny */
   background: rgba(0, 0, 0, 0.3);           /* czerń 30% */
   -webkit-backdrop-filter: blur(20px);      /* rozmycie tła pod okienkiem – czytelność tekstu; usuń, jeśli niepotrzebne */
@@ -882,7 +845,7 @@ body.dokument { min-height: 0; }
 @media (max-width: 1099px) {
   .logo-kancelarii { position: static; transform: none; }
   .logo-kancelarii__pelne { width: 150px; }
-  .logo-adwokatura img { width: 64px; }
+  .logo-adwokatura img { width: 51px; }
   .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
   .naglowek--pasek .logo-adwokatura { display: none; }
 }
@@ -950,7 +913,6 @@ body.dokument { min-height: 0; }
 }
 
 @media (max-width: 1099px) {
-  .puls { top: auto; bottom: 26px; width: 64px; height: 64px; margin-left: -32px; border-width: 6px; }
   .opis, .opis--dol { max-height: 80vh; }
 }
 
@@ -964,7 +926,6 @@ body.dokument { min-height: 0; }
   .naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { height: 30px; }
   .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
   .naglowek--pasek .menu { gap: 10px; font-size: 12px; }
-  .puls { top: auto; bottom: calc(26px - 64px / 3); width: calc(64px * 5 / 3); height: calc(64px * 5 / 3); margin-left: calc(-64px * 5 / 6); }
 }
 @media (max-width: 1099px) { .stopka__kolumna li { min-height: 0; } .stopka__kolumna li + li { margin-top: 10px; } }
 
@@ -1217,7 +1178,6 @@ body.blog { min-height: 0; }
   .kafel__przycisk { justify-content: space-between; padding: 22px 0; }
   .kafel__nazwa { flex: none; line-height: 1.2; }
   .ikona { margin: 0 auto; }
-  .puls { bottom: calc(22px - 64px / 3); }
 
   /* okienko usługi: kwadrat na wysokość 2 kafli, przewijana treść, przycisk × */
   .opis, .opis--dol {
@@ -1241,3 +1201,30 @@ body.blog { min-height: 0; }
 .wpis__zamknij, .karta__link, .opis__zamknij { -webkit-tap-highlight-color: transparent; }
 .karta__link:focus, .karta__link:focus-visible, .wpis__zamknij:focus, .wpis__zamknij:focus-visible { outline: none; }
 .karta__link:focus-visible .karta__tlo::after { background-color: rgba(0, 0, 0, 0.12); }
+
+/* ===================== v22 ===================== */
+/* treść okienka usługi przewija się w środku; tekst przy dolnym marginesie gaśnie na 20 px,
+   a przy dojściu do końca treści zanik maleje do 0 (--zanik ustawia skrypt) */
+.opis__tresc {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--zanik, 0px)), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - var(--zanik, 0px)), transparent 100%);
+}
+.opis__tresc > :last-child { margin-bottom: 0; }
+@media (max-width: 1099px) {
+  .opis__zamknij { position: static; flex: none; margin: 0 -12px 0 auto; }
+  .opis__zamknij + * { margin-top: -12px; }
+}
+
+/* podpisy adresów nad kropkami: biały podlew, czarny tekst, delikatny cień jak pod okienkami */
+.mapa .podpis-biura {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);
+}
+.mapa .podpis-biura::before { border-top-color: #fff; }
+@media (max-width: 1099px) { .opis, .opis--dol { overflow: hidden; } }
