@@ -1,4 +1,4 @@
-/* wersja 19 */
+/* wersja 21 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -357,6 +357,7 @@
 
   // jeśli okienko wystaje poza ekran – delikatnie przewijamy stronę
   function pokazCaleOkienko(opis) {
+    if (getComputedStyle(opis).position === "fixed") return;   // telefon: okienko na środku ekranu
     const r = opis.getBoundingClientRect();
     const vh = window.innerHeight, m = 24;
     let dy = 0;
@@ -413,6 +414,7 @@
       if (otwarty && otwarty.kafel === kafel) zamknijOpis(); else otworzOpis(i);
     });
     kafel.querySelector(".opis").addEventListener("click", (e) => e.stopPropagation());
+    kafel.querySelector(".opis__zamknij").addEventListener("click", () => { zamknijOpis(); });
   });
   document.addEventListener("click", zamknijOpis);
   document.addEventListener("keydown", (e) => {

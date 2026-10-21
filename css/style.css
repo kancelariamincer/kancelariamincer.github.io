@@ -1,4 +1,4 @@
-/* wersja 19 */
+/* wersja 21 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -172,7 +172,7 @@ html.anim .tla {
 .naglowek {
   position: absolute;
   left: 0; right: 0;
-  top: calc(100 * var(--u));
+  top: calc(40 * var(--u));                  /* jak na blogu: od pierwszego wiersza siatki */
   height: calc(119 * var(--u));
   z-index: 3;
 }
@@ -183,7 +183,7 @@ html.anim .tla {
   transform: translateY(-50%);
   display: block;
 }
-.logo-adwokatura img { display: block; width: calc(187 * var(--f)); height: auto; }
+.logo-adwokatura img { display: block; width: calc(141 * var(--f)); height: auto; }   /* tylko trochę wyższe od logo AMM (92 vs 80 px) */
 .menu {
   position: absolute;
   left: 50%; top: 50%;
@@ -882,7 +882,7 @@ body.dokument { min-height: 0; }
 @media (max-width: 1099px) {
   .logo-kancelarii { position: static; transform: none; }
   .logo-kancelarii__pelne { width: 150px; }
-  .logo-adwokatura img { width: 84px; }
+  .logo-adwokatura img { width: 64px; }
   .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
   .naglowek--pasek .logo-adwokatura { display: none; }
 }
@@ -1067,7 +1067,7 @@ body.blog { min-height: 0; }
   transition: background-color .3s ease;
 }
 .karta__link:hover .karta__tlo::after { background-color: rgba(0,0,0,.15); }
-.zdjecie--waga  { background-image: url("../img/zdjecie-2-waga.webp"); }
+.zdjecie--waga  { background-image: url("../img/blog-waga.webp"); }    /* bez przezroczystych krawędzi */
 .zdjecie--dachy { background-image: url("../img/zdjecie-3-dachy.webp"); }
 .karta__data, .karta__tytul { position: relative; z-index: 1; }
 .karta__data, .wpis__data { font-size: max(13px, calc(18 * var(--f))); letter-spacing: -0.007em; }
@@ -1084,7 +1084,7 @@ body.blog { min-height: 0; }
   width: calc(1072 * var(--u));
   min-height: calc(1555 * var(--u));
   border-radius: calc(10 * var(--u));
-  background: #fff; color: #000;
+  background: #000; color: #000;            /* biel wjeżdża osobną warstwą (.wpis__biel) */
   overflow: hidden;
   box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);
   z-index: 3;
@@ -1093,8 +1093,23 @@ body.blog { min-height: 0; }
 .wpis__okladka { bottom: auto; height: calc(490 * var(--u)); }
 .wpis__okladka::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,.1) 35%, rgba(255,255,255,0) 45%, rgba(255,255,255,.85) 78%, #fff 92%);
+  background: linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,.1) 35%, rgba(0,0,0,0) 45%);
 }
+/* przyciemnienie jak na kafelku – gaśnie na początku rozwijania */
+.wpis__ciemne {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.45));
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.wpis--start .wpis__ciemne { opacity: 1; }
+/* biały gradient wyjeżdżający spod kafla */
+.wpis__biel {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 0;
+  top: calc(220 * var(--u));
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0, rgba(255,255,255,.85) calc(150 * var(--u)), #fff calc(230 * var(--u)), #fff 100%);
+}
+.wpis--start .wpis__biel { transform: translateY(100%); }
 .wpis__glowa, .wpis__tresc, .wpis__autor { position: relative; z-index: 1; }
 .wpis__glowa { padding: calc(70 * var(--u)) calc(80 * var(--u)) 0; color: var(--biel); }
 .wpis__zamknij {
@@ -1104,6 +1119,9 @@ body.blog { min-height: 0; }
   font-size: calc(30 * var(--f)); line-height: 1; color: var(--biel);
 }
 .wpis__zamknij:hover { text-decoration: none; opacity: .75; }
+.wpis__zamknij:focus, .wpis__zamknij:focus-visible { outline: none; }
+.wpis__zamknij:focus-visible { opacity: .75; }
+.karta__link:focus:not(:focus-visible) { outline: none; }
 .wpis__tytul {
   margin-top: calc(90 * var(--u)); max-width: calc(620 * var(--u));
   font-family: var(--szeryf); font-weight: 400;
@@ -1136,10 +1154,10 @@ body.blog { min-height: 0; }
   font-size: max(12px, calc(12 * var(--f)));
 }
 /* stany: wpis otwarty */
-.blog-uklad.wpis-otwarty .blog-karty { opacity: 0; pointer-events: none; }
-.wpis__glowa, .wpis__tresc, .wpis__autor, .wpis__okladka::after { transition: opacity .35s ease; }
-.wpis.wpis--animacja .wpis__glowa, .wpis.wpis--animacja .wpis__tresc,
-.wpis.wpis--animacja .wpis__autor { opacity: 0; }
+.blog-uklad.wpis-otwarty .blog-karty { pointer-events: none; }   /* kafle zostają pod wpisem – bez błyskania przy zamykaniu */
+/* teksty wpisu pojawiają się kolejno (także w trakcie rozwijania) */
+.wpis-linia { transition: opacity .6s cubic-bezier(0.33, 0, 0.2, 1) var(--opoznienie, 0s); }
+.wpis--teksty-ukryte .wpis-linia { opacity: 0; transition-duration: .2s; transition-delay: 0s; }
 
 /* stopka bloga */
 .blog-stopka {
@@ -1179,6 +1197,47 @@ body.blog { min-height: 0; }
   .wpis__autor { padding: 20px 22px 40px; font-size: 13px; }
   .blog-stopka { padding: 30px 20px 40px; }
 }
-.wpis.wpis--animacja .wpis__okladka::after { opacity: 0; }
+
 .blog-szukaj { -webkit-appearance: none; appearance: none; }
 .blog-szukaj::-webkit-search-cancel-button { filter: invert(1); }
+
+@media (max-width: 1099px) {
+  .blog-uklad.wpis-otwarty .blog-karty { visibility: hidden; }
+  .wpis__biel { top: 150px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0, rgba(255,255,255,.85) 120px, #fff 190px, #fff 100%); }
+}
+
+/* ===================== v21: poprawki wersji na telefon ===================== */
+.opis__zamknij { display: none; }
+@media (max-width: 1099px) {
+  /* pasek menu: oba sygnety 2× mniejsze */
+  .naglowek--pasek .logo-kancelarii__sygnet { height: 19px; }
+  .naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { height: 15px; }
+
+  /* kafle usług: margines od dołu kafla do koła = od góry kafla do tekstu */
+  .kafel__przycisk { justify-content: space-between; padding: 22px 0; }
+  .kafel__nazwa { flex: none; line-height: 1.2; }
+  .ikona { margin: 0 auto; }
+  .puls { bottom: calc(22px - 64px / 3); }
+
+  /* okienko usługi: kwadrat na wysokość 2 kafli, przewijana treść, przycisk × */
+  .opis, .opis--dol {
+    left: 20px; right: 20px;
+    height: calc(100vw - 40px); max-height: calc(100vh - 120px);
+    padding: 0 20px 24px;
+  }
+  .opis__zamknij {
+    display: grid; place-items: center;
+    position: sticky; top: 0; z-index: 2;
+    margin: 0 -12px 0 auto;
+    width: 44px; height: 44px;
+    border: 0; background: none; color: var(--biel);
+    font-size: 28px; line-height: 1; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opis__zamknij + * { margin-top: -20px; }
+}
+
+/* blog: bez obrysów i szarych "kwadratów" po dotknięciu (×, kafle) */
+.wpis__zamknij, .karta__link, .opis__zamknij { -webkit-tap-highlight-color: transparent; }
+.karta__link:focus, .karta__link:focus-visible, .wpis__zamknij:focus, .wpis__zamknij:focus-visible { outline: none; }
+.karta__link:focus-visible .karta__tlo::after { background-color: rgba(0, 0, 0, 0.12); }
