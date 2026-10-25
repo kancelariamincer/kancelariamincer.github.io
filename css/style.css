@@ -1,4 +1,4 @@
-/* wersja 23 */
+/* wersja 24 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1096,7 +1096,7 @@ body.blog { min-height: 0; }
 }
 .wpis__tresc {
   padding: calc(26 * var(--u)) calc(80 * var(--u)) 0;
-  max-width: calc(80 * var(--u) + 389 * var(--u) + 80 * var(--u));
+  max-width: calc(34em + 160 * var(--u));   /* ok. 65 znaków w wierszu – szerokość liczona od wielkości czcionki */
   font-size: max(12px, calc(12 * var(--f))); line-height: max(18px, calc(18 * var(--f)));
 }
 .wpis__tresc p, .wpis__tresc ul, .wpis__tresc ol, .wpis__tresc table { margin: 0 0 calc(12 * var(--f)); }
@@ -1209,8 +1209,6 @@ body.blog { min-height: 0; }
   flex: 1 1 auto; min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--zanik, 0px)), transparent 100%);
           mask-image: linear-gradient(to bottom, #000 calc(100% - var(--zanik, 0px)), transparent 100%);
 }
@@ -1248,4 +1246,31 @@ body.blog { min-height: 0; }
 .sekcja--kontakt .info,
 .sekcja--kontakt .dane-biura,
 .sekcja--kontakt .formularz__rodo,
-.sekcja--kontakt .formularz__status { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45); }
+.sekcja--kontakt .formularz__status { text-shadow: 0 0 6px rgba(0, 0, 0, 0.45); }   /* cień równomierny we wszystkie strony */
+
+/* ===================== v24 ===================== */
+/* rozmycie tła pod podlewami (jak pod okienkami usług) */
+.kafel__przycisk:hover,
+.kafel__przycisk[aria-expanded="true"],
+.pole {
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+}
+
+/* suwak w okienku usługi: 6 px szerokości i 6 px od krawędzi okienka */
+.opis__tresc {
+  margin-right: calc(-35 * var(--u) + 6px);
+  padding-right: calc(35 * var(--u) - 12px);
+}
+.opis__tresc::-webkit-scrollbar { width: 6px; }
+.opis__tresc::-webkit-scrollbar-track { background: transparent; }
+.opis__tresc::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.5); border-radius: 3px; }
+@supports not selector(::-webkit-scrollbar) {
+  .opis__tresc { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.5) transparent; }
+}
+@media (max-width: 1099px) {
+  .opis__tresc { margin-right: -14px; padding-right: 8px; }
+}
+
+/* blog: bardzo delikatny cień pod tytułem wpisu */
+.wpis__tytul { text-shadow: 0 0 14px rgba(0, 0, 0, 0.35); }

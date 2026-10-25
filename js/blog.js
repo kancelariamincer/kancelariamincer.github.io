@@ -1,4 +1,4 @@
-/* wersja 23 */
+/* wersja 24 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -112,7 +112,7 @@
      a spod jego dolnej krawędzi wyjeżdża biały gradient (3 s, wyhamowanie). Teksty wpisu
      pojawiają się kolejno już w trakcie. Wszystko maskowane przez kafel.
      Zamykanie: odwrotnie. Pozostałe kafle cały czas leżą pod spodem (bez błyskania). */
-  const CZAS = 700, WYGASZENIE = 300, BIEL = 3000;
+  const CZAS = 700, WYGASZENIE = 0, BIEL = 750;   // biel wchodzi od razu i szybko
   const KRZYWA = "cubic-bezier(0.2, 0.7, 0.1, 1)";
   const indeksBloga = document.body.dataset.indeks || "./";
   let otwarty = null, trwa = null;
@@ -171,7 +171,7 @@
         wpis.classList.remove("wpis--start");
         wpis.querySelector(".wpis__ciemne").style.opacity = "";
         const biel = wpis.querySelector(".wpis__biel");
-        if (window.matchMedia("(max-width: 1099px)").matches) {
+        if (true) {   // biel startuje tuż pod dolną krawędzią kafla (komputer i telefon)
           // telefon: biel startuje tuż pod dolną krawędzią kafla i płynnie wsuwa się
           // (przesunięcie + rozciąganie w pionie + krycie), zamiast "wskakiwać" z daleka
           const d = Math.max(0, start.height - biel.offsetTop);
@@ -180,7 +180,7 @@
             [{ transform: `translateY(${d}px) scaleY(0.3)`, opacity: 0 },
              { transform: `translateY(${d * 0.4}px) scaleY(0.75)`, opacity: 1, offset: 0.35 },
              { transform: "translateY(0) scaleY(1)", opacity: 1 }],
-            { duration: BIEL, easing: "cubic-bezier(0.25, 0, 0.2, 1)" });
+            { duration: BIEL, easing: "cubic-bezier(0.2, 0, 0.1, 1)" });
         } else {
           biel.animate(
             [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
