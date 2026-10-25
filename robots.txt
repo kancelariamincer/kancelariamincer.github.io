@@ -36,22 +36,22 @@ Allow: /
 #     Ustawienie domyślne: zgoda – blog jest publiczną informacją kancelarii.
 #     Żeby nie udostępniać treści do trenowania, zmień na "Disallow: /".
 User-agent: GPTBot
-Allow: /
+Disallow: /
 
 User-agent: ClaudeBot
-Allow: /
+Disallow: /
 
 User-agent: Google-Extended
-Allow: /
+Disallow: /
 
 User-agent: Applebot-Extended
-Allow: /
+Disallow: /
 
 User-agent: CCBot
-Allow: /
+Disallow: /
 
 User-agent: meta-externalagent
-Allow: /
+Disallow: /
 
 # --- Roboty bez korzyści dla kancelarii ---
 User-agent: Bytespider
