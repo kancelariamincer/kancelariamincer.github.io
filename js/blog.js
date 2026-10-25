@@ -1,4 +1,4 @@
-/* wersja 24 */
+/* wersja 25 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -203,6 +203,9 @@
       if (document.activeElement && wpis.contains(document.activeElement) || document.activeElement && document.activeElement.closest && document.activeElement.closest(".karta")) document.activeElement.blur();
       wpis.hidden = true;
       wpis.style.cssText = "";
+      // tekst na kaflu wraca łagodnie (0,5 s), a nie nagle
+      if (karta && !malyRuch.matches) karta.querySelectorAll(".karta__data, .karta__tytul").forEach((el) =>
+        el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: "ease-out" }));
       wpis.classList.remove("wpis--start", "wpis--teksty-ukryte");
       wpis.querySelector(".wpis__ciemne").style.opacity = "";
       obszar.style.minHeight = "";

@@ -1,4 +1,4 @@
-/* wersja 24 */
+/* wersja 25 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1096,7 +1096,7 @@ body.blog { min-height: 0; }
 }
 .wpis__tresc {
   padding: calc(26 * var(--u)) calc(80 * var(--u)) 0;
-  max-width: calc(34em + 160 * var(--u));   /* ok. 65 znaków w wierszu – szerokość liczona od wielkości czcionki */
+  max-width: calc(36.7em + 160 * var(--u));   /* ok. 65 znaków w wierszu – szerokość liczona od wielkości czcionki */
   font-size: max(12px, calc(12 * var(--f))); line-height: max(18px, calc(18 * var(--f)));
 }
 .wpis__tresc p, .wpis__tresc ul, .wpis__tresc ol, .wpis__tresc table { margin: 0 0 calc(12 * var(--f)); }
@@ -1246,7 +1246,7 @@ body.blog { min-height: 0; }
 .sekcja--kontakt .info,
 .sekcja--kontakt .dane-biura,
 .sekcja--kontakt .formularz__rodo,
-.sekcja--kontakt .formularz__status { text-shadow: 0 0 6px rgba(0, 0, 0, 0.45); }   /* cień równomierny we wszystkie strony */
+.sekcja--kontakt .formularz__status { text-shadow: var(--cien-tekstu); }   /* cień równomierny we wszystkie strony */
 
 /* ===================== v24 ===================== */
 /* rozmycie tła pod podlewami (jak pod okienkami usług) */
@@ -1274,3 +1274,27 @@ body.blog { min-height: 0; }
 
 /* blog: bardzo delikatny cień pod tytułem wpisu */
 .wpis__tytul { text-shadow: 0 0 14px rgba(0, 0, 0, 0.35); }
+
+/* ===================== v25 ===================== */
+/* delikatny cień pod wszystkimi białymi tekstami (o 20% mniejszy niż wcześniej w kontakcie) */
+:root { --cien-tekstu: 0 0 4.8px rgba(0, 0, 0, 0.45); }
+.naglowek, .sekcja, .stopka, .kontakt, .opis, .wybor-mapy, .okno-rodo,
+.blog-glowa, .blog-boczny, .karta, .wpis__glowa, .blog-stopka { text-shadow: var(--cien-tekstu); }
+/* bez cienia tam, gdzie tekst jest czarny */
+.pole, .przycisk, .mapa, .kafel__przycisk:hover .kafel__nazwa,
+.wpis__lead, .wybor-mapy__opcja, .okno-rodo__zamknij { text-shadow: none; }
+.wpis__tytul { text-shadow: 0 0 14px rgba(0, 0, 0, 0.35); }
+
+/* biura w belce kontaktowej – tylko na telefonie */
+.kontakt__biura { display: none; }
+
+@media (max-width: 1099px) {
+  .kontakt__biura { display: block; margin-top: 4px; font-size: 14px; line-height: 20px; letter-spacing: .02em; }
+  /* znak Adwokatury w menu +20% */
+  .logo-adwokatura img { width: 65px; }
+  /* kafle usług: tytuł i ikona bliżej siebie (odstęp = margines pod ikoną), całość wyśrodkowana */
+  .kafel__przycisk { justify-content: center; gap: 22px; padding: 0; }
+  /* pasek menu: przy przewijaniu w dół znika na krycie w 0,5 s */
+  .naglowek--pasek { transition: opacity .5s ease; }
+  .naglowek--pasek.naglowek--ukryty:not(:focus-within) { transform: none; opacity: 0; pointer-events: none; }
+}
