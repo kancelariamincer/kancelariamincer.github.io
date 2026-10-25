@@ -1,4 +1,4 @@
-/* wersja 22 */
+/* wersja 23 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -183,7 +183,7 @@ html.anim .tla {
   transform: translateY(-50%);
   display: block;
 }
-.logo-adwokatura img { display: block; width: calc(113 * var(--f)); height: auto; }   /* −20% (73 px wysokości) */
+.logo-adwokatura img { display: block; width: calc(118.65 * var(--f)); height: auto; }   /* +5% (77 px wysokości) */
 .menu {
   position: absolute;
   left: 50%; top: 50%;
@@ -845,7 +845,7 @@ body.dokument { min-height: 0; }
 @media (max-width: 1099px) {
   .logo-kancelarii { position: static; transform: none; }
   .logo-kancelarii__pelne { width: 150px; }
-  .logo-adwokatura img { width: 51px; }
+  .logo-adwokatura img { width: 54px; }
   .naglowek--pasek .logo-kancelarii__sygnet { height: 34px; }
   .naglowek--pasek .logo-adwokatura { display: none; }
 }
@@ -919,7 +919,7 @@ body.dokument { min-height: 0; }
 /* ===================== SYGNETY W PASKU MENU ===================== */
 .logo-adwokatura .logo-adwokatura__sygnet { display: none; }
 .naglowek--pasek .logo-adwokatura .logo-adwokatura__pelne { display: none; }
-.naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { display: block; width: auto; height: max(26px, calc(31 * var(--f))); }   /* 2× mniejszy */
+.naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { display: block; width: auto; height: max(28.6px, calc(34.1 * var(--f))); }   /* +10% */
 .naglowek--pasek .logo-kancelarii__sygnet { height: max(38px, calc(45 * var(--f))); }   /* −20% */
 @media (max-width: 1099px) {
   .naglowek--pasek .logo-adwokatura { display: block; }
@@ -1172,7 +1172,7 @@ body.blog { min-height: 0; }
 @media (max-width: 1099px) {
   /* pasek menu: oba sygnety 2× mniejsze */
   .naglowek--pasek .logo-kancelarii__sygnet { height: 19px; }
-  .naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { height: 15px; }
+  .naglowek--pasek .logo-adwokatura .logo-adwokatura__sygnet { height: 16.5px; }
 
   /* kafle usług: margines od dołu kafla do koła = od góry kafla do tekstu */
   .kafel__przycisk { justify-content: space-between; padding: 22px 0; }
@@ -1228,3 +1228,24 @@ body.blog { min-height: 0; }
 }
 .mapa .podpis-biura::before { border-top-color: #fff; }
 @media (max-width: 1099px) { .opis, .opis--dol { overflow: hidden; } }
+/* ukryte okienka usług nie mogą zasłaniać kafli (display:flex nadpisywał atrybut hidden) */
+.opis[hidden] { display: none !important; }
+
+/* ===================== v23 ===================== */
+/* blog: pasek menu przy przewijaniu przyklejony do samej góry (wcześniej dziedziczył 40 px) */
+.blog .naglowek--pasek { top: 0; }
+
+/* kafel usług po najechaniu: czarny tekst na białym podlewie */
+.kafel__przycisk:hover .kafel__nazwa { color: #000; }
+.kafel__nazwa { transition: color .2s ease; }
+
+/* formularz kontaktowy: czarne teksty i podpowiedzi w polach */
+.pole { color: #000; }
+.pole::placeholder { color: #000; opacity: 1; }
+
+/* sekcja kontaktowa: delikatny cień pod białymi tekstami (czytelność na zdjęciu) */
+.sekcja--kontakt .naglowek-sekcji,
+.sekcja--kontakt .info,
+.sekcja--kontakt .dane-biura,
+.sekcja--kontakt .formularz__rodo,
+.sekcja--kontakt .formularz__status { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45); }

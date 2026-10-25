@@ -1,4 +1,4 @@
-/* wersja 22 */
+/* wersja 23 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
