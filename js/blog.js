@@ -1,4 +1,4 @@
-/* wersja 26 */
+/* wersja 27 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -107,6 +107,24 @@
     }
   }
 
+  /* ---------- Dane kontaktowe przy otwartym wpisie ----------
+     Komputer: w prawym dolnym rogu, wyrównane do przycisku ×, widoczne tylko nad białą częścią wpisu
+     (tekst jest czarny). Telefon: belka na dole ekranu, stale przy otwartym wpisie. */
+  const blogKontakt = document.querySelector(".blog-kontakt");
+  const telefon = window.matchMedia("(max-width: 1099px)");
+  function aktualizujKontaktBloga() {
+    if (!blogKontakt) return;
+    let widac = !!otwarty;
+    if (widac && !telefon.matches) {
+      const w = otwarty.getBoundingClientRect(), k = blogKontakt.getBoundingClientRect();
+      const bialeOd = w.top + otwarty.querySelector(".wpis__okladka").offsetHeight;
+      widac = k.top > bialeOd && k.bottom < w.bottom - 20;
+    }
+    blogKontakt.classList.toggle("widoczny", widac);
+  }
+  window.addEventListener("scroll", () => requestAnimationFrame(aktualizujKontaktBloga), { passive: true });
+  window.addEventListener("resize", aktualizujKontaktBloga);
+
   /* ---------- 3. Rozwijanie kafla we wpis ----------
      Otwieranie: przyciemnienie kafla gaśnie (0,3 s), potem kafel rośnie do pełnego wpisu,
      a spod jego dolnej krawędzi wyjeżdża biały gradient (3 s, wyhamowanie). Teksty wpisu
@@ -155,6 +173,7 @@
     obszar.style.minHeight = cel.height + "px";
     uklad.classList.add("wpis-otwarty");
     otwarty = wpis;
+    setTimeout(aktualizujKontaktBloga, CZAS + 50);
     if (doHistorii) history.pushState({ wpis: slug }, "", slug + ".html");
     document.title = wpis.dataset.tytul + " – Blog kancelarii";
 
@@ -200,6 +219,7 @@
     if (!wpis) return;
     otwarty = null;
     clearTimeout(trwa);
+    aktualizujKontaktBloga();
     const karta = karty.find((k) => k.dataset.slug === wpis.dataset.slug);
     const koniec = () => {
       if (document.activeElement && wpis.contains(document.activeElement) || document.activeElement && document.activeElement.closest && document.activeElement.closest(".karta")) document.activeElement.blur();
