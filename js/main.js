@@ -1,4 +1,4 @@
-/* wersja 28 */
+/* wersja 29 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -46,10 +46,11 @@
       const a = okno.getBoundingClientRect(), c = blokKontaktu.getBoundingClientRect();
       if (a.left < c.right && a.right > c.left && a.top < c.bottom && a.bottom > c.top) k = 0;
     }
+    const gradientKrycie = k === 0 && okno ? 0 : g;   // przy otwartym okienku w rogu chowamy też gradient z rozmyciem
     // krycie ustawiane wprost na elemencie (pewniejsze w Safari na iPadzie niż zmienne CSS)
     blokKontaktu.style.opacity = k.toFixed(3);
     blokKontaktu.style.visibility = k > 0.01 ? "visible" : "hidden";
-    root.style.setProperty("--gradient", g.toFixed(3));
+    root.style.setProperty("--gradient", gradientKrycie.toFixed(3));
   }
 
   /* =========================================================

@@ -1,4 +1,4 @@
-/* wersja 28 */
+/* wersja 29 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -959,7 +959,7 @@ body.blog { min-height: 0; }
 }
 
 .blog-strona { position: relative; z-index: 2; padding-bottom: calc(120 * var(--u)); }
-.blog-glowa { position: relative; height: calc(535 * var(--u)); }
+.blog-glowa { position: relative; height: calc(591 * var(--u)); }   /* opis bloga ma 5 linijek (+56 px) */
 .blog-glowa > * { position: absolute; left: calc(179 * var(--u)); }
 .blog-tytul {
   top: calc(269 * var(--u));
@@ -969,7 +969,7 @@ body.blog { min-height: 0; }
 .blog-opis { top: calc(390 * var(--u)); }
 .blog-strony {
   left: auto; right: calc(50% - 685 * var(--u));
-  top: calc(462 * var(--u));
+  top: calc(518 * var(--u));
   display: flex; gap: calc(12 * var(--u));
   font-family: var(--szeryf); font-size: calc(40 * var(--f)); line-height: normal;
 }
@@ -1388,6 +1388,8 @@ body.blog { min-height: 0; }
 /* ===================== v28 ===================== */
 /* rozmycie pod danymi kontaktowymi – dokładnie tam, gdzie czarny podlew (ta sama maska co gradient) */
 .gradient-kontakt {
+  z-index: 3;                                 /* nad treścią strony (z-index 2), pod danymi kontaktowymi (4) –
+                                                 dopiero wtedy rozmycie obejmuje przewijane teksty */
   -webkit-backdrop-filter: blur(20px);
           backdrop-filter: blur(20px);
   -webkit-mask-image: linear-gradient(150.07deg, transparent 66.6%, #000 93.9%);
@@ -1419,3 +1421,17 @@ body.blog { min-height: 0; }
   }
 }
 @media (max-width: 1099px) { .blog .naglowek { --menu-odstep: 39px; } }
+
+/* ===================== v29 ===================== */
+@media (max-width: 1099px) {
+  /* menu: przyciski jeden pod drugim, do lewej */
+  .naglowek:not(.naglowek--pasek) .menu {
+    flex-direction: column; align-items: flex-start;
+    gap: 10px;
+  }
+  .naglowek:not(.naglowek--pasek) .menu a { align-items: flex-start; }
+}
+@media (max-width: 1099px) {
+  .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 21px; }          /* menu pionowe – w połowie między logo a tytułem */
+  .blog .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 25.5px; }
+}
