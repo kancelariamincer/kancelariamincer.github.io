@@ -1,4 +1,4 @@
-/* wersja 25 */
+/* wersja 26 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1234,8 +1234,7 @@ body.blog { min-height: 0; }
 .blog .naglowek--pasek { top: 0; }
 
 /* kafel usług po najechaniu: czarny tekst na białym podlewie */
-.kafel__przycisk:hover .kafel__nazwa { color: #000; }
-.kafel__nazwa { transition: color .2s ease; }
+
 
 /* formularz kontaktowy: czarne teksty i podpowiedzi w polach */
 .pole { color: #000; }
@@ -1277,11 +1276,11 @@ body.blog { min-height: 0; }
 
 /* ===================== v25 ===================== */
 /* delikatny cień pod wszystkimi białymi tekstami (o 20% mniejszy niż wcześniej w kontakcie) */
-:root { --cien-tekstu: 0 0 4.8px rgba(0, 0, 0, 0.45); }
+:root { --cien-tekstu: 0 0 9.6px rgba(0, 0, 0, 0.45); }   /* 2× szerszy */
 .naglowek, .sekcja, .stopka, .kontakt, .opis, .wybor-mapy, .okno-rodo,
 .blog-glowa, .blog-boczny, .karta, .wpis__glowa, .blog-stopka { text-shadow: var(--cien-tekstu); }
 /* bez cienia tam, gdzie tekst jest czarny */
-.pole, .przycisk, .mapa, .kafel__przycisk:hover .kafel__nazwa,
+.pole, .przycisk, .mapa,
 .wpis__lead, .wybor-mapy__opcja, .okno-rodo__zamknij { text-shadow: none; }
 .wpis__tytul { text-shadow: 0 0 14px rgba(0, 0, 0, 0.35); }
 
@@ -1297,4 +1296,32 @@ body.blog { min-height: 0; }
   /* pasek menu: przy przewijaniu w dół znika na krycie w 0,5 s */
   .naglowek--pasek { transition: opacity .5s ease; }
   .naglowek--pasek.naglowek--ukryty:not(:focus-within) { transform: none; opacity: 0; pointer-events: none; }
+}
+
+/* ===================== v26 ===================== */
+/* klauzula RODO: rozwijana w miejscu, przycisk "zwiń" na końcu */
+.rodo__zwin {
+  display: none;
+  padding: 0; border: 0; background: none;
+  color: var(--biel); font: inherit; line-height: inherit;
+  text-decoration: underline; cursor: pointer;
+}
+.rodo--rozwiniete .rodo__skrot { max-height: none; }
+.rodo--rozwiniete .rodo__skrot::before,
+.rodo--rozwiniete .rodo__rozwin { display: none; }
+.rodo--rozwiniete .rodo__zwin { display: inline; }
+
+/* ikony usług: 90%, pełna wielkość po najechaniu i po kliknięciu (1 s) */
+.ikona { transform: scale(0.9); transition: transform 1s cubic-bezier(0.2, 0.7, 0.1, 1); }
+.kafel__przycisk:hover .ikona,
+.kafel__przycisk[aria-expanded="true"] .ikona { transform: scale(1); }
+
+/* tytuły kafli: większy margines boczny – dłuższe nazwy łamią się na 2 linie,
+   rosnąc w górę (dolna linia zostaje na swoim miejscu nad kołem) */
+.kafel__nazwa {
+  top: auto;
+  bottom: calc(189.6 * var(--u));
+  left: calc(28 * var(--u)); right: calc(28 * var(--u));   /* zostaje 198 px: łamie się tylko "Obsługa przedsiębiorców" */
+  white-space: normal;
+  line-height: 1.15;
 }

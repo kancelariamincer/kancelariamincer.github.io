@@ -13,9 +13,9 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=25">
+  <link rel="stylesheet" href="css/style.css?v=26">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=25"></script>
+  <script src="js/start.js?v=26"></script>
 </head>
 <body>
 
@@ -415,7 +415,7 @@
         <p class="formularz__status" role="status" aria-live="polite"></p>
         <button class="przycisk linia" type="submit">Wyślij</button>
         <div class="formularz__rodo linia">
-          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-haspopup="dialog" aria-controls="okno-rodo">… rozwiń</button>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka <span class="bez-lamania">Mincer-Madejska</span>, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
+          <p class="rodo__skrot"><button class="rodo__rozwin" type="button" aria-expanded="false">… rozwiń</button>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka <span class="bez-lamania">Mincer-Madejska</span>, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności. <button class="rodo__zwin" type="button">zwiń</button></p>
         </div>
       </form>
     </section>
@@ -463,12 +463,6 @@
   </aside>
 
   <!-- ===== WYBÓR APLIKACJI MAP (wygląd do dopracowania) ===== -->
-  <!-- ===== PEŁNA KLAUZULA RODO (okienko) ===== -->
-  <dialog class="okno-rodo" id="okno-rodo" aria-labelledby="okno-rodo-tytul">
-    <h2 class="okno-rodo__tytul" id="okno-rodo-tytul">Informacja o danych osobowych</h2>
-    <p>Administratorem danych podanych w&nbsp;formularzu jest adw. Agnieszka <span class="bez-lamania">Mincer-Madejska</span>, Kancelaria Adwokacka, ul. Świętej Anny 9, Kraków. Dane przetwarzamy wyłącznie w&nbsp;celu odpowiedzi na wiadomość (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;b i&nbsp;f RODO). Szczegóły i&nbsp;Twoje prawa: <a href="polityka-prywatnosci.html">polityka prywatności</a>. Nie przesyłaj w&nbsp;formularzu szczegółów sprawy ani dokumentów – komunikacja elektroniczna nie gwarantuje pełnej poufności.</p>
-    <button class="okno-rodo__zamknij" type="button">Zamknij</button>
-  </dialog>
 
   <dialog class="wybor-mapy" id="wybor-mapy" aria-labelledby="wybor-mapy-tytul">
     <p class="wybor-mapy__tytul" id="wybor-mapy-tytul">Otwórz adres w:</p>
@@ -481,6 +475,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=25"></script>
+  <script src="js/main.js?v=26"></script>
 </body>
 </html>

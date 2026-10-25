@@ -1,4 +1,4 @@
-/* wersja 25 */
+/* wersja 26 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -449,18 +449,17 @@
   }
 
   /* =========================================================
-     4c. Klauzula RODO – pełna treść w okienku
+     4c. Klauzula RODO – "… rozwiń" rozwija całą treść w miejscu (w dół), "zwiń" ją zwija
+     (delegacja – przyciski są podmieniane przy zmianie języka)
      ========================================================= */
-  const oknoRodo = document.getElementById("okno-rodo");
-  const rozwin = document.querySelector(".rodo__rozwin");
-  if (oknoRodo && rozwin && typeof oknoRodo.showModal === "function") {
-    // delegacja – przycisk może zostać podmieniony przy zmianie języka
-    document.addEventListener("click", (e) => { if (e.target.closest(".rodo__rozwin")) oknoRodo.showModal(); });
-    oknoRodo.querySelector(".okno-rodo__zamknij").addEventListener("click", () => oknoRodo.close());
-    oknoRodo.addEventListener("click", (e) => { if (e.target === oknoRodo) oknoRodo.close(); });
-  } else if (rozwin) {
-    rozwin.hidden = true;
-  }
+  document.addEventListener("click", (e) => {
+    const rozwin = e.target.closest(".rodo__rozwin"), zwin = e.target.closest(".rodo__zwin");
+    if (!rozwin && !zwin) return;
+    const blok = (rozwin || zwin).closest(".formularz__rodo");
+    blok.classList.toggle("rodo--rozwiniete", !!rozwin);
+    const r = blok.querySelector(".rodo__rozwin");
+    if (r) r.setAttribute("aria-expanded", String(!!rozwin));
+  });
 
   /* =========================================================
      4d. Zmiana języka bez przeładowania strony

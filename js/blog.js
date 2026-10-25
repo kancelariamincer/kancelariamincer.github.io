@@ -1,4 +1,4 @@
-/* wersja 25 */
+/* wersja 26 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -121,7 +121,9 @@
     const a = obszar.getBoundingClientRect(), r = el.getBoundingClientRect();
     return { left: r.left - a.left, top: r.top - a.top, width: r.width, height: r.height };
   }
-  const px = (r) => ({ left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+  // minHeight 0: bez tego CSS-owe min-height wpisu (1555 px) blokowało animację wysokości –
+  // kafel rósł tylko w poziomie, a w pionie od razu "skakał" do 1555 px
+  const px = (r) => ({ left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", minHeight: "0px" });
 
   function linieWpisu(wpis) {
     const el = [wpis.querySelector(".wpis__data"), wpis.querySelector(".wpis__zamknij"), wpis.querySelector(".wpis__tytul"), wpis.querySelector(".wpis__lead")];
@@ -166,8 +168,8 @@
       trwa = setTimeout(() => {
         // 2) kafel rośnie, biel wyjeżdża spod spodu, teksty wchodzą
         const a = wpis.animate([px(start), px(cel)], { duration: CZAS, easing: KRZYWA, fill: "forwards" });
-        a.onfinish = () => { a.cancel(); wpis.style.cssText = ""; };
-        wpis.style.cssText = "";
+        // styl startowy zostaje do końca animacji – inaczej przez klatkę wpis miga w pełnym rozmiarze
+        a.onfinish = () => { wpis.style.cssText = ""; a.cancel(); };
         wpis.classList.remove("wpis--start");
         wpis.querySelector(".wpis__ciemne").style.opacity = "";
         const biel = wpis.querySelector(".wpis__biel");
