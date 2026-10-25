@@ -1,0 +1,60 @@
+# =====================================================================
+#  ROBOTS.TXT – panel sterowania indeksowaniem (Google, Bing, AI)
+#  Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska
+#
+#  Jak zarządzać: przy wybranym robocie zmień "Allow: /" na "Disallow: /"
+#  (zablokowanie) albo odwrotnie (dopuszczenie). Nic więcej nie trzeba.
+#  Uwaga: dopóki strony mają znacznik "noindex", wyszukiwarki ich nie pokażą,
+#  nawet jeśli tutaj mają zgodę na wejście.
+# =====================================================================
+
+# --- Wyszukiwarki (Google, Bing, DuckDuckGo, Apple itd.) ---
+User-agent: *
+Allow: /
+
+# --- Asystenci AI: wyszukiwanie i odpowiedzi na pytania użytkowników ---
+#     (dzięki nim kancelaria może być cytowana i polecana w odpowiedziach)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# --- Trenowanie modeli AI (treść może trafić do "wiedzy" modeli) ---
+#     Ustawienie domyślne: zgoda – blog jest publiczną informacją kancelarii.
+#     Żeby nie udostępniać treści do trenowania, zmień na "Disallow: /".
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# --- Roboty bez korzyści dla kancelarii ---
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://www.adwokat-mincer.com/sitemap.xml

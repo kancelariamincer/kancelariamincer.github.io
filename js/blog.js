@@ -1,4 +1,4 @@
-/* wersja 29 */
+/* wersja 31 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -73,7 +73,7 @@
         const b = document.createElement("button");
         b.type = "button";
         b.textContent = String(i);
-        b.setAttribute("aria-label", "Strona " + i);
+        b.setAttribute("aria-label", (document.documentElement.lang === "en" ? "Page " : "Strona ") + i);
         if (i === strona) b.setAttribute("aria-current", "page");
         b.addEventListener("click", () => {
           strona = i;
@@ -125,6 +125,14 @@
   window.addEventListener("scroll", () => requestAnimationFrame(aktualizujKontaktBloga), { passive: true });
   window.addEventListener("resize", aktualizujKontaktBloga);
 
+  // flagi PL / ENG prowadzą do tej samej strony (lista albo ten sam wpis) w drugim języku
+  function ustawFlagi(slug) {
+    document.querySelectorAll(".blog-jezyki a").forEach((a) => {
+      const baza = a.getAttribute("href").replace(/[^/]*$/, "");
+      a.setAttribute("href", baza + (slug ? slug + ".html" : ""));
+    });
+  }
+
   /* ---------- 3. Rozwijanie kafla we wpis ----------
      Otwieranie: przyciemnienie kafla gaśnie (0,3 s), potem kafel rośnie do pełnego wpisu,
      a spod jego dolnej krawędzi wyjeżdża biały gradient (3 s, wyhamowanie). Teksty wpisu
@@ -160,9 +168,41 @@
     wpis.classList.remove("wpis--teksty-ukryte");
   }
 
+  /* Treść wpisu jest tylko na jego własnej stronie (slug.html) – dzięki temu każdy adres
+     ma unikalną treść dla Google. Lista dociąga wpis w tle (już przy najechaniu na kafel). */
+  const pobrane = {};
+  function pobierzWpis(slug) {
+    const jest = document.getElementById("wpis-" + slug);
+    if (jest) return Promise.resolve(jest);
+    if (!pobrane[slug]) {
+      pobrane[slug] = fetch(slug + ".html", { credentials: "same-origin" })
+        .then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then((tekst) => {
+          const doc = new DOMParser().parseFromString(tekst, "text/html");
+          const art = doc.getElementById("wpis-" + slug);
+          if (!art) throw new Error("brak wpisu");
+          const wpis = document.importNode(art, true);
+          wpis.hidden = true;
+          const h1 = wpis.querySelector("h1.wpis__tytul");   // na liście tytuł wpisu to h2
+          if (h1) { const h2 = document.createElement("h2"); h2.className = h1.className; h2.innerHTML = h1.innerHTML; h1.replaceWith(h2); }
+          obszar.appendChild(wpis);
+          wpis.querySelector(".wpis__zamknij").addEventListener("click", (e) => { e.preventDefault(); zamknij(true, true); });
+          return wpis;
+        })
+        .catch((e) => { delete pobrane[slug]; throw e; });
+    }
+    return pobrane[slug];
+  }
+
   function otworz(slug, animacja, doHistorii) {
-    const wpis = document.getElementById("wpis-" + slug);
-    if (!wpis || otwarty === wpis) return;
+    const jest = document.getElementById("wpis-" + slug);
+    if (!jest) {
+      pobierzWpis(slug).then(() => otworz(slug, animacja, doHistorii))
+        .catch(() => { location.href = slug + ".html"; });   // awaryjnie zwykłe przejście na stronę wpisu
+      return;
+    }
+    const wpis = jest;
+    if (otwarty === wpis) return;
     zamknij(false);
     const karta = karty.find((k) => k.dataset.slug === slug);
     const ruch = animacja && !malyRuch.matches;
@@ -175,7 +215,8 @@
     otwarty = wpis;
     setTimeout(aktualizujKontaktBloga, CZAS + 50);
     if (doHistorii) history.pushState({ wpis: slug }, "", slug + ".html");
-    document.title = wpis.dataset.tytul + " – Blog kancelarii";
+    document.title = wpis.dataset.tytul + (document.body.dataset.sufiks || "");
+    ustawFlagi(slug);
 
     if (ruch && karta && !karta.hidden) {
       const start = prostokat(karta);
@@ -235,6 +276,7 @@
     };
     if (doHistorii) history.pushState({}, "", indeksBloga);
     document.title = document.body.dataset.tytulBloga;
+    ustawFlagi(null);
     if (animacja && !malyRuch.matches && karta && !karta.hidden) {
       wpis.classList.add("wpis--teksty-ukryte");                     // teksty gasną
       const start = prostokat(wpis), cel = prostokat(karta);
@@ -257,6 +299,10 @@
   }
 
   karty.forEach((k) => {
+    const wstepnie = () => { pobierzWpis(k.dataset.slug).catch(() => {}); };
+    k.addEventListener("pointerenter", wstepnie, { once: true });
+    k.addEventListener("touchstart", wstepnie, { once: true, passive: true });
+    k.addEventListener("focusin", wstepnie, { once: true });
     k.querySelector("a").addEventListener("click", (e) => {
       e.preventDefault();
       otworz(k.dataset.slug, true, true);

@@ -1,4 +1,4 @@
-/* wersja 29 */
+/* wersja 30 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -161,7 +161,7 @@ html.anim .tla {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   height: calc(717 * var(--u));
-  background: linear-gradient(150.07deg, rgba(0,0,0,0) 66.6%, rgba(0,0,0,.96) 93.9%);  /* 2× ciemniej niż w pliku */
+  background: linear-gradient(150.07deg, rgba(0,0,0,0) 66.0%, rgba(0,0,0,.96) 93.3%);  /* 2× ciemniej niż w pliku; próg 10 px wyżej */
   z-index: 1;
   pointer-events: none;
   opacity: var(--gradient, 1);
@@ -1390,10 +1390,11 @@ body.blog { min-height: 0; }
 .gradient-kontakt {
   z-index: 3;                                 /* nad treścią strony (z-index 2), pod danymi kontaktowymi (4) –
                                                  dopiero wtedy rozmycie obejmuje przewijane teksty */
-  -webkit-backdrop-filter: blur(20px);
-          backdrop-filter: blur(20px);
-  -webkit-mask-image: linear-gradient(150.07deg, transparent 66.6%, #000 93.9%);
-          mask-image: linear-gradient(150.07deg, transparent 66.6%, #000 93.9%);
+  -webkit-backdrop-filter: blur(30px);        /* mocniejsze rozmycie */
+          backdrop-filter: blur(30px);
+  /* próg gradientu przesunięty ok. 10 px w górę (−0,6%) */
+  -webkit-mask-image: linear-gradient(150.07deg, transparent 66.0%, #000 93.3%);
+          mask-image: linear-gradient(150.07deg, transparent 66.0%, #000 93.3%);
 }
 @media (max-width: 1099px) {
   .kontakt, .blog-kontakt {
@@ -1435,3 +1436,12 @@ body.blog { min-height: 0; }
   .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 21px; }          /* menu pionowe – w połowie między logo a tytułem */
   .blog .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 25.5px; }
 }
+
+/* ===================== v30 ===================== */
+/* blog: opis + flagi zmiany języka pod nim */
+.blog-opis-blok { top: calc(390 * var(--u)); }
+.blog-jezyki { margin-top: calc(16 * var(--f)); }
+@media (max-width: 1099px) { .blog-jezyki { margin-top: 16px; } }
+/* blog po angielsku: wiersze treści o ok. 10 znaków krótsze */
+.blog--en .wpis__tresc { max-width: calc(28.6em + 160 * var(--u)); }
+@media (max-width: 1099px) { .blog--en .wpis__tresc { max-width: none; } }

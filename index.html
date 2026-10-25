@@ -3,9 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- WERSJA ROBOCZA: usuń poniższą linię w dniu przełączenia domeny -->
-  <meta name="robots" content="noindex, nofollow">
   <!-- Bezpieczeństwo: przeglądarka wykona wyłącznie pliki z tej strony; obrazy mapy tylko z OpenStreetMap -->
+  <!-- ===== SEO / AI (moduł indeksowania) ===== -->
+  <!-- WERSJA ROBOCZA: w dniu przełączenia domeny zostanie zmieniona na "index, follow" -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://www.adwokat-mincer.com/">
+  <link rel="alternate" hreflang="pl" href="https://www.adwokat-mincer.com/">
+  <link rel="alternate" hreflang="en" href="https://www.adwokat-mincer.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://www.adwokat-mincer.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:title" content="Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków">
+  <meta property="og:description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, prawo rzeczowe, szkody osobowe, obsługa przedsiębiorców, odzyskiwanie długów.">
+  <meta property="og:url" content="https://www.adwokat-mincer.com/">
+  <meta property="og:image" content="https://www.adwokat-mincer.com/img/og-kancelaria.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon.png">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków</title>
@@ -13,9 +31,162 @@
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=29">
+  <link rel="stylesheet" href="css/style.css?v=31">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=29"></script>
+  <script src="js/start.js?v=31"></script>
+  <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "LegalService",
+   "@id": "https://www.adwokat-mincer.com/#kancelaria",
+   "name": "Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska",
+   "alternateName": "Law Office of Advocate Agnieszka Mincer-Madejska",
+   "url": "https://www.adwokat-mincer.com/",
+   "image": "https://www.adwokat-mincer.com/img/og-kancelaria.jpg",
+   "telephone": "+48 780 147 406",
+   "email": "kancelaria@adwokat-mincer.com",
+   "taxID": "5492385361",
+   "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ul. Świętej Anny 9",
+    "addressLocality": "Kraków",
+    "addressRegion": "małopolskie",
+    "addressCountry": "PL"
+   },
+   "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 50.06205,
+    "longitude": 19.93445
+   },
+   "location": [
+    {
+     "@type": "Place",
+     "name": "Biuro – ul. Świętej Anny 9",
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ul. Świętej Anny 9",
+      "addressLocality": "Kraków",
+      "addressCountry": "PL"
+     }
+    },
+    {
+     "@type": "Place",
+     "name": "Biuro – ul. Urzędnicza 20/8",
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ul. Urzędnicza 20/8",
+      "addressLocality": "Kraków",
+      "addressCountry": "PL"
+     }
+    }
+   ],
+   "openingHoursSpecification": [
+    {
+     "@type": "OpeningHoursSpecification",
+     "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+     ],
+     "opens": "09:00",
+     "closes": "17:00"
+    }
+   ],
+   "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+48 780 147 406",
+    "email": "kancelaria@adwokat-mincer.com",
+    "contactType": "customer service",
+    "availableLanguage": [
+     "Polish",
+     "English"
+    ]
+   },
+   "areaServed": {
+    "@type": "City",
+    "name": "Kraków"
+   },
+   "knowsAbout": [
+    "mediacje i ugody",
+    "prawo spadkowe",
+    "szkody osobowe i odszkodowania",
+    "obsługa prawna przedsiębiorców",
+    "prawo karne",
+    "prawo rodzinne",
+    "prawo pracy",
+    "prawo rzeczowe",
+    "odzyskiwanie długów"
+   ],
+   "founder": {
+    "@id": "https://www.adwokat-mincer.com/#adwokat"
+   },
+   "employee": {
+    "@id": "https://www.adwokat-mincer.com/#adwokat"
+   }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://www.adwokat-mincer.com/#adwokat",
+   "name": "Agnieszka Mincer-Madejska",
+   "honorificPrefix": "adw.",
+   "jobTitle": "Adwokat",
+   "worksFor": {
+    "@id": "https://www.adwokat-mincer.com/#kancelaria"
+   },
+   "memberOf": {
+    "@type": "Organization",
+    "name": "Izba Adwokacka w Krakowie"
+   },
+   "knowsLanguage": [
+    "pl",
+    "en"
+   ],
+   "knowsAbout": [
+    "mediacje i ugody",
+    "prawo spadkowe",
+    "szkody osobowe i odszkodowania",
+    "obsługa prawna przedsiębiorców",
+    "prawo karne",
+    "prawo rodzinne",
+    "prawo pracy",
+    "prawo rzeczowe",
+    "odzyskiwanie długów"
+   ]
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://www.adwokat-mincer.com/#strona",
+   "url": "https://www.adwokat-mincer.com/",
+   "name": "Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska",
+   "inLanguage": [
+    "pl-PL",
+    "en"
+   ],
+   "publisher": {
+    "@id": "https://www.adwokat-mincer.com/#kancelaria"
+   }
+  },
+  {
+   "@type": "WebPage",
+   "@id": "https://www.adwokat-mincer.com/#strona",
+   "url": "https://www.adwokat-mincer.com/",
+   "name": "Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków",
+   "inLanguage": "pl-PL",
+   "isPartOf": {
+    "@id": "https://www.adwokat-mincer.com/#strona"
+   },
+   "about": {
+    "@id": "https://www.adwokat-mincer.com/#kancelaria"
+   },
+   "primaryImageOfPage": "https://www.adwokat-mincer.com/img/og-kancelaria.jpg"
+  }
+ ]
+}
+  </script>
 </head>
 <body>
 
@@ -474,6 +645,6 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=29"></script>
+  <script src="js/main.js?v=31"></script>
 </body>
 </html>
