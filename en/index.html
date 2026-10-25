@@ -12,8 +12,8 @@
   <link rel="preload" href="../fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="../css/style.css?v=27">
-  <script src="../js/start.js?v=27"></script>
+  <link rel="stylesheet" href="../css/style.css?v=28">
+  <script src="../js/start.js?v=28"></script>
 </head>
 <body>
 
@@ -76,7 +76,7 @@
           </button>
           <div class="opis" id="opis-cywilne" role="region" aria-label="Mediation and settlements – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Mediation and settlements">
             <h3 class="ukryte">Mediation and settlements – civil law</h3>
             <p>The law office provides comprehensive legal services in the broad field of civil law, including legal advice and the preparation of legal analyses and opinions. Civil law is the most extensive branch of Polish law, covering matters ranging from debt recovery to inheritance and infringements of real property ownership. We offer not only professional legal assistance but, above all, representation before courts and public authorities.</p>
             <h4>Scope of assistance</h4>
@@ -101,7 +101,7 @@
           </button>
           <div class="opis" id="opis-spadkowe" role="region" aria-label="Inheritance law – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Inheritance law">
             <h3 class="ukryte">Inheritance law</h3>
             <p>We handle inheritance matters with full professionalism and commitment. We provide legal assistance as early as the stage of drafting a will. After the opening of the succession, we conduct proceedings from the declaration of acquisition of the inheritance through to the division of the estate, and we pursue claims for the legitime (zachowek) on behalf of our clients.</p>
             <h4>Statements of claim and applications</h4>
@@ -128,7 +128,7 @@
           </button>
           <div class="opis" id="opis-szkody" role="region" aria-label="Personal injury – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Personal injury">
             <h3 class="ukryte">Personal injury</h3>
             <p>We offer professional legal assistance in obtaining compensation. We help clients obtain the compensation they are entitled to from insurance companies when payment has been refused. Unjustified refusals and significantly understated amounts are common practices among insurers, and we challenge them. We support clients from the moment the damage occurs, through the claims-handling process, to court proceedings and payment of the final amount.</p>
             <h4>Types of cases</h4>
@@ -150,7 +150,7 @@
           </button>
           <div class="opis" id="opis-przedsiebiorcy" role="region" aria-label="Business legal services – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Business legal services">
             <h3 class="ukryte">Business legal services</h3>
             <p>The law office provides ongoing legal services to businesses, including partnerships and companies governed by the Commercial Companies Code. We offer comprehensive legal advice on all aspects of our clients’ business activity.</p>
             <h4>Ongoing legal services</h4>
@@ -177,7 +177,7 @@
           </button>
           <div class="opis" id="opis-karne" role="region" aria-label="Criminal law – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Criminal law">
             <h3 class="ukryte">Criminal law</h3>
             <p>We represent clients at all stages of criminal proceedings, fiscal penal proceedings and petty offence proceedings.</p>
             <h4>We act as</h4>
@@ -196,7 +196,7 @@
           </button>
           <div class="opis" id="opis-rodzinne" role="region" aria-label="Family law – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Family law">
             <h3 class="ukryte">Family law</h3>
             <p>The law office provides comprehensive services in family law matters. We offer professional assistance with all legal steps related to divorce proceedings, the granting, limitation or deprivation of parental authority, contact with children and the determination of maintenance obligations. We also handle legal separation cases with the utmost care.</p>
             <h4>Statements of claim and applications</h4>
@@ -244,7 +244,7 @@
           </button>
           <div class="opis" id="opis-pracy" role="region" aria-label="Employment law – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Employment law">
             <h3 class="ukryte">Employment law</h3>
             <p>In employment law, we represent both individual and collective clients. We advise on how to run an effective and lawful employment policy in a company. We prepare legal opinions, contracts and documents, and also handle compensation claims for accidents at work.</p>
             <h4>Statements of claim and applications</h4>
@@ -284,7 +284,7 @@
           </button>
           <div class="opis" id="opis-rzeczowe" role="region" aria-label="Property law – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Property law">
             <h3 class="ukryte">Property law</h3>
             <p>The law office has experience in handling cases in the broad field of property law. We provide legal advice and represent clients in court proceedings concerning ownership of movables and real property. We also handle cases concerning limited property rights, including perpetual usufruct, usufruct, easements, pledges, mortgages and the cooperative ownership right to premises.</p>
             <h4>Statements of claim and applications</h4>
@@ -319,7 +319,7 @@
           </button>
           <div class="opis" id="opis-dlugi" role="region" aria-label="Debt recovery – scope of assistance" hidden>
             <button class="opis__zamknij" type="button" aria-label="Close">×</button>
-            <div class="opis__tresc">
+            <div class="opis__tresc" data-nazwa="Debt recovery">
             <h3 class="ukryte">Debt recovery</h3>
             <p>We help creditors – both individuals and businesses – recover amounts owed. We handle cases from the pre-litigation stage through to enforcement.</p>
             <h4>Scope of assistance</h4>
@@ -431,7 +431,6 @@
         e-mail: <a href="mailto:kancelaria@adwokat-mincer.com" tabindex="-1">kancelaria@adwokat-mincer.com</a>
       </p>
     </div>
-    <p class="kontakt__biura">ul. Świętej Anny 9, Kraków<br>ul. Urzędnicza 20/8, Kraków</p>
     </div>
   </aside>
 
@@ -447,6 +446,6 @@
   </dialog>
 
   <script src="../vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="../js/main.js?v=27"></script>
+  <script src="../js/main.js?v=28"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* wersja 27 */
+/* wersja 28 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -403,6 +403,7 @@
     animujOpis(opis);
     requestAnimationFrame(() => { opis.classList.add("otwarty"); pokazCaleOkienko(opis); });
     otwarty = { kafel, przycisk, opis };
+    yPrzyOtwarciu = window.scrollY;
   }
 
   // dolny zanik tekstu (20 px), gdy treść sięga dolnego marginesu;
@@ -423,6 +424,12 @@
     kafel.querySelector(".opis__zamknij").addEventListener("click", () => { zamknijOpis(); });
   });
   document.addEventListener("click", zamknijOpis);
+  // telefon: okienko nie jedzie za przewijaniem strony – przy przewinięciu gaśnie i się zamyka
+  let yPrzyOtwarciu = 0;
+  window.addEventListener("scroll", () => {
+    if (!otwarty || getComputedStyle(otwarty.opis).position !== "fixed") return;
+    if (Math.abs(window.scrollY - yPrzyOtwarciu) > 12) zamknijOpis();
+  }, { passive: true });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && otwarty) { const p = otwarty.przycisk; zamknijOpis(); p.focus(); }
   });
@@ -470,7 +477,7 @@
      ========================================================= */
   const CZAS_ZMIANY = 1000;     // ms – zejście (i osobno wejście) tekstu jednego bloku
   const ROZRZUT = 10;           // ile liter naraz jest w trakcie obrotu
-  const ATRYBUTY = ["href", "title", "aria-label", "placeholder", "data-tekst", "alt", "lang", "hreflang", "aria-current", "src", "data-adres"];
+  const ATRYBUTY = ["href", "title", "aria-label", "placeholder", "data-tekst", "alt", "lang", "hreflang", "aria-current", "src", "data-adres", "data-nazwa"];
   let trwaZmiana = false;
 
   // elementy dodane przez skrypty (mapa Leaflet, podział na słowa/litery) – pomijamy

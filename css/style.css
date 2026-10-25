@@ -1,4 +1,4 @@
-/* wersja 27 */
+/* wersja 28 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1384,3 +1384,38 @@ body.blog { min-height: 0; }
                 url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
   }
 }
+
+/* ===================== v28 ===================== */
+/* rozmycie pod danymi kontaktowymi – dokładnie tam, gdzie czarny podlew (ta sama maska co gradient) */
+.gradient-kontakt {
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  -webkit-mask-image: linear-gradient(150.07deg, transparent 66.6%, #000 93.9%);
+          mask-image: linear-gradient(150.07deg, transparent 66.6%, #000 93.9%);
+}
+@media (max-width: 1099px) {
+  .kontakt, .blog-kontakt {
+    -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+  }
+
+  /* okienko usługi: tytuł z kafla na górze, × w rogu */
+  .opis, .opis--dol { padding-top: 22px; }
+  .opis__zamknij { position: absolute; top: 8px; right: 8px; margin: 0; }
+  .opis__zamknij + * { margin-top: 0; }
+  .opis__tresc::before {
+    content: attr(data-nazwa);
+    display: block;
+    margin: 0 36px 18px 0;                    /* odstęp jak między blokami tekstu */
+    font-size: 18px; line-height: 1.3;
+  }
+
+  /* menu główne (i menu bloga): pod logo kancelarii, do lewej, w połowie drogi do tytułu */
+  .naglowek:not(.naglowek--pasek) .menu {
+    order: 3; width: 100%;
+    justify-content: flex-start;
+    gap: 26px;                                /* propozycja – do skorygowania */
+    margin-top: var(--menu-odstep, 48.5px);   /* menu dokładnie w połowie między logo a tytułem */
+  }
+}
+@media (max-width: 1099px) { .blog .naglowek { --menu-odstep: 39px; } }
