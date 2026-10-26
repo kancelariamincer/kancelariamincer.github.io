@@ -1,4 +1,4 @@
-/* wersja 33 */
+/* wersja 35 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -40,13 +40,7 @@
     const gora3 = strona3.getBoundingClientRect().top;
     let k = ogranicz((gora3 - vh * 0.65) / (vh * 0.3));
     const g = ogranicz((gora3 - vh * 0.4) / (vh * 0.6));
-    // otwarte okienko usługi chowa dane kontaktowe tylko wtedy, gdy faktycznie na nie nachodzi
-    const okno = document.querySelector(".opis.otwarty");
-    if (okno && k > 0) {
-      const a = okno.getBoundingClientRect(), c = blokKontaktu.getBoundingClientRect();
-      if (a.left < c.right && a.right > c.left && a.top < c.bottom && a.bottom > c.top) k = 0;
-    }
-    const gradientKrycie = k === 0 && okno ? 0 : g;   // przy otwartym okienku w rogu chowamy też gradient z rozmyciem
+    const gradientKrycie = g;   // okienko usługi leży teraz nad danymi kontaktowymi – nic nie chowamy
     // krycie ustawiane wprost na elemencie (pewniejsze w Safari na iPadzie niż zmienne CSS)
     blokKontaktu.style.opacity = k.toFixed(3);
     blokKontaktu.style.visibility = k > 0.01 ? "visible" : "hidden";

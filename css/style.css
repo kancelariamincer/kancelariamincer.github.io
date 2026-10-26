@@ -1,4 +1,4 @@
-/* wersja 34 */
+/* wersja 35 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1601,4 +1601,30 @@ body { background: var(--tlo); color: var(--tekst); }
 @media (max-width: 1099px) {
   .kafel__przycisk { border-color: transparent; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18); }
   .kafel__przycisk[aria-expanded="true"] { border-color: var(--braz); }
+}
+
+/* =====================================================================
+   v35
+   ===================================================================== */
+/* zdjęcie 1: wyższy kadr (tytuł na jasnej części wieży) i płynne przejście w zdjęcie 2:
+   Rynek gaśnie w tym samym pasie (890–1250 px), w którym pojawia się zdjęcie 2 */
+.tlo--rynek {
+  height: calc(1250 * var(--u));
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 360 * var(--u)), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 360 * var(--u)), transparent 100%);
+}
+/* bez brązowych obrysów przycisków */
+.przycisk { border: 0; }
+.kafel__przycisk[aria-expanded="true"] { border-color: transparent; }
+/* kafle usług: tymczasowo przesłane zdjęcia (jak na kaflach bloga) */
+.kafel__przycisk { background-size: cover; background-position: center; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.kafel:nth-child(3n+1) .kafel__przycisk { background-image: linear-gradient(to bottom, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%), url("../img/zdjecie-1-rynek.webp"); }
+.kafel:nth-child(3n+2) .kafel__przycisk { background-image: linear-gradient(to bottom, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%), url("../img/blog-waga.webp"); }
+.kafel:nth-child(3n)   .kafel__przycisk { background-image: linear-gradient(to bottom, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%), url("../img/zdjecie-3-dachy.webp"); }
+.kafel__przycisk:hover, .kafel__przycisk[aria-expanded="true"] { background-color: transparent; }
+.kafel__przycisk:hover { filter: brightness(1.04); }
+/* otwarte okienko usługi nad danymi kontaktowymi w prawym dolnym rogu */
+html.opis-otwarty main { z-index: 6; }
+@media (max-width: 1099px) {
+  .kafel__przycisk[aria-expanded="true"] { border-color: transparent; }
 }
