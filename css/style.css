@@ -1,4 +1,4 @@
-/* wersja 32 */
+/* wersja 33 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1546,6 +1546,37 @@ body { background: var(--tlo); color: var(--tekst); }
   }
   .sekcja--kontakt {
     background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,.62) 110px, rgba(238,231,220,.72) calc(100% - 160px), var(--tlo) 100%),
+                url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
+  }
+}
+
+/* =====================================================================
+   v33 – nowe zdjęcia bez filtrów i koloryzacji; bez cieni pod tekstami
+   ===================================================================== */
+:root { --cien-tekstu: none; }
+.wpis__tytul { text-shadow: none; }
+.tlo--rynek, .tlo--dachy, .tlo--waga,
+.blog-tlo::before, .karta__tlo, .wpis__okladka { filter: none; }
+.tlo--rynek { opacity: 1; background-size: cover; background-position: center top; }
+.blog-tlo::before { opacity: 1; background-size: cover; }
+.tla::after { display: none; }                         /* bez beżowej mgły na zdjęciach */
+/* blog: tylko łagodne przejście u dołu (tam jest tytuł), bez przykrywania całego zdjęcia */
+.blog-tlo::after { background: linear-gradient(to bottom, rgba(238,231,220,0) 0, rgba(238,231,220,0) 55%, rgba(238,231,220,.85) 80%, var(--tlo) 95%); }
+.karta__tlo::after { background: linear-gradient(to bottom, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%); }
+.karta__link:hover .karta__tlo::after { background-color: transparent; }
+.wpis__okladka::after { background: none; }
+.wpis__ciemne { background: linear-gradient(to bottom, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%); }
+@media (max-width: 1099px) {
+  .sekcja--start {
+    background: linear-gradient(to bottom, rgba(238,231,220,0) 0, rgba(238,231,220,0) 70%, var(--tlo) 100%),
+                url("../img/zdjecie-1-rynek.webp") center / cover no-repeat;
+  }
+  .sekcja--uslugi {
+    background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,0) 110px, rgba(238,231,220,0) calc(100% - 110px), var(--tlo) 100%),
+                url("../img/zdjecie-2-waga.webp") center / cover no-repeat;
+  }
+  .sekcja--kontakt {
+    background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,0) 110px, rgba(238,231,220,0) calc(100% - 160px), var(--tlo) 100%),
                 url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
   }
 }
