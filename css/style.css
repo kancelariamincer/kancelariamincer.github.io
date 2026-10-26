@@ -1,4 +1,4 @@
-/* wersja 33 */
+/* wersja 34 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1579,4 +1579,26 @@ body { background: var(--tlo); color: var(--tekst); }
     background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,0) 110px, rgba(238,231,220,0) calc(100% - 160px), var(--tlo) 100%),
                 url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
   }
+}
+
+/* =====================================================================
+   v34 – kafle usług w stylistyce kafli bloga: zaokrąglenie, cień, beżowy gradient
+   ===================================================================== */
+.kafel__przycisk {
+  border-radius: calc(10 * var(--u));
+  background: linear-gradient(to bottom, rgba(238,231,220,.35) 0%, rgba(238,231,220,.85) 100%);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18);   /* jak kafle bloga */
+  transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.kafel__przycisk:hover,
+.kafel__przycisk[aria-expanded="true"] {
+  background: linear-gradient(to bottom, rgba(247,243,236,.6) 0%, rgba(247,243,236,.95) 100%);
+  box-shadow: 0 calc(6 * var(--u)) calc(26 * var(--u)) rgba(0, 0, 0, 0.22);
+}
+.kafel__przycisk[aria-expanded="true"] { border-color: var(--braz); }
+@media (max-width: 1099px) {
+  .kafel__przycisk { border-color: transparent; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18); }
+  .kafel__przycisk[aria-expanded="true"] { border-color: var(--braz); }
 }
