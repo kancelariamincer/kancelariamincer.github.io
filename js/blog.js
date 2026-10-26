@@ -1,4 +1,4 @@
-/* wersja 31 */
+/* wersja 32 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)

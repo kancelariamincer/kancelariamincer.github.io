@@ -32,9 +32,10 @@ Allow: /
 User-agent: Claude-User
 Allow: /
 
-# --- Trenowanie modeli AI (treść może trafić do "wiedzy" modeli) ---
-#     Ustawienie domyślne: zgoda – blog jest publiczną informacją kancelarii.
-#     Żeby nie udostępniać treści do trenowania, zmień na "Disallow: /".
+# --- Trenowanie modeli AI (treść trafiłaby do "wiedzy" modeli) ---
+#     Decyzja kancelarii: BRAK ZGODY na trenowanie modeli na treściach strony.
+#     Nie wpływa to na wyniki Google ani na cytowanie strony przez asystentów AI
+#     w odpowiedziach (to regulują sekcje wyżej). Żeby zezwolić: "Allow: /".
 User-agent: GPTBot
 Disallow: /
 

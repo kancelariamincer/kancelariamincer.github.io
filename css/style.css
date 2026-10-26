@@ -1,4 +1,4 @@
-/* wersja 30 */
+/* wersja 32 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1445,3 +1445,107 @@ body.blog { min-height: 0; }
 /* blog po angielsku: wiersze treści o ok. 10 znaków krótsze */
 .blog--en .wpis__tresc { max-width: calc(28.6em + 160 * var(--u)); }
 @media (max-width: 1099px) { .blog--en .wpis__tresc { max-width: none; } }
+
+/* =====================================================================
+   v32 – MOTYW „QUIET LUXURY”: beże tonące w beżach, akcenty brązu, czarne teksty
+   (warstwa nadpisująca – wcześniejsze reguły zostają, kolory zmieniają się tutaj)
+   ===================================================================== */
+:root {
+  --tlo: #EEE7DC;            /* główny beż (tło strony) */
+  --tlo-jasne: #F7F3EC;      /* jasny beż / kość słoniowa (okienka, wpisy) */
+  --bez: #E3D7C6;            /* beż średni (przyciski, podlewy) */
+  --taupe: #C8B79F;          /* beż ciemny (ramki, linie) */
+  --braz: #6B513D;           /* brąz – akcenty (koła ikon, pinezki, suwaki) */
+  --braz-ciemny: #47362A;    /* ciemny brąz – obramowania aktywne */
+  --tekst: #1B1713;          /* „czarny” tekst – ciepła czerń */
+  --biel: var(--tekst);      /* dawne białe teksty → czarne */
+  --czern: var(--tekst);
+  --wypelnienie-pola: rgba(255, 255, 255, 0.4);
+  --cien-tekstu: 0 0 9.6px rgba(238, 231, 220, 0.75);   /* ten sam zasięg, jasna poświata pod czarnym tekstem */
+  color-scheme: light;
+}
+body { background: var(--tlo); color: var(--tekst); }
+::selection { background: var(--braz); color: var(--tlo-jasne); }
+
+/* logotypy (białe pliki) – wyświetlane na czarno */
+.logo-kancelarii img, .logo-adwokatura img { filter: brightness(0); opacity: .88; }
+
+/* tła zdjęciowe: ocieplone i przykryte beżową mgłą */
+.tlo--rynek, .tlo--dachy, .tlo--waga { filter: sepia(.28) saturate(.75) brightness(1.05); }
+.tla::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background: rgba(238, 231, 220, 0.6);
+}
+.tlo--gradient-header { background: linear-gradient(to bottom, rgba(238,231,220,.45) 0, rgba(238,231,220,.3) 60%, rgba(238,231,220,0) 100%); }
+.tlo--wygaszenie {
+  background: linear-gradient(to bottom,
+    rgba(238,231,220,0) 0%, rgba(238,231,220,.14) 26%, rgba(238,231,220,.45) 43%,
+    rgba(238,231,220,.70) 61%, rgba(238,231,220,.95) 78%, var(--tlo) 87%);
+}
+.gradient-kontakt { background: linear-gradient(150.07deg, rgba(238,231,220,0) 66.0%, rgba(238,231,220,.96) 93.3%); }
+
+/* pasek menu przy przewijaniu */
+.naglowek--pasek { background: rgba(238, 231, 220, 0.72); }
+
+/* kafle usług */
+.ikona { background: var(--braz); }
+.kafel__przycisk:hover, .kafel__przycisk[aria-expanded="true"] { background: rgba(255, 255, 255, 0.45); }
+.kafel__przycisk[aria-expanded="true"] { border-color: var(--braz-ciemny); }
+.opis { background: rgba(247, 243, 236, 0.78); }
+.opis__tresc::-webkit-scrollbar-thumb { background: rgba(107, 81, 61, 0.5); }
+@supports not selector(::-webkit-scrollbar) {
+  .opis__tresc { scrollbar-color: rgba(107, 81, 61, 0.5) transparent; }
+}
+
+/* formularz */
+.pole { border-color: rgba(71, 54, 42, 0.45); }
+.pole::placeholder { color: rgba(27, 23, 19, 0.75); }
+.pole:focus, .pole:focus-visible { box-shadow: inset 0 0 0 2px var(--braz); }
+.przycisk { background: var(--bez); color: var(--tekst); border: 1px solid var(--braz); text-shadow: none; }
+.przycisk:hover { background: var(--taupe); }
+
+/* mapa */
+.pinezka { background: var(--braz); border-color: #fff; }
+.wybor-mapy { background: var(--tlo-jasne); color: var(--tekst); border-color: var(--taupe); }
+.wybor-mapy::backdrop { background: rgba(71, 54, 42, 0.35); }
+.wybor-mapy__opcja { background: var(--bez); color: var(--tekst); }
+.wybor-mapy__opcja:hover { background: var(--taupe); }
+.wybor-mapy__anuluj { color: var(--tekst); border-color: var(--taupe); }
+
+/* blog */
+.blog-tlo::before { filter: sepia(.28) saturate(.75) brightness(1.05); }
+.blog-tlo::after {
+  background: linear-gradient(to bottom,
+    rgba(238,231,220,.6) 0, rgba(238,231,220,.6) 20%, rgba(238,231,220,.55) 34%,
+    rgba(238,231,220,.6) 45%, rgba(238,231,220,.85) 70%, var(--tlo) 92%);
+}
+.karta__tlo { filter: sepia(.28) saturate(.75) brightness(1.05); }
+.karta__tlo::after { background: linear-gradient(rgba(238,231,220,.55), rgba(238,231,220,.72)); }
+.karta__link:hover .karta__tlo::after { background-color: rgba(238,231,220,.12); }
+.karta__link:focus-visible .karta__tlo::after { background-color: rgba(238,231,220,.18); }
+.wpis { background: var(--tlo); color: var(--tekst); }
+.wpis__okladka { filter: sepia(.28) saturate(.75) brightness(1.05); }
+.wpis__okladka::after { background: linear-gradient(to bottom, rgba(238,231,220,.55) 0%, rgba(238,231,220,.45) 35%, rgba(238,231,220,.35) 45%); }
+.wpis__ciemne { background: linear-gradient(rgba(238,231,220,.55), rgba(238,231,220,.72)); }
+.wpis__biel { background: linear-gradient(to bottom, rgba(247,243,236,0) 0, rgba(247,243,236,.85) calc(150 * var(--u)), var(--tlo-jasne) calc(230 * var(--u)), var(--tlo-jasne) 100%); }
+.wpis__tytul { text-shadow: var(--cien-tekstu); }
+.wpis__tresc .wyroznienie { border-left-color: var(--braz); }
+
+@media (max-width: 1099px) {
+  .kafel__przycisk { border-color: rgba(71, 54, 42, 0.35); }
+  .opis, .opis--dol { background: rgba(247, 243, 236, 0.95); }
+  .kontakt, .blog-kontakt { background: rgba(238, 231, 220, 0.9); color: var(--tekst); }
+  .wpis__biel { background: linear-gradient(to bottom, rgba(247,243,236,0) 0, rgba(247,243,236,.85) 120px, var(--tlo-jasne) 190px, var(--tlo-jasne) 100%); }
+  .sekcja--start {
+    background: linear-gradient(to bottom, rgba(238,231,220,.55) 0, rgba(238,231,220,.65) 65%, var(--tlo) 100%),
+                url("../img/zdjecie-1-rynek.webp") center / cover no-repeat;
+  }
+  .sekcja--uslugi {
+    background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,.62) 110px, rgba(238,231,220,.68) calc(100% - 110px), var(--tlo) 100%),
+                url("../img/zdjecie-2-waga.webp") center / cover no-repeat;
+  }
+  .sekcja--kontakt {
+    background: linear-gradient(to bottom, var(--tlo) 0, rgba(238,231,220,.62) 110px, rgba(238,231,220,.72) calc(100% - 160px), var(--tlo) 100%),
+                url("../img/zdjecie-3-dachy.webp") center / cover no-repeat;
+  }
+}
