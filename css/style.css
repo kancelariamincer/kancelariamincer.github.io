@@ -1,4 +1,4 @@
-/* wersja 35 */
+/* wersja 36 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1628,3 +1628,35 @@ html.opis-otwarty main { z-index: 6; }
 @media (max-width: 1099px) {
   .kafel__przycisk[aria-expanded="true"] { border-color: transparent; }
 }
+
+/* =====================================================================
+   v36
+   ===================================================================== */
+/* kafle usług: w pełni białe, bez zdjęć; ikony brązowe bez kół (ta sama wielkość) */
+.kafel:nth-child(n) .kafel__przycisk { background: #fff; }
+.kafel__przycisk:hover, .kafel__przycisk[aria-expanded="true"] { background: #fff; filter: none; }
+.ikona { background: transparent; }
+
+/* mapa: od bieli do brązu, zielone kropki biur */
+.mapa .leaflet-tile-pane { filter: grayscale(1) sepia(.55) brightness(1.06) contrast(.92); }
+.pinezka { background: var(--zielen-adwokacka, #0f5a3a); }
+
+/* pola formularza: cień jak pod kaflami, bez brązowego obrysu */
+.pole { border-color: transparent; box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18); }
+.pole:focus, .pole:focus-visible { box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18), inset 0 0 0 2px var(--braz); }
+
+/* pasek menu przy cofaniu: cień pod spodem (schowany pasek odjeżdża dalej, żeby cień nie wystawał) */
+.naglowek--pasek { box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14); }
+.naglowek--pasek.naglowek--ukryty:not(:focus-within) { transform: translateY(calc(-100% - 40px)); }
+@media (max-width: 1099px) {
+  .naglowek--pasek { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14); }
+  .naglowek--pasek.naglowek--ukryty:not(:focus-within) { transform: none; }
+}
+
+/* strony 2 i 3: tytuł i opis wyżej o 47 px (odstęp podtytuł → opis ze strony 1) */
+.naglowek-sekcji--uslugi { --y: 197; }
+.tekst--uslugi { top: calc(197 * var(--u) + 54 * var(--f)); }
+.naglowek-sekcji--kontakt { --y: 235; }
+.info--1 { top: calc(235 * var(--u) + 54 * var(--f)); }
+.info--2 { top: calc(235 * var(--u) + 54 * var(--f)); }
+.info--3 { top: calc(235 * var(--u) + 82 * var(--f)); }
