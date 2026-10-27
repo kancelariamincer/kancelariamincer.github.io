@@ -1,4 +1,4 @@
-/* wersja 35 */
+/* wersja 37 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -145,12 +145,20 @@
       naglowek.classList.remove("bez-przejscia");
     } else if (pasek && y <= dolNaglowka && y < ostatnieY) {   // wracamy do góry – zwykły nagłówek
       naglowek.classList.add("bez-przejscia");
-      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty");
+      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty", "naglowek--odjazd");
       void naglowek.offsetWidth;
       naglowek.classList.remove("bez-przejscia");
     } else if (pasek) {
-      if (ukryjPoKlikniecie || y > ostatnieY + 3) naglowek.classList.add("naglowek--ukryty");
-      else if (y < ostatnieY - 3) naglowek.classList.remove("naglowek--ukryty");
+      const granica = document.getElementById("specjalizacje").offsetTop;   // początek strony 2
+      if (y < granica && y < ostatnieY) {
+        // cofanie ze strony 2 na 1: pasek razem z zawartością odjeżdża za górną krawędź (ease-out),
+        // a jego cień gaśnie tuż przed końcem ruchu
+        if (!naglowek.classList.contains("naglowek--ukryty")) naglowek.classList.add("naglowek--odjazd", "naglowek--ukryty");
+      } else if (ukryjPoKlikniecie || y > ostatnieY + 3) {
+        naglowek.classList.add("naglowek--ukryty");
+      } else if (y < ostatnieY - 3) {
+        naglowek.classList.remove("naglowek--ukryty", "naglowek--odjazd");
+      }
     }
     ostatnieY = y;
     // pogrubienie aktualnej sekcji

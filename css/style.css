@@ -1,4 +1,4 @@
-/* wersja 36 */
+/* wersja 37 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1660,3 +1660,43 @@ html.opis-otwarty main { z-index: 6; }
 .info--1 { top: calc(235 * var(--u) + 54 * var(--f)); }
 .info--2 { top: calc(235 * var(--u) + 54 * var(--f)); }
 .info--3 { top: calc(235 * var(--u) + 82 * var(--f)); }
+
+/* =====================================================================
+   v37
+   ===================================================================== */
+/* kafle usług w kolorze paska menu: ten sam podlew, rozmycie i cień; białe ikony */
+.kafel:nth-child(n) .kafel__przycisk,
+.kafel__przycisk:hover, .kafel__przycisk[aria-expanded="true"] {
+  background: rgba(238, 231, 220, 0.72);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14);
+}
+
+/* cień pod mapą i pod przyciskiem "Wyślij" (jak pod polami) */
+.mapa, .przycisk { box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.18); }
+
+/* mapa: zamiast żółtawej sepii – ciepły szarobeż (taupe) */
+.mapa .leaflet-tile-pane { filter: grayscale(1) sepia(.3) hue-rotate(-20deg) saturate(.8) brightness(1.04) contrast(.9); }
+
+/* gradient pod menu głównym o 50 px dłuższy – sięga pod tytuł i podtytuł */
+.tlo--gradient-header { height: calc(440 * var(--u)); }
+
+/* pasek menu: najwyższa warstwa; odjazd za górną krawędź przy cofaniu ze strony 2 na 1 */
+.naglowek--pasek { z-index: 100; }
+.naglowek--pasek.naglowek--odjazd { animation: pasek-odjazd .7s cubic-bezier(0, 0, 0.2, 1) forwards; }
+@keyframes pasek-odjazd {
+  0%   { transform: translateY(0);                     box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14); opacity: 1; }
+  70%  {                                               box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14); }
+  92%  {                                               box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0); }
+  100% { transform: translateY(calc(-100% - 40px));    box-shadow: none; opacity: 1; }
+}
+@media (max-width: 1099px) {
+  .naglowek--pasek.naglowek--odjazd { animation-name: pasek-odjazd-m; }
+  @keyframes pasek-odjazd-m {
+    0%   { transform: translateY(0); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14); opacity: 1; }
+    70%  { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14); }
+    92%  { box-shadow: 0 4px 20px rgba(0, 0, 0, 0); }
+    100% { transform: translateY(calc(-100% - 40px)); box-shadow: none; opacity: 1; }
+  }
+}
