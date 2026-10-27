@@ -1,4 +1,4 @@
-/* wersja 38 */
+/* wersja 39 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1760,3 +1760,35 @@ html.opis-otwarty main { z-index: 6; }
   .zgody .przycisk { flex: 1 1 auto; height: 44px; padding: 0 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .zgody { transition: none; } }
+
+/* =====================================================================
+   v39
+   ===================================================================== */
+/* baner cookies: przyciski w pełni białe */
+.zgody .przycisk, .zgody .przycisk:hover { background: #fff; }
+
+/* gradient pod menu głównym jeszcze dłuższy */
+.tlo--gradient-header { height: calc(560 * var(--u)); }
+
+/* napisy na kaflach: środek napisu zawsze w tym samym miejscu –
+   złamany na 2 linie rozkłada się po połowie w górę i w dół; test: krój szeryfowy */
+.kafel__nazwa {
+  top: calc(70.05 * var(--u) - 14 * var(--f));
+  bottom: auto;
+  transform: translateY(-50%);
+  font-family: var(--szeryf);
+}
+@media (max-width: 1099px) { .kafel__nazwa { transform: none; } }
+
+/* test: przyciski menu głównego w wielkości z paska menu */
+@media (min-width: 1100px) {
+  .naglowek:not(.naglowek--pasek) .menu { font-size: max(14px, calc(17 * var(--f))); }
+}
+
+/* mapa: bez żółci – szarość mnożona przez beż z palety strony */
+.mapa .leaflet-tile-pane { filter: grayscale(1) brightness(1.05) contrast(.9); }
+.mapa::after {
+  content: ""; position: absolute; inset: 0; z-index: 250; pointer-events: none;
+  background: #E9DDCB; mix-blend-mode: multiply;
+  border-radius: inherit;
+}

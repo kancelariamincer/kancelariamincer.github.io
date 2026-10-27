@@ -1,4 +1,4 @@
-/* wersja 38 */
+/* wersja 39 */
 /* =========================================================
    Pliki cookies i analityka (Google Analytics 4)
    - Analityka ładuje się WYŁĄCZNIE po zgodzie użytkownika

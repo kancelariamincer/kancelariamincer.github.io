@@ -1,4 +1,4 @@
-/* wersja 33 */
+/* wersja 39 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -278,18 +278,21 @@
     document.title = document.body.dataset.tytulBloga;
     ustawFlagi(null);
     if (animacja && !malyRuch.matches && karta && !karta.hidden) {
-      wpis.classList.add("wpis--teksty-ukryte");                     // teksty gasną
+      wpis.classList.add("wpis--teksty-ukryte");                     // teksty gasną, gradient zostaje
+      // start = tylko widoczna część wpisu (od góry wpisu do dolnej krawędzi ekranu) –
+      // dzięki temu wszystkie krawędzie dochodzą do kafla w tym samym czasie, proporcjonalnie
+      const r = wpis.getBoundingClientRect();
       const start = prostokat(wpis), cel = prostokat(karta);
-      wpis.querySelector(".wpis__biel").animate(
-        [{ transform: "translateY(0)" }, { transform: "translateY(100%)" }],
-        { duration: 600, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" });
+      start.height = Math.max(cel.height, Math.min(r.height, window.innerHeight - r.top));
+      Object.assign(wpis.style, px(start));
       const a = wpis.animate([px(start), px(cel)], { duration: CZAS, easing: KRZYWA, delay: 200, fill: "forwards" });
-      setTimeout(() => { wpis.querySelector(".wpis__ciemne").style.opacity = "1"; }, 200 + CZAS - 300);  // przyciemnienie wraca
+      // na samym końcu wpis łagodnie przechodzi w kafel pod spodem
+      wpis.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: CZAS, delay: 200, fill: "forwards" });
+      setTimeout(() => { wpis.querySelector(".wpis__ciemne").style.opacity = "1"; }, 200 + CZAS - 300);
       przewinDo(obszar);
       a.onfinish = () => {
         Object.assign(wpis.style, px(cel));
-        a.cancel();
-        wpis.querySelector(".wpis__biel").getAnimations().forEach((x) => x.cancel());
+        wpis.getAnimations().forEach((x) => x.cancel());
         koniec();
       };
     } else {

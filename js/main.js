@@ -1,4 +1,4 @@
-/* wersja 37 */
+/* wersja 39 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -132,6 +132,7 @@
   let ostatnieY = window.scrollY;
   let ukryjPoKlikniecie = false;
   let dolNaglowka = 0;
+  let czasOdjazdu = 0;
 
   function aktualizujPasek() {
     const y = window.scrollY;
@@ -149,14 +150,17 @@
       void naglowek.offsetWidth;
       naglowek.classList.remove("bez-przejscia");
     } else if (pasek) {
-      const granica = document.getElementById("specjalizacje").offsetTop;   // początek strony 2
+      // pasek odjeżdża dopiero w połowie strony 1; potem przez 2 s nie wraca,
+      // żeby przy nerwowym przewijaniu nie migał
+      const granica = document.getElementById("specjalizacje").offsetTop / 2;
       if (y < granica && y < ostatnieY) {
-        // cofanie ze strony 2 na 1: pasek razem z zawartością odjeżdża za górną krawędź (ease-out),
-        // a jego cień gaśnie tuż przed końcem ruchu
-        if (!naglowek.classList.contains("naglowek--ukryty")) naglowek.classList.add("naglowek--odjazd", "naglowek--ukryty");
+        if (!naglowek.classList.contains("naglowek--ukryty")) {
+          naglowek.classList.add("naglowek--odjazd", "naglowek--ukryty");
+          czasOdjazdu = Date.now();
+        }
       } else if (ukryjPoKlikniecie || y > ostatnieY + 3) {
         naglowek.classList.add("naglowek--ukryty");
-      } else if (y < ostatnieY - 3) {
+      } else if (y < ostatnieY - 3 && Date.now() - czasOdjazdu > 2000) {
         naglowek.classList.remove("naglowek--ukryty", "naglowek--odjazd");
       }
     }
