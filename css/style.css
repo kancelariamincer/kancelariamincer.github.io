@@ -1,4 +1,4 @@
-/* wersja 37 */
+/* wersja 38 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1700,3 +1700,63 @@ html.opis-otwarty main { z-index: 6; }
     100% { transform: translateY(calc(-100% - 40px)); box-shadow: none; opacity: 1; }
   }
 }
+
+/* =====================================================================
+   v38 – baner plików cookies (w stylistyce paska menu i kafli)
+   ===================================================================== */
+.zgody {
+  position: fixed;
+  left: calc(50% - 685 * var(--u));           /* lewa krawędź siatki – lustrzanie do danych kontaktowych */
+  bottom: calc(59 * var(--u));
+  z-index: 200;                                /* nad wszystkim, także nad paskiem menu */
+  width: calc(536 * var(--u));
+  padding: calc(28 * var(--u)) calc(32 * var(--u)) calc(30 * var(--u));
+  border-radius: calc(10 * var(--u));
+  background: rgba(238, 231, 220, 0.72);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14);
+  color: var(--tekst);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .45s cubic-bezier(0, 0, 0.2, 1), transform .45s cubic-bezier(0, 0, 0.2, 1);
+}
+.zgody[hidden] { display: none; }
+.zgody.zgody--widoczne { opacity: 1; transform: none; }
+.zgody__tytul {
+  font-family: var(--szeryf); font-weight: 400;
+  font-size: max(20px, calc(24 * var(--f))); line-height: 1.2;
+  margin-bottom: calc(12 * var(--f));
+}
+.zgody__tekst { font-size: max(13px, calc(14 * var(--f))); line-height: max(20px, calc(22 * var(--f))); letter-spacing: -0.007em; }
+.zgody__tekst a { text-decoration: underline; }
+.zgody__ustawienia { margin-top: calc(16 * var(--f)); display: grid; gap: calc(8 * var(--f)); }
+.zgody__ustawienia[hidden] { display: none; }
+.zgody__opcja { display: flex; align-items: center; gap: 10px; font-size: max(13px, calc(14 * var(--f))); cursor: pointer; }
+.zgody__opcja input { width: 18px; height: 18px; accent-color: var(--braz); cursor: pointer; }
+.zgody__opcja input:disabled { cursor: default; }
+.zgody__przyciski { margin-top: calc(20 * var(--f)); display: flex; flex-wrap: wrap; gap: calc(10 * var(--u)); justify-content: flex-end; }
+.zgody .przycisk {
+  grid-column: auto; justify-self: auto; margin: 0;
+  width: auto; height: max(40px, calc(44 * var(--u)));
+  padding: 0 calc(20 * var(--u));
+  font-size: max(13px, calc(15 * var(--f)));
+}
+.zgody .przycisk[hidden] { display: none; }
+/* "Ustawienia cookies" w stopce i w polityce – wygląda jak link */
+.zgody-otworz {
+  padding: 0; border: 0; background: none;
+  color: inherit; font: inherit; line-height: inherit;
+  text-decoration: underline; cursor: pointer;
+}
+@media (max-width: 1099px) {
+  .zgody {
+    left: 12px; right: 12px; width: auto;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    padding: 20px 20px 22px;
+    border-radius: 10px;
+  }
+  .zgody__przyciski { justify-content: stretch; }
+  .zgody .przycisk { flex: 1 1 auto; height: 44px; padding: 0 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .zgody { transition: none; } }

@@ -24,16 +24,16 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon.png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Kancelaria Adwokacka – Adwokat Agnieszka Mincer-Madejska, Kraków</title>
   <meta name="description" content="Kancelaria Adwokacka adwokat Agnieszki Mincer-Madejskiej w Krakowie. Prawo cywilne, rodzinne, spadkowe, karne, prawo pracy, prawo rzeczowe, szkody osobowe, obsługa przedsiębiorców, odzyskiwanie długów.">
   <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="css/style.css?v=37">
+  <link rel="stylesheet" href="css/style.css?v=38">
   <!-- włącza animacje wejścia zanim strona się narysuje -->
-  <script src="js/start.js?v=37"></script>
+  <script src="js/start.js?v=38"></script>
   <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -607,7 +607,7 @@
       <li class="linia"><a href="blog/podzial-nieruchomosci-po-spadku-lub-rozwodzie.html">Podział nieruchomości po spadku lub rozwodzie – jaką drogę wybrać? Kompleksowy przewodnik</a></li>
       <li class="linia"><a href="blog/nabycie-spadku.html">Nabycie spadku po zmarłym członku rodziny – terminy, procedura i&nbsp;skutki prawne</a></li>
     </ul>
-    <p class="stopka__polityka linia"><a href="polityka-prywatnosci.html">Polityka prywatności</a></p>
+    <p class="stopka__polityka linia"><a href="polityka-prywatnosci.html">Polityka prywatności</a> · <button class="zgody-otworz" type="button">Ustawienia cookies</button></p>
     <p class="stopka__prawa linia">Wszystkie prawa © <span class="rok">2026</span> Kancelaria Adwokacka Adwokat Agnieszka <span class="bez-lamania">Mincer-Madejska</span></p>
   </footer>
 
@@ -644,7 +644,24 @@
     </div>
   </dialog>
 
+  <!-- ===== PLIKI COOKIES (baner zgody) ===== -->
+  <section class="zgody" id="zgody" role="dialog" aria-labelledby="zgody-tytul" hidden>
+    <h2 class="zgody__tytul" id="zgody-tytul">Pliki cookies</h2>
+    <p class="zgody__tekst">Używamy plików cookies niezbędnych do działania strony, a&nbsp;za Twoją zgodą także analitycznych (Google Analytics), które pokazują nam, jak korzystasz ze strony. Wybór możesz zmienić w&nbsp;każdej chwili w&nbsp;stopce. <a href="polityka-prywatnosci.html#cookies">Polityka prywatności</a></p>
+    <div class="zgody__ustawienia" hidden>
+      <label class="zgody__opcja"><input type="checkbox" checked disabled><span>Niezbędne – zawsze aktywne</span></label>
+      <label class="zgody__opcja"><input type="checkbox" id="zgoda-analityka"><span>Analityczne – Google Analytics</span></label>
+    </div>
+    <div class="zgody__przyciski">
+      <button class="przycisk zgody__odrzuc" type="button">Odrzucam</button>
+      <button class="przycisk zgody__ustaw" type="button">Ustawienia</button>
+      <button class="przycisk zgody__zapisz" type="button" hidden>Zapisz wybór</button>
+      <button class="przycisk zgody__akceptuj" type="button">Akceptuję</button>
+    </div>
+  </section>
+
+  <script src="js/zgody.js?v=38"></script>
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
-  <script src="js/main.js?v=37"></script>
+  <script src="js/main.js?v=38"></script>
 </body>
 </html>

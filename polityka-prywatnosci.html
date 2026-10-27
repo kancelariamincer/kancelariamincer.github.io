@@ -23,11 +23,11 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon.png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Polityka prywatności – Kancelaria Adwokacka Adwokat Agnieszka Mincer-Madejska</title>
   <meta name="description" content="Polityka prywatności Kancelarii Adwokackiej adw. Agnieszki Mincer-Madejskiej w Krakowie.">
-  <link rel="stylesheet" href="css/style.css?v=37">
+  <link rel="stylesheet" href="css/style.css?v=38">
 </head>
 <body class="dokument">
   <main class="dokument__tresc">
@@ -48,7 +48,7 @@
     </ul>
 
     <h2>3. Odbiorcy danych</h2>
-    <p>Dane mogą być przekazywane podmiotom świadczącym na rzecz Administratora usługi informatyczne: GitHub, Inc. (hosting strony), Google (obsługa poczty elektronicznej) oraz OpenStreetMap Foundation (mapa), a&nbsp;także podmiotom uprawnionym na podstawie przepisów prawa.</p>
+    <p>Dane mogą być przekazywane podmiotom świadczącym na rzecz Administratora usługi informatyczne: GitHub, Inc. (hosting strony), Google (obsługa poczty elektronicznej oraz – za Twoją zgodą – Google Analytics) oraz OpenStreetMap Foundation (mapa), a&nbsp;także podmiotom uprawnionym na podstawie przepisów prawa.</p>
 
     <h2>4. Przekazywanie danych poza Europejski Obszar Gospodarczy</h2>
     <p>[Do weryfikacji: GitHub, Inc. ma siedzibę w&nbsp;USA – przekazanie na podstawie unijno-amerykańskich ram ochrony danych (Data Privacy Framework) lub standardowych klauzul umownych; OpenStreetMap Foundation ma siedzibę w&nbsp;Wielkiej Brytanii – na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony. Należy potwierdzić aktualny status tych podstaw.]</p>
@@ -62,8 +62,10 @@
     <h2>7. Dobrowolność</h2>
     <p>Podanie danych jest dobrowolne, ale niezbędne do udzielenia odpowiedzi na wiadomość. Twoje dane nie są wykorzystywane do zautomatyzowanego podejmowania decyzji ani profilowania.</p>
 
-    <h2>8. Pliki cookies</h2>
-    <p>Strona nie zapisuje na Twoim urządzeniu plików cookies ani innych podobnych informacji.</p>
+    <h2 id="cookies">8. Pliki cookies i&nbsp;analityka</h2>
+    <p><strong>Niezbędne.</strong> W&nbsp;pamięci przeglądarki (localStorage) zapisujemy wyłącznie Twój wybór dotyczący plików cookies, aby nie pytać o&nbsp;niego przy każdej wizycie. Wybór jest ważny 12&nbsp;miesięcy.</p>
+    <p><strong>Analityczne – Google Analytics 4.</strong> Tylko jeśli wyrazisz zgodę, korzystamy z&nbsp;usługi Google Analytics (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlandia), która zapisuje pliki cookies <code>_ga</code> i&nbsp;<code>_ga_*</code> (ważne do 2&nbsp;lat) i&nbsp;zbiera informacje o&nbsp;sposobie korzystania ze strony: odwiedzone podstrony, czas wizyty, przybliżoną lokalizację, rodzaj urządzenia i&nbsp;przeglądarki. Dane służą wyłącznie do statystyk – nie używamy ich do reklam, profilowania ani łączenia z&nbsp;Twoją tożsamością; wyłączyliśmy sygnały Google i&nbsp;personalizację reklam. Dane mogą być przekazywane do Google LLC w&nbsp;USA na podstawie unijno-amerykańskich ram ochrony danych (Data Privacy Framework). Dane w&nbsp;Google Analytics przechowujemy przez 14&nbsp;miesięcy.</p>
+    <p>Podstawą jest Twoja zgoda (art.&nbsp;6 ust.&nbsp;1 lit.&nbsp;a RODO oraz [do weryfikacji: art.&nbsp;399 ust.&nbsp;1 ustawy – Prawo komunikacji elektronicznej]). Zgodę możesz w&nbsp;każdej chwili zmienić lub wycofać – bez wpływu na zgodność z&nbsp;prawem wcześniejszego przetwarzania: <button class="zgody-otworz" type="button">Ustawienia cookies</button>.</p>
 
     <h2>9. Tajemnica adwokacka i&nbsp;poufność</h2>
     <p>Komunikacja przez Internet nie gwarantuje pełnej poufności. Prosimy, aby w&nbsp;pierwszej wiadomości nie przesyłać szczegółów sprawy ani dokumentów – po nawiązaniu kontaktu ustalimy bezpieczny sposób ich przekazania.</p>
@@ -71,5 +73,21 @@
     <h2>10. Zmiany polityki</h2>
     <p>Polityka obowiązuje od [data]. O&nbsp;istotnych zmianach poinformujemy na tej stronie.</p>
   </main>
+  <!-- ===== PLIKI COOKIES (baner zgody) ===== -->
+  <section class="zgody" id="zgody" role="dialog" aria-labelledby="zgody-tytul" hidden>
+    <h2 class="zgody__tytul" id="zgody-tytul">Pliki cookies</h2>
+    <p class="zgody__tekst">Używamy plików cookies niezbędnych do działania strony, a&nbsp;za Twoją zgodą także analitycznych (Google Analytics), które pokazują nam, jak korzystasz ze strony. Wybór możesz zmienić w&nbsp;każdej chwili w&nbsp;stopce. <a href="#cookies">Polityka prywatności</a></p>
+    <div class="zgody__ustawienia" hidden>
+      <label class="zgody__opcja"><input type="checkbox" checked disabled><span>Niezbędne – zawsze aktywne</span></label>
+      <label class="zgody__opcja"><input type="checkbox" id="zgoda-analityka"><span>Analityczne – Google Analytics</span></label>
+    </div>
+    <div class="zgody__przyciski">
+      <button class="przycisk zgody__odrzuc" type="button">Odrzucam</button>
+      <button class="przycisk zgody__ustaw" type="button">Ustawienia</button>
+      <button class="przycisk zgody__zapisz" type="button" hidden>Zapisz wybór</button>
+      <button class="przycisk zgody__akceptuj" type="button">Akceptuję</button>
+    </div>
+  </section>
+  <script src="js/zgody.js?v=38"></script>
 </body>
 </html>

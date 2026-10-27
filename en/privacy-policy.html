@@ -25,11 +25,11 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon.png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Privacy policy – Law Office of Advocate Agnieszka Mincer-Madejska</title>
   <meta name="description" content="Privacy policy of the Law Office of advocate Agnieszka Mincer-Madejska in Kraków.">
-  <link rel="stylesheet" href="../css/style.css?v=37">
+  <link rel="stylesheet" href="../css/style.css?v=38">
 </head>
 <body class="dokument">
   <main class="dokument__tresc">
@@ -50,7 +50,7 @@
     </ul>
 
     <h2>3. Recipients of data</h2>
-    <p>Data may be disclosed to providers of IT services to the Controller: GitHub, Inc. (website hosting), Google (e-mail services) and the OpenStreetMap Foundation (map), as well as to entities authorised by law.</p>
+    <p>Data may be disclosed to providers of IT services to the Controller: GitHub, Inc. (website hosting), Google (e-mail services and – with your consent – Google Analytics) and the OpenStreetMap Foundation (map), as well as to entities authorised by law.</p>
 
     <h2>4. Transfers outside the European Economic Area</h2>
     <p>[To be verified: GitHub, Inc. is based in the USA – transfer on the basis of the EU-U.S. Data Privacy Framework or standard contractual clauses; the OpenStreetMap Foundation is based in the United Kingdom – on the basis of a European Commission adequacy decision. The current status of these legal bases must be confirmed.]</p>
@@ -64,8 +64,10 @@
     <h2>7. Voluntary provision of data</h2>
     <p>Providing data is voluntary but necessary for us to reply to your message. Your data is not used for automated decision-making or profiling.</p>
 
-    <h2>8. Cookies</h2>
-    <p>This website does not store cookies or any similar information on your device.</p>
+    <h2 id="cookies">8. Cookies and analytics</h2>
+    <p><strong>Necessary.</strong> In your browser’s storage (localStorage) we only save your cookie choice, so that we do not ask for it on every visit. The choice is valid for 12 months.</p>
+    <p><strong>Analytics – Google Analytics 4.</strong> Only if you consent, we use Google Analytics (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland), which stores the cookies <code>_ga</code> and <code>_ga_*</code> (valid for up to 2 years) and collects information about how the website is used: pages visited, visit duration, approximate location, device and browser type. The data is used for statistics only – not for advertising, profiling or identifying you; Google signals and ad personalisation are disabled. Data may be transferred to Google LLC in the USA on the basis of the EU-U.S. Data Privacy Framework. Google Analytics data is retained for 14 months.</p>
+    <p>The legal basis is your consent (Article 6(1)(a) GDPR and [to be verified: Article 399(1) of the Polish Electronic Communications Law]). You can change or withdraw your consent at any time, without affecting the lawfulness of earlier processing: <button class="zgody-otworz" type="button">Cookie settings</button>.</p>
 
     <h2>9. Legal professional privilege and confidentiality</h2>
     <p>Communication over the Internet does not guarantee full confidentiality. Please do not send case details or documents in your first message – once we are in touch, we will agree on a secure way to share them.</p>
@@ -73,5 +75,21 @@
     <h2>10. Changes to this policy</h2>
     <p>This policy applies from [date]. We will announce any material changes on this page.</p>
   </main>
+  <!-- ===== PLIKI COOKIES (baner zgody) ===== -->
+  <section class="zgody" id="zgody" role="dialog" aria-labelledby="zgody-tytul" hidden>
+    <h2 class="zgody__tytul" id="zgody-tytul">Cookies</h2>
+    <p class="zgody__tekst">We use cookies that are necessary for the website to work and, with your consent, analytics cookies (Google Analytics) that show us how the website is used. You can change your choice at any time in the footer. <a href="#cookies">Privacy policy</a></p>
+    <div class="zgody__ustawienia" hidden>
+      <label class="zgody__opcja"><input type="checkbox" checked disabled><span>Necessary – always active</span></label>
+      <label class="zgody__opcja"><input type="checkbox" id="zgoda-analityka"><span>Analytics – Google Analytics</span></label>
+    </div>
+    <div class="zgody__przyciski">
+      <button class="przycisk zgody__odrzuc" type="button">Reject</button>
+      <button class="przycisk zgody__ustaw" type="button">Settings</button>
+      <button class="przycisk zgody__zapisz" type="button" hidden>Save choice</button>
+      <button class="przycisk zgody__akceptuj" type="button">Accept</button>
+    </div>
+  </section>
+  <script src="../js/zgody.js?v=38"></script>
 </body>
 </html>
