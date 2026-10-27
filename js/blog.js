@@ -1,4 +1,4 @@
-/* wersja 39 */
+/* wersja 40 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -255,6 +255,38 @@
     }
   }
 
+  /* tekst kafla jako pojedyncze litery (słowa się nie rozdzielają) */
+  function litery(karta) {
+    if (!karta.dataset.litery) {
+      karta.querySelectorAll(".karta__data, .karta__tytul").forEach((el) => {
+        const tekst = el.textContent;
+        el.textContent = "";
+        tekst.split(/(\s+)/).forEach((kawalek) => {
+          if (/^\s+$/.test(kawalek)) { el.appendChild(document.createTextNode(kawalek)); return; }
+          const slowo = document.createElement("span");
+          slowo.className = "karta__slowo";
+          [...kawalek].forEach((z) => {
+            const l = document.createElement("span");
+            l.className = "karta__litera";
+            l.textContent = z;
+            slowo.appendChild(l);
+          });
+          el.appendChild(slowo);
+        });
+      });
+      karta.dataset.litery = "1";
+    }
+    return [...karta.querySelectorAll(".karta__litera")];
+  }
+  function ukryjTekstKarty(karta) { litery(karta).forEach((l) => { l.style.opacity = "0"; }); }
+  function napiszTekstKarty(karta) {
+    const l = litery(karta), krok = Math.min(18, 700 / l.length);
+    l.forEach((x, i) => {
+      x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, delay: i * krok, easing: "ease-out", fill: "forwards" })
+        .onfinish = () => { x.style.opacity = ""; };
+    });
+  }
+
   function zamknij(animacja, doHistorii) {
     const wpis = otwarty;
     if (!wpis) return;
@@ -266,9 +298,6 @@
       if (document.activeElement && wpis.contains(document.activeElement) || document.activeElement && document.activeElement.closest && document.activeElement.closest(".karta")) document.activeElement.blur();
       wpis.hidden = true;
       wpis.style.cssText = "";
-      // tekst na kaflu wraca łagodnie (0,5 s), a nie nagle
-      if (karta && !malyRuch.matches) karta.querySelectorAll(".karta__data, .karta__tytul").forEach((el) =>
-        el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: "ease-out" }));
       wpis.classList.remove("wpis--start", "wpis--teksty-ukryte");
       wpis.querySelector(".wpis__ciemne").style.opacity = "";
       obszar.style.minHeight = "";
@@ -289,6 +318,9 @@
       // na samym końcu wpis łagodnie przechodzi w kafel pod spodem
       wpis.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: CZAS, delay: 200, fill: "forwards" });
       setTimeout(() => { wpis.querySelector(".wpis__ciemne").style.opacity = "1"; }, 200 + CZAS - 300);
+      // tekst na kaflu "pisze się" litera po literze – start 0,5 s przed uformowaniem kafla
+      ukryjTekstKarty(karta);
+      setTimeout(() => napiszTekstKarty(karta), 200 + CZAS - 500);
       przewinDo(obszar);
       a.onfinish = () => {
         Object.assign(wpis.style, px(cel));

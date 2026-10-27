@@ -1,4 +1,4 @@
-/* wersja 39 */
+/* wersja 40 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -132,7 +132,18 @@
   let ostatnieY = window.scrollY;
   let ukryjPoKlikniecie = false;
   let dolNaglowka = 0;
-  let czasOdjazdu = 0;
+
+  function pokazZwyklyNaglowek() {
+    if (!naglowek.classList.contains("naglowek--pasek")) return;
+    naglowek.classList.add("bez-przejscia");
+    naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty", "naglowek--odjazd");
+    void naglowek.offsetWidth;
+    naglowek.classList.remove("bez-przejscia");
+    naglowek.classList.remove("naglowek--wejscie");
+    void naglowek.offsetWidth;
+    naglowek.classList.add("naglowek--wejscie");
+    setTimeout(() => naglowek.classList.remove("naglowek--wejscie"), 600);
+  }
 
   function aktualizujPasek() {
     const y = window.scrollY;
@@ -144,23 +155,21 @@
       naglowek.classList.add("bez-przejscia", "naglowek--pasek", "naglowek--ukryty");
       void naglowek.offsetWidth;
       naglowek.classList.remove("bez-przejscia");
-    } else if (pasek && y <= dolNaglowka && y < ostatnieY) {   // wracamy do góry – zwykły nagłówek
-      naglowek.classList.add("bez-przejscia");
-      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty", "naglowek--odjazd");
-      void naglowek.offsetWidth;
-      naglowek.classList.remove("bez-przejscia");
-    } else if (pasek) {
-      // pasek odjeżdża dopiero w połowie strony 1; potem przez 2 s nie wraca,
-      // żeby przy nerwowym przewijaniu nie migał
-      const granica = document.getElementById("specjalizacje").offsetTop / 2;
-      if (y < granica && y < ostatnieY) {
-        if (!naglowek.classList.contains("naglowek--ukryty")) {
+    } else if (pasek && y <= 2) {
+      // sama góra strony: pasek odjeżdża za górną krawędź (ease-out, cień gaśnie przed końcem),
+      // potem pojawia się zwykły nagłówek, a logotypy rosną z 60% i wychodzą z przezroczystości
+      if (!naglowek.classList.contains("naglowek--odjazd")) {
+        if (naglowek.classList.contains("naglowek--ukryty")) {
+          pokazZwyklyNaglowek();
+        } else {
           naglowek.classList.add("naglowek--odjazd", "naglowek--ukryty");
-          czasOdjazdu = Date.now();
+          setTimeout(() => { if (window.scrollY <= 2) pokazZwyklyNaglowek(); }, 700);
         }
-      } else if (ukryjPoKlikniecie || y > ostatnieY + 3) {
+      }
+    } else if (pasek) {
+      if (ukryjPoKlikniecie || y > ostatnieY + 3) {
         naglowek.classList.add("naglowek--ukryty");
-      } else if (y < ostatnieY - 3 && Date.now() - czasOdjazdu > 2000) {
+      } else if (y < ostatnieY - 3) {
         naglowek.classList.remove("naglowek--ukryty", "naglowek--odjazd");
       }
     }

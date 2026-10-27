@@ -1,4 +1,4 @@
-/* wersja 39 */
+/* wersja 40 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1792,3 +1792,18 @@ html.opis-otwarty main { z-index: 6; }
   background: #E9DDCB; mix-blend-mode: multiply;
   border-radius: inherit;
 }
+
+/* =====================================================================
+   v40
+   ===================================================================== */
+/* zwykły nagłówek po powrocie na górę: logotypy z 60% i z przezroczystości (0,5 s) */
+.naglowek--wejscie .logo-kancelarii img,
+.naglowek--wejscie .logo-adwokatura img { animation: logo-wejscie .5s cubic-bezier(0, 0, 0.2, 1) both; }
+@keyframes logo-wejscie {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: .88; transform: scale(1); }
+}
+.logo-kancelarii img { transform-origin: left center; }
+.logo-adwokatura img { transform-origin: right center; }
+/* blog: litery tekstu kafla (animacja "pisania" po zamknięciu wpisu) */
+.karta__slowo { white-space: nowrap; }
