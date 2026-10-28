@@ -1,4 +1,4 @@
-/* wersja 40 */
+/* wersja 41 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -103,11 +103,16 @@
     if (!animTla) animTla = requestAnimationFrame(krokTla);
   }
 
+  // telefon: strony 2 i 3 animują się dopiero po pierwszym przesunięciu palcem w górę
+  const telefonWejscia = window.matchMedia("(max-width: 1099px)");
+  let przesunieto = false;
   function sprawdzWejscia() {
     if (!animacje) return;
+    if (window.scrollY > 5) przesunieto = true;
     const vh = window.innerHeight;
-    grupy.forEach((gr) => {
+    grupy.forEach((gr, i) => {
       if (gr.pokazana) return;
+      if (i > 0 && telefonWejscia.matches && !przesunieto) return;
       const r = gr.kontenery[0].getBoundingClientRect();
       if (r.bottom < 0) pokazGrupe(gr, true);          // już przewinięta – bez animacji
       else if (r.top < vh * 0.8) pokazGrupe(gr, false); // wjeżdża na ekran
@@ -430,6 +435,23 @@
   }
   document.querySelectorAll(".opis__tresc").forEach((t) =>
     t.addEventListener("scroll", () => zanikOpisu(t), { passive: true }));
+
+  // dłuższe zatrzymanie kursora (2 s) – kafel delikatnie się powiększa i pokazuje zachętę
+  const zHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  kafle.forEach((kafel) => {
+    let zegar = 0;
+    const p = kafel.querySelector(".kafel__przycisk");
+    p.addEventListener("pointerenter", () => {
+      if (!zHover.matches) return;
+      clearTimeout(zegar);
+      zegar = setTimeout(() => kafel.classList.add("kafel--powiekszony"), 2000);
+    });
+    p.addEventListener("pointerleave", () => {
+      clearTimeout(zegar);
+      kafel.classList.remove("kafel--powiekszony", "kafel--kliknieto");
+    });
+    p.addEventListener("click", () => kafel.classList.add("kafel--kliknieto"));
+  });
 
   kafle.forEach((kafel, i) => {
     kafel.querySelector(".kafel__przycisk").addEventListener("click", (e) => {

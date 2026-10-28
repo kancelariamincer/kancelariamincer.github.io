@@ -1,4 +1,4 @@
-/* wersja 40 */
+/* wersja 41 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1807,3 +1807,57 @@ html.opis-otwarty main { z-index: 6; }
 .logo-adwokatura img { transform-origin: right center; }
 /* blog: litery tekstu kafla (animacja "pisania" po zamknięciu wpisu) */
 .karta__slowo { white-space: nowrap; }
+
+/* =====================================================================
+   v41
+   ===================================================================== */
+/* napisy na kaflach w wielkości nagłówka "Blog" w stopce (24 px) */
+.kafel__nazwa { font-size: calc(24 * var(--f)); line-height: calc(29 * var(--f)); top: calc(70.05 * var(--u) - 14 * var(--f)); }
+@media (max-width: 1099px) { .kafel__nazwa { font-size: 17px; line-height: 1.2; } }
+
+/* kafel po 2 s pod kursorem: powiększenie o połowę odstępu do sąsiada (po 10 px z każdej strony),
+   cień niżej o 20 px i o 20% ciemniejszy; 2 s, ease-in-out w obie strony */
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .kafel__przycisk { transition: background-color .3s ease, border-color .3s ease, box-shadow 2s ease-in-out, transform 2s ease-in-out; }
+  .kafel--powiekszony { z-index: 3; }
+  .kafel--powiekszony .kafel__przycisk {
+    transform: scale(calc(278 / 258));
+    box-shadow: 0 calc(24 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.168);
+  }
+  .kafel__przycisk::after {
+    content: "Kliknij, żeby przeczytać więcej";
+    position: absolute; left: 0; right: 0; bottom: calc(22 * var(--u));
+    text-align: center; white-space: nowrap;
+    font-family: var(--szeryf); font-size: calc(18 * var(--f)); line-height: 1.2;
+    color: #fff;
+    opacity: 0; transition: opacity .6s ease;
+    pointer-events: none;
+  }
+  html[lang="en"] .kafel__przycisk::after { content: "Click to read more"; }
+  .kafel--powiekszony .kafel__przycisk::after { opacity: 1; transition: opacity .8s ease 1.4s; }
+  .kafel--kliknieto .kafel__przycisk::after { opacity: 0; transition: opacity .3s ease; }
+}
+
+/* gradient pod menu także na blogu (jak na stronie kancelarii: 560 px) */
+.blog-tlo::after {
+  background:
+    linear-gradient(to bottom, rgba(238,231,220,.45) 0, rgba(238,231,220,.3) 60%, rgba(238,231,220,0) 100%) top / 100% calc(560 * var(--u)) no-repeat,
+    linear-gradient(to bottom, rgba(238,231,220,0) 0, rgba(238,231,220,0) 55%, rgba(238,231,220,.85) 80%, var(--tlo) 95%);
+}
+
+/* przejście blog → kancelaria: cała treść odjeżdża w lewo, strona kancelarii wjeżdża z prawej
+   (menu u góry nie jedzie – ma własną warstwę przejścia) */
+@view-transition { navigation: auto; }
+.naglowek { view-transition-name: naglowek; }
+html:active-view-transition-type(z-bloga)::view-transition-old(root) { animation: vt-w-lewo .8s cubic-bezier(0.4, 0, 0.2, 1) both; }
+html:active-view-transition-type(z-bloga)::view-transition-new(root) { animation: vt-z-prawej .8s cubic-bezier(0.4, 0, 0.2, 1) both; }
+@keyframes vt-w-lewo { to { transform: translateX(-100%); } }
+@keyframes vt-z-prawej { from { transform: translateX(100%); } }
+
+/* telefon: bez animacji pojawiania się logotypów */
+@media (max-width: 1099px) {
+  .naglowek--wejscie .logo-kancelarii img, .naglowek--wejscie .logo-adwokatura img { animation: none; }
+}
+
+/* pinezki biur na mapie: brązowe */
+.pinezka { background: var(--braz); }

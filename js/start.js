@@ -10,5 +10,18 @@
     zmianaJezyka = !!r && r.origin === location.origin && r.pathname !== location.pathname &&
       bezJezyka(r.pathname) === bezJezyka(location.pathname);
   } catch (e) {}
-  if (!malyRuch && !zmianaJezyka) document.documentElement.classList.add("anim");
+  // przejście z bloga na stronę kancelarii: strona wjeżdża z prawej gotowa (bez animacji wejścia)
+  var zBloga = false;
+  try { var rr = document.referrer ? new URL(document.referrer) : null;
+        zBloga = !!rr && rr.origin === location.origin && /\/blog\//.test(rr.pathname) && !/\/blog\//.test(location.pathname); } catch (e) {}
+  if (!malyRuch && !zmianaJezyka && !zBloga) document.documentElement.classList.add("anim");
+
+  // przejścia między stronami (View Transitions): tylko blog → kancelaria = przesunięcie w lewo
+  window.addEventListener("pagereveal", function (e) {
+    if (!e.viewTransition) return;
+    var od = "";
+    try { od = navigation.activation && navigation.activation.from ? new URL(navigation.activation.from.url).pathname : ""; } catch (x) {}
+    if (/\/blog\//.test(od) && !/\/blog\//.test(location.pathname)) e.viewTransition.types.add("z-bloga");
+    else e.viewTransition.skipTransition();
+  });
 })();
