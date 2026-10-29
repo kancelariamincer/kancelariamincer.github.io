@@ -15,6 +15,8 @@
   try { var rr = document.referrer ? new URL(document.referrer) : null;
         zBloga = !!rr && rr.origin === location.origin && /\/blog\//.test(rr.pathname) && !/\/blog\//.test(location.pathname); } catch (e) {}
   if (!malyRuch && !zmianaJezyka && !zBloga) document.documentElement.classList.add("anim");
+  // telefon: po przejściu z bloga animujemy przyciski menu
+  if (zBloga && !malyRuch && window.matchMedia("(max-width: 1099px)").matches) document.documentElement.classList.add("anim-menu");
 
   // przejścia między stronami (View Transitions): tylko blog → kancelaria = przesunięcie w lewo
   window.addEventListener("pagereveal", function (e) {

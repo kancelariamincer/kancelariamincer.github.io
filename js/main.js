@@ -1,4 +1,4 @@
-/* wersja 41 */
+/* wersja 42 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -163,14 +163,18 @@
     } else if (pasek && y <= 2) {
       // sama góra strony: pasek odjeżdża za górną krawędź (ease-out, cień gaśnie przed końcem),
       // potem pojawia się zwykły nagłówek, a logotypy rosną z 60% i wychodzą z przezroczystości
-      if (!naglowek.classList.contains("naglowek--odjazd")) {
-        if (naglowek.classList.contains("naglowek--ukryty")) {
-          pokazZwyklyNaglowek();
-        } else {
-          naglowek.classList.add("naglowek--odjazd", "naglowek--ukryty");
-          setTimeout(() => { if (window.scrollY <= 2) pokazZwyklyNaglowek(); }, 700);
-        }
+      // (odjeżdża kopia paska – w tej samej chwili prawdziwy nagłówek wraca, a logotypy zaczynają rosnąć)
+      if (!naglowek.classList.contains("naglowek--ukryty")) {
+        const kopia = naglowek.cloneNode(true);
+        kopia.setAttribute("aria-hidden", "true");
+        kopia.inert = true;
+        kopia.style.viewTransitionName = "none";
+        kopia.classList.remove("naglowek--wejscie");
+        kopia.classList.add("naglowek--odjazd");
+        document.body.appendChild(kopia);
+        setTimeout(() => kopia.remove(), 1100);
       }
+      pokazZwyklyNaglowek();
     } else if (pasek) {
       if (ukryjPoKlikniecie || y > ostatnieY + 3) {
         naglowek.classList.add("naglowek--ukryty");
@@ -444,7 +448,7 @@
     p.addEventListener("pointerenter", () => {
       if (!zHover.matches) return;
       clearTimeout(zegar);
-      zegar = setTimeout(() => kafel.classList.add("kafel--powiekszony"), 2000);
+      kafel.classList.add("kafel--powiekszony");     // powiększanie startuje od razu po najechaniu
     });
     p.addEventListener("pointerleave", () => {
       clearTimeout(zegar);
