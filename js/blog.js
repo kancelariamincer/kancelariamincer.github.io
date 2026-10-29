@@ -1,4 +1,4 @@
-/* wersja 40 */
+/* wersja 43 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -121,7 +121,24 @@
       widac = k.top > bialeOd && k.bottom < w.bottom - 20;
     }
     blogKontakt.classList.toggle("widoczny", widac);
+    // węższy ekran (np. iPad): pełne dane nachodzą na tekst wpisu → zwijamy do "tel." / "e-mail"
+    let zwin = false;
+    if (otwarty && !telefon.matches) {
+      const tresc = otwarty.querySelector(".wpis__tresc");
+      const tr = tresc.getBoundingClientRect();
+      const kolumna = tr.right - parseFloat(getComputedStyle(tresc).paddingRight);
+      const pelny = blogKontakt.querySelector(".blog-kontakt__pelny");
+      const lewa = blogKontakt.getBoundingClientRect().right - pelny.scrollWidth;
+      zwin = lewa < kolumna + 30;
+      blogKontakt.style.setProperty("--szer-kontaktu", Math.max(0, pelny.scrollWidth - blogKontakt.offsetWidth) + "px");
+    }
+    blogKontakt.classList.toggle("blog-kontakt--zwiniety", zwin);
+    if (!zwin) blogKontakt.classList.remove("blog-kontakt--otwarty");
   }
+  if (blogKontakt) blogKontakt.addEventListener("click", (e) => {
+    if (!blogKontakt.classList.contains("blog-kontakt--zwiniety") || e.target.closest("a")) return;
+    blogKontakt.classList.toggle("blog-kontakt--otwarty");     // dotyk (iPad): stuknięcie rozwija / zwija
+  });
   window.addEventListener("scroll", () => requestAnimationFrame(aktualizujKontaktBloga), { passive: true });
   window.addEventListener("resize", aktualizujKontaktBloga);
 
@@ -152,7 +169,10 @@
   const px = (r) => ({ left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", minHeight: "0px" });
 
   function linieWpisu(wpis) {
-    const el = [wpis.querySelector(".wpis__data"), wpis.querySelector(".wpis__zamknij"), wpis.querySelector(".wpis__tytul"), wpis.querySelector(".wpis__lead")];
+    const tytul = wpis.querySelector(".wpis__tytul");
+    const el = [wpis.querySelector(".wpis__data"), wpis.querySelector(".wpis__zamknij")];
+    if (!tytul.dataset.lot) el.push(tytul);              // tytuł animowany przelotem – osobno
+    el.push(wpis.querySelector(".wpis__lead"));
     wpis.querySelectorAll(".wpis__tresc > *").forEach((x) => {
       if (x.tagName === "UL" || x.tagName === "OL") el.push(...x.children); else el.push(x);
     });
@@ -219,6 +239,7 @@
     ustawFlagi(slug);
 
     if (ruch && karta && !karta.hidden) {
+      const lot = telefon.matches ? null : przygotujLot(karta, wpis);   // tytuł "przelatuje" z kafla
       const start = prostokat(karta);
       wpis.classList.add("wpis--start");                 // przyciemnienie 100%, biel schowana pod kaflem
       Object.assign(wpis.style, px(start));
@@ -249,6 +270,7 @@
             { duration: BIEL, easing: "cubic-bezier(0, 0, 0.2, 1)" });
         }
         pokazTeksty(wpis, 150);
+        if (lot) lot.start();
       }, WYGASZENIE);
     } else {
       pokazTeksty(wpis, 300);           // np. wejście prosto na adres wpisu – teksty wchodzą kolejno
@@ -285,6 +307,62 @@
       x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, delay: i * krok, easing: "ease-out", fill: "forwards" })
         .onfinish = () => { x.style.opacity = ""; };
     });
+  }
+
+  /* Przelot tytułu: pierwsza linijka tytułu z kafla leci na miejsce pierwszej linijki tytułu we wpisie,
+     dalsze linijki kafla gasną, a reszta tytułu wpisu (z łamaniem jak we wpisie) pisze się w trakcie otwierania. */
+  function slowaTytulu(el) {
+    if (!el.dataset.slowa) {
+      const tekst = el.textContent.trim();
+      el.textContent = "";
+      tekst.split(/\s+/).forEach((slowo, i) => {
+        if (i) el.appendChild(document.createTextNode(" "));
+        const sp = document.createElement("span");
+        sp.className = "karta__slowo";
+        [...slowo].forEach((z) => { const l = document.createElement("span"); l.className = "karta__litera"; l.textContent = z; sp.appendChild(l); });
+        el.appendChild(sp);
+      });
+      el.dataset.slowa = "1";
+    }
+    return [...el.querySelectorAll(".karta__slowo")];
+  }
+  function przygotujLot(karta, wpis) {
+    const tk = karta.querySelector(".karta__tytul"), tw = wpis.querySelector(".wpis__tytul");
+    litery(karta);
+    const sk = [...tk.querySelectorAll(".karta__slowo")];
+    const sw = slowaTytulu(tw);
+    if (!sk.length || sk.length !== sw.length) return null;
+    const gora = sk[0].getBoundingClientRect().top;
+    const n = sk.filter((x) => Math.abs(x.getBoundingClientRect().top - gora) < 4).length;
+    // pozycje (względem obszaru kafli): tytuł na kaflu teraz, tytuł we wpisie po rozwinięciu (wpis ma już docelowy układ)
+    const o = obszar.getBoundingClientRect(), rk = tk.getBoundingClientRect(), rw = tw.getBoundingClientRect();
+    const klon = tk.cloneNode(true);
+    klon.classList.add("tytul-lot");
+    Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
+    const dx = rw.left - rk.left, dy = rw.top - rk.top;
+    tw.dataset.lot = "1";
+    sw.forEach((x, i) => { x.style.opacity = "0"; });
+    return {
+      start() {
+        obszar.appendChild(klon);
+        const ks = [...klon.querySelectorAll(".karta__slowo")];
+        ks.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" }));
+        klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${dx}px, ${dy}px)` }],
+          { duration: CZAS, easing: KRZYWA, fill: "forwards" });
+        // reszta tytułu wpisu pisze się litera po literze w trakcie otwierania
+        const reszta = sw.slice(n);
+        reszta.forEach((x) => { x.style.opacity = ""; x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = "0"; }); });
+        const l = reszta.flatMap((x) => [...x.querySelectorAll(".karta__litera")]);
+        const krok = l.length ? (CZAS - 250) / l.length : 0;
+        l.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: 120 + i * krok, fill: "forwards" })
+          .onfinish = () => { x.style.opacity = ""; });
+        setTimeout(() => {
+          sw.slice(0, n).forEach((x) => { x.style.opacity = ""; });
+          klon.remove();
+          delete tw.dataset.lot;
+        }, CZAS + 30);
+      },
+    };
   }
 
   function zamknij(animacja, doHistorii) {
