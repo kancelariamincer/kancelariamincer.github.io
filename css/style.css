@@ -1,4 +1,4 @@
-/* wersja 43 */
+/* wersja 44 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1940,3 +1940,44 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
 
 /* przelot tytułu z kafla do wpisu */
 .tytul-lot { position: absolute; z-index: 5; margin: 0; pointer-events: none; color: var(--tekst); }
+
+/* =====================================================================
+   v44
+   ===================================================================== */
+/* znak Adwokatury Polskiej +10% (strona i blog) */
+.logo-adwokatura img { width: calc(130.5 * var(--f)); }
+@media (max-width: 1099px) { .logo-adwokatura img { width: 71.5px; } }
+
+/* okienko usługi przy powiększonym kaflu: wyrównane do górnej (dolnej) krawędzi powiększonego kafla */
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .kafel--powiekszony .opis { top: calc(-10 * var(--u)); }
+  .kafel--powiekszony .opis--dol { top: auto; bottom: calc(-10 * var(--u)); }
+}
+
+/* blog: menu jak na stronie kancelarii (4 przyciski) – telefon: te same odstępy co na stronie głównej */
+@media (max-width: 1099px) {
+  .blog .naglowek:not(.naglowek--pasek) .menu { gap: calc((3 * 18px + 2 * 10px - 4 * 18px) / 3); }
+}
+
+/* blog: zwijanie danych kontaktowych w prawo, pod 10-pikselowy gradient przy prawej krawędzi;
+   po najechaniu pełny tekst wychodzi z prawej do lewej */
+.blog-kontakt--zwiniety .blog-kontakt__pelny {
+  opacity: 1; transform: none; pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 10px);
+          mask-image: linear-gradient(to left, transparent 0, #000 10px);
+  transition: none;
+}
+.blog-kontakt--zwiniety .blog-kontakt__ruch {
+  transform: translateX(105%);
+  transition: transform 1s ease-in-out;
+}
+.blog-kontakt--zwiniety:hover .blog-kontakt__pelny,
+.blog-kontakt--zwiniety.blog-kontakt--otwarty .blog-kontakt__pelny { opacity: 1; transform: none; pointer-events: auto; }
+.blog-kontakt--zwiniety:hover .blog-kontakt__ruch,
+.blog-kontakt--zwiniety.blog-kontakt--otwarty .blog-kontakt__ruch { transform: none; }
+@media (max-width: 1099px) {
+  .blog-kontakt--zwiniety .blog-kontakt__pelny { -webkit-mask-image: none; mask-image: none; overflow: visible; }
+  .blog-kontakt--zwiniety .blog-kontakt__ruch { transform: none; }
+}
+@media (max-width: 1099px) { .blog .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 11px; } }

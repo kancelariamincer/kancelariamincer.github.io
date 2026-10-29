@@ -1,4 +1,4 @@
-/* wersja 43 */
+/* wersja 44 */
 /* =========================================================
    Kancelaria Adwokacka – skrypty strony
    1. Dane kontaktowe i gradient przy przewijaniu
@@ -402,6 +402,7 @@
     przycisk.setAttribute("aria-expanded", "false");
     opis.classList.remove("otwarty");
     kafel.classList.remove("kafel--otwarty");
+    if (!przycisk.matches(":hover")) kafel.classList.remove("kafel--powiekszony");
     root.classList.remove("opis-otwarty");
     aktualizujKontakt();
     const doUkrycia = opis;
@@ -452,9 +453,9 @@
     });
     p.addEventListener("pointerleave", () => {
       clearTimeout(zegar);
-      kafel.classList.remove("kafel--powiekszony", "kafel--kliknieto");
+      // dopóki okienko usługi jest otwarte, kafel zostaje powiększony, a napis "Kliknij…" widoczny
+      if (!kafel.classList.contains("kafel--otwarty")) kafel.classList.remove("kafel--powiekszony");
     });
-    p.addEventListener("click", () => kafel.classList.add("kafel--kliknieto"));
   });
 
   kafle.forEach((kafel, i) => {

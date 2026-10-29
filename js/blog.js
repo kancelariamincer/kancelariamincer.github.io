@@ -1,4 +1,4 @@
-/* wersja 43 */
+/* wersja 44 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -346,21 +346,22 @@
       start() {
         obszar.appendChild(klon);
         const ks = [...klon.querySelectorAll(".karta__slowo")];
-        ks.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" }));
+        ks.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));   // szybko gasną
         klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${dx}px, ${dy}px)` }],
           { duration: CZAS, easing: KRZYWA, fill: "forwards" });
         // reszta tytułu wpisu pisze się litera po literze w trakcie otwierania
         const reszta = sw.slice(n);
         reszta.forEach((x) => { x.style.opacity = ""; x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = "0"; }); });
         const l = reszta.flatMap((x) => [...x.querySelectorAll(".karta__litera")]);
-        const krok = l.length ? (CZAS - 250) / l.length : 0;
-        l.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: 120 + i * krok, fill: "forwards" })
+        // reszta tytułu buduje się wolniej, dopiero gdy dolne linijki z kafla zgasną (bez nakładania tekstów)
+        const krok = l.length ? 1100 / l.length : 0;
+        l.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, delay: 260 + i * krok, fill: "forwards" })
           .onfinish = () => { x.style.opacity = ""; });
         setTimeout(() => {
           sw.slice(0, n).forEach((x) => { x.style.opacity = ""; });
           klon.remove();
-          delete tw.dataset.lot;
         }, CZAS + 30);
+        setTimeout(() => { delete tw.dataset.lot; }, 260 + 1100 + 500);
       },
     };
   }
