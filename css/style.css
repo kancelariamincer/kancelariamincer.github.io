@@ -1,4 +1,4 @@
-/* wersja 45 */
+/* wersja 47 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2033,4 +2033,31 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
   .blog-kontakt__l { text-align: left; }
   .blog-kontakt__w { transform: none; }
   .blog-kontakt__l--odstep { margin-bottom: 4px; }
+}
+
+/* =====================================================================
+   v47
+   ===================================================================== */
+/* strona 3: tytuł i kolumny wyżej o 77 px; pod nimi tel. / e-mail (z tym samym odstępem),
+   po prawej nad formularzem "Zadaj pytanie" (krój i wielkość jak "Blog" w stopce) */
+.naglowek-sekcji--kontakt { --y: 158; }
+.info--1, .info--2 { top: calc(158 * var(--u) + 54 * var(--f)); }
+.info--3 { --x: 179; top: calc(158 * var(--u) + 152 * var(--f)); }
+.formularz__tytul {
+  --x: 1013;
+  top: calc(158 * var(--u) + 152 * var(--f));
+  font-family: var(--bezszeryf); font-weight: 400;
+  font-size: calc(24 * var(--f)); line-height: 1.2;
+}
+@media (max-width: 1099px) {
+  .formularz__tytul { font-size: 22px; margin-top: 32px; }
+  .formularz__tytul + .formularz { margin-top: 14px; }
+}
+
+/* telefon / tablet w układzie mobilnym: kolumna tekstu wpisu ok. 65 znaków (PL) i 55 (EN) */
+@media (max-width: 1099px) {
+  .wpis__tresc { max-width: calc(34.5em + 44px); }
+  .wpis__lead { max-width: 34.5em; }
+  .blog--en .wpis__tresc { max-width: calc(26.7em + 44px); }
+  .blog--en .wpis__lead { max-width: 26.7em; }
 }

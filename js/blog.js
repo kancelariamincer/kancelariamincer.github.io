@@ -1,4 +1,4 @@
-/* wersja 45 */
+/* wersja 47 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -150,7 +150,8 @@
         l.dataset.x = l.offsetWidth - w;
         widoczna = Math.max(widoczna, w);
       } else {
-        l.dataset.x = l.offsetWidth + 12;            // godziny wyjeżdżają w całości
+        l.dataset.x = 0;                              // dni i godziny zostają na miejscu
+        widoczna = Math.max(widoczna, l.offsetWidth);
       }
     });
     blogKontakt.style.setProperty("--szer", (zwin ? widoczna : pelna) + "px");
@@ -387,7 +388,9 @@
     Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
     const dx = rw.left - rk.left, dy = rw.top - rk.top;
     tw.dataset.lot = "1";
-    sw.forEach((x, i) => { x.style.opacity = "0"; });
+    tw.classList.remove("wpis-linia");                 // tytuł nie gaśnie/zapala się drugi raz razem z resztą tekstów
+    tw.style.opacity = "";
+    sw.forEach((x) => { x.style.opacity = "0"; });
     return {
       start() {
         obszar.appendChild(klon);
@@ -408,6 +411,50 @@
           klon.remove();
         }, CZAS + 30);
         setTimeout(() => { delete tw.dataset.lot; }, 260 + 1100 + 500);
+      },
+    };
+  }
+
+  /* Powrót tytułu: pierwsza linijka tytułu kafla leci z miejsca tytułu we wpisie na kafel,
+     dalsze słowa tytułu wpisu szybko gasną, a reszta tytułu (i data) na kaflu pisze się w trakcie zamykania. */
+  function przygotujPowrot(karta, wpis) {
+    const tk = karta.querySelector(".karta__tytul"), tw = wpis.querySelector(".wpis__tytul");
+    litery(karta);
+    const sk = [...tk.querySelectorAll(".karta__slowo")];
+    const sw = slowaTytulu(tw);
+    if (!sk.length || sk.length !== sw.length) return null;
+    const gora = sk[0].getBoundingClientRect().top;
+    const n = sk.filter((x) => Math.abs(x.getBoundingClientRect().top - gora) < 4).length;
+    const o = obszar.getBoundingClientRect(), rk = tk.getBoundingClientRect(), rw = tw.getBoundingClientRect();
+    const klon = tk.cloneNode(true);
+    klon.classList.add("tytul-lot");
+    Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
+    [...klon.querySelectorAll(".karta__slowo")].forEach((x, i) => {
+      x.style.opacity = i < n ? "" : "0";
+      x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = ""; });
+    });
+    const dx = rw.left - rk.left, dy = rw.top - rk.top;
+    return {
+      start() {
+        // tytuł we wpisie: pierwsza linijka od razu "przechodzi" w lecący klon, reszta szybko gaśnie
+        sw.slice(0, n).forEach((x) => { x.style.opacity = "0"; });
+        sw.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));
+        obszar.appendChild(klon);
+        klon.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+          { duration: CZAS, delay: 200, easing: KRZYWA, fill: "both" });
+        // kafel: pierwsza linijka ukryta do końca lotu, reszta tytułu i data piszą się w trakcie
+        const wszystkie = litery(karta);
+        wszystkie.forEach((l) => { l.style.opacity = "0"; });
+        const pierwsze = new Set(sk.slice(0, n).flatMap((x) => [...x.querySelectorAll(".karta__litera")]));
+        const reszta = wszystkie.filter((l) => !pierwsze.has(l));
+        const krok = reszta.length ? 900 / reszta.length : 0;
+        reszta.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 300 + i * krok, fill: "forwards" })
+          .onfinish = () => { x.style.opacity = ""; });
+        setTimeout(() => {
+          pierwsze.forEach((l) => { l.style.opacity = ""; });
+          klon.remove();
+          sw.forEach((x) => { x.style.opacity = ""; x.getAnimations().forEach((a) => a.cancel()); });
+        }, 200 + CZAS + 30);
       },
     };
   }
@@ -443,9 +490,13 @@
       // na samym końcu wpis łagodnie przechodzi w kafel pod spodem
       wpis.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: CZAS, delay: 200, fill: "forwards" });
       setTimeout(() => { wpis.querySelector(".wpis__ciemne").style.opacity = "1"; }, 200 + CZAS - 300);
-      // tekst na kaflu "pisze się" litera po literze – start 0,5 s przed uformowaniem kafla
-      ukryjTekstKarty(karta);
-      setTimeout(() => napiszTekstKarty(karta), 200 + CZAS - 500);
+      // tytuł wraca "przelotem" (jak przy otwieraniu, tylko w drugą stronę); na telefonie – pisanie litera po literze
+      const powrot = telefon.matches ? null : przygotujPowrot(karta, wpis);
+      if (powrot) powrot.start();
+      else {
+        ukryjTekstKarty(karta);
+        setTimeout(() => napiszTekstKarty(karta), 200 + CZAS - 500);
+      }
       przewinDo(obszar);
       a.onfinish = () => {
         Object.assign(wpis.style, px(cel));
