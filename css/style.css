@@ -1,4 +1,4 @@
-/* wersja 44 */
+/* wersja 45 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -1981,3 +1981,56 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
   .blog-kontakt--zwiniety .blog-kontakt__ruch { transform: none; }
 }
 @media (max-width: 1099px) { .blog .naglowek:not(.naglowek--pasek) .menu { --menu-odstep: 11px; } }
+
+/* =====================================================================
+   v45 – dane kontaktowe na stronie wpisu (komputer): zwijanie do "tel…" / "e-mail…"
+   ===================================================================== */
+@property --maska { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --szer  { syntax: "<length>"; inherits: true;  initial-value: 0px; }
+.blog-kontakt { transition: opacity .4s ease, visibility 0s linear .4s, --szer .5s ease-in-out; }
+.blog-kontakt.widoczny { transition: opacity .4s ease, --szer .5s ease-in-out; }
+.blog-kontakt__okno {
+  position: relative;
+  margin-right: -5px; padding-right: 5px;      /* prawa krawędź tekstu = środek maski */
+  -webkit-mask-image: linear-gradient(to left, transparent 0, transparent calc(5px - var(--maska) / 2), #000 calc(5px + var(--maska) / 2));
+          mask-image: linear-gradient(to left, transparent 0, transparent calc(5px - var(--maska) / 2), #000 calc(5px + var(--maska) / 2));
+}
+.bk--maska .blog-kontakt__okno { animation: bk-maska .5s ease-in-out; }
+@keyframes bk-maska { 0% { --maska: 0px; } 50% { --maska: 10px; } 100% { --maska: 0px; } }
+.blog-kontakt__l { margin: 0; text-align: right; white-space: nowrap; }
+.blog-kontakt__l--odstep { margin-bottom: calc(16 * var(--u)); }
+.blog-kontakt__w {
+  display: inline-block; position: relative;
+  transform: translateX(var(--x, 0px));
+  transition: transform .5s ease-in-out;
+}
+.blog-kontakt__wielo { position: absolute; top: 0; left: var(--pref, 0px); opacity: 0; transition: opacity .15s ease; }
+.blog-kontakt__reszta { transition: opacity .15s ease; }
+/* zwinięte: tuż przed końcem ruchu litery gasną, pojawia się wielokropek */
+.bk--zwin .blog-kontakt__reszta { opacity: 0; transition: opacity .15s ease .33s; }
+.bk--zwin .blog-kontakt__wielo  { opacity: 1; transition: opacity .15s ease .33s; }
+/* najechanie na zwinięte – odwrotnie: najpierw znika wielokropek, potem tekst jedzie w lewo */
+.bk--zwin.bk--hover .blog-kontakt__w { transform: none; }
+.bk--zwin.bk--hover .blog-kontakt__reszta { opacity: 1; transition: opacity .15s ease; }
+.bk--zwin.bk--hover .blog-kontakt__wielo { opacity: 0; transition: opacity .15s ease; }
+.bk--bez-animacji, .bk--bez-animacji * { transition: none !important; }
+/* rozmycie i przygaszenie pod spodem – podąża za szerokością widocznego tekstu, miękka krawędź 50 px */
+.blog-kontakt__tlo {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: -50px; bottom: -50px; right: -50px; width: calc(var(--szer) + 100px);
+  background: rgba(247, 243, 236, 0.5);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 50px, #000 calc(100% - 50px), transparent),
+                      linear-gradient(to bottom, transparent, #000 50px, #000 calc(100% - 50px), transparent);
+  -webkit-mask-composite: source-in;
+          mask-image: linear-gradient(to right, transparent, #000 50px, #000 calc(100% - 50px), transparent),
+                      linear-gradient(to bottom, transparent, #000 50px, #000 calc(100% - 50px), transparent);
+          mask-composite: intersect;
+}
+@media (max-width: 1099px) {
+  .blog-kontakt__tlo, .blog-kontakt__wielo { display: none; }
+  .blog-kontakt__okno { -webkit-mask-image: none; mask-image: none; margin: 0; padding: 0; }
+  .blog-kontakt__l { text-align: left; }
+  .blog-kontakt__w { transform: none; }
+  .blog-kontakt__l--odstep { margin-bottom: 4px; }
+}

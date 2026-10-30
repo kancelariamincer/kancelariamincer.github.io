@@ -1,4 +1,4 @@
-/* wersja 44 */
+/* wersja 45 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -121,24 +121,70 @@
       widac = k.top > bialeOd && k.bottom < w.bottom - 20;
     }
     blogKontakt.classList.toggle("widoczny", widac);
-    // węższy ekran (np. iPad): pełne dane nachodzą na tekst wpisu → zwijamy do "tel." / "e-mail"
-    let zwin = false;
-    if (otwarty && !telefon.matches) {
-      const tresc = otwarty.querySelector(".wpis__tresc");
-      const tr = tresc.getBoundingClientRect();
-      const kolumna = tr.right - parseFloat(getComputedStyle(tresc).paddingRight);
-      const pelny = blogKontakt.querySelector(".blog-kontakt__pelny");
-      const lewa = blogKontakt.getBoundingClientRect().right - pelny.scrollWidth;
-      zwin = lewa < kolumna + 30;
-      blogKontakt.style.setProperty("--szer-kontaktu", Math.max(0, pelny.scrollWidth - blogKontakt.offsetWidth) + "px");
-    }
-    blogKontakt.classList.toggle("blog-kontakt--zwiniety", zwin);
-    if (!zwin) blogKontakt.classList.remove("blog-kontakt--otwarty");
+    zwijanieKontaktu();
   }
-  if (blogKontakt) blogKontakt.addEventListener("click", (e) => {
-    if (!blogKontakt.classList.contains("blog-kontakt--zwiniety") || e.target.closest("a")) return;
-    blogKontakt.classList.toggle("blog-kontakt--otwarty");     // dotyk (iPad): stuknięcie rozwija / zwija
-  });
+
+  /* Węższy ekran: gdy lewa krawędź danych kontaktowych zbliży się na 50 px do prawej krawędzi
+     tekstu wpisu, dane odjeżdżają w prawo (0,5 s, ease-in-out) aż zostanie "tel…" i "e-mail…".
+     Jeden egzemplarz tekstu – każda linijka przesuwa się o tyle, ile trzeba; prawa krawędź to maska. */
+  let stanZwin = null, zegarMaski = 0;
+  function zwijanieKontaktu() {
+    if (!blogKontakt) return;
+    const linie = [...blogKontakt.querySelectorAll(".blog-kontakt__w")];
+    if (!otwarty || telefon.matches) {
+      if (stanZwin !== null) { blogKontakt.classList.remove("bk--zwin"); linie.forEach((l) => l.style.removeProperty("--x")); stanZwin = null; }
+      return;
+    }
+    const tresc = otwarty.querySelector(".wpis__tresc");
+    const tr = tresc.getBoundingClientRect();
+    const kolumna = tr.right - parseFloat(getComputedStyle(tresc).paddingRight);
+    const prawa = blogKontakt.getBoundingClientRect().right;
+    const pelna = Math.max(...linie.map((l) => l.offsetWidth));
+    const zwin = prawa - pelna - kolumna < 50;
+    let widoczna = 0;
+    linie.forEach((l) => {
+      const pref = l.querySelector(".blog-kontakt__pref"), wielo = l.querySelector(".blog-kontakt__wielo");
+      if (pref) {
+        const w = pref.offsetWidth + wielo.offsetWidth;
+        l.style.setProperty("--pref", pref.offsetWidth + "px");
+        l.dataset.x = l.offsetWidth - w;
+        widoczna = Math.max(widoczna, w);
+      } else {
+        l.dataset.x = l.offsetWidth + 12;            // godziny wyjeżdżają w całości
+      }
+    });
+    blogKontakt.style.setProperty("--szer", (zwin ? widoczna : pelna) + "px");
+    if (zwin === stanZwin) { if (zwin) linie.forEach((l) => l.style.setProperty("--x", l.dataset.x + "px")); return; }
+    const pierwszy = stanZwin === null;
+    stanZwin = zwin;
+    if (pierwszy) blogKontakt.classList.add("bk--bez-animacji");     // małe okno od początku: od razu skrót
+    blogKontakt.classList.toggle("bk--zwin", zwin);
+    linie.forEach((l) => { if (zwin) l.style.setProperty("--x", l.dataset.x + "px"); else l.style.removeProperty("--x"); });
+    if (pierwszy) { void blogKontakt.offsetWidth; requestAnimationFrame(() => blogKontakt.classList.remove("bk--bez-animacji")); return; }
+    // maska prawej krawędzi: zakres gradientu 0 → 10 px → 0 w trakcie ruchu
+    blogKontakt.classList.remove("bk--maska"); void blogKontakt.offsetWidth; blogKontakt.classList.add("bk--maska");
+    clearTimeout(zegarMaski); zegarMaski = setTimeout(() => blogKontakt.classList.remove("bk--maska"), 550);
+  }
+  // najechanie na zwinięte dane: pełny tekst wychodzi z prawej do lewej (ta sama animacja w drugą stronę)
+  function maskaKontaktu() {
+    blogKontakt.classList.remove("bk--maska"); void blogKontakt.offsetWidth; blogKontakt.classList.add("bk--maska");
+    clearTimeout(zegarMaski); zegarMaski = setTimeout(() => blogKontakt.classList.remove("bk--maska"), 550);
+  }
+  if (blogKontakt) {
+    blogKontakt.addEventListener("pointerenter", () => {
+      if (!stanZwin) return;
+      const pelna = Math.max(...[...blogKontakt.querySelectorAll(".blog-kontakt__w")].map((l) => l.offsetWidth));
+      blogKontakt.dataset.szerZwin = blogKontakt.style.getPropertyValue("--szer");
+      blogKontakt.style.setProperty("--szer", pelna + "px");
+      blogKontakt.classList.add("bk--hover"); maskaKontaktu();
+    });
+    blogKontakt.addEventListener("pointerleave", () => {
+      if (!blogKontakt.classList.contains("bk--hover")) return;
+      blogKontakt.classList.remove("bk--hover");
+      if (blogKontakt.dataset.szerZwin) blogKontakt.style.setProperty("--szer", blogKontakt.dataset.szerZwin);
+      maskaKontaktu();
+    });
+  }
   window.addEventListener("scroll", () => requestAnimationFrame(aktualizujKontaktBloga), { passive: true });
   window.addEventListener("resize", aktualizujKontaktBloga);
 
