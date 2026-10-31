@@ -1,4 +1,4 @@
-/* wersja 54 */
+/* wersja 55 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2196,3 +2196,40 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
     rgba(238, 231, 220, 0.5);
 }
 .wpis__okladka::after { background: rgba(238, 231, 220, 0.5); }
+
+/* =====================================================================
+   v55
+   ===================================================================== */
+/* × w białym kółku – krzyżyk rysowany liniami, idealnie na środku */
+.wpis__zamknij::before {
+  content: "";
+  background:
+    linear-gradient(45deg,  transparent calc(50% - 0.75px), var(--tekst) calc(50% - 0.75px), var(--tekst) calc(50% + 0.75px), transparent calc(50% + 0.75px)) center / 8px 8px no-repeat,
+    linear-gradient(-45deg, transparent calc(50% - 0.75px), var(--tekst) calc(50% - 0.75px), var(--tekst) calc(50% + 0.75px), transparent calc(50% + 0.75px)) center / 8px 8px no-repeat,
+    #fff;
+}
+
+/* kafle bloga: po najechaniu powiększenie jak w kaflach usług (o połowę odstępu do sąsiada),
+   cień niżej o 20 px i o 20% ciemniejszy; 0,7 s; nakładka koloru zostaje */
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .karta { position: relative; }
+  .karta__link { transition: transform .7s ease-in-out, box-shadow .7s ease-in-out; }
+  .karta:hover { z-index: 2; }
+  .karta:hover .karta__link {
+    transform: scale(calc(556 / 516));
+    box-shadow: 0 calc(24 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.216);
+  }
+}
+.karta__link:hover .karta__tlo::after { background-color: transparent; }
+
+/* O mnie: miejsce na podpis (tymczasowo tekst) – po lewej od zdjęcia, przy jego dolnej krawędzi */
+.omnie__podpis {
+  left: 0; width: calc(834 * var(--u));
+  top: calc(955 * var(--u) - 16px);
+  text-align: right;
+  font-family: var(--bezszeryf);
+  font-size: max(11px, calc(12 * var(--f))); line-height: 16px;
+  letter-spacing: -0.007em;
+}
+@media (max-width: 1099px) { .omnie__podpis { width: auto; text-align: right; margin-top: 10px; } }
+.wpis__data { display: inline-block; }   /* transformacje (lot daty) działają tylko na elementach blokowych */

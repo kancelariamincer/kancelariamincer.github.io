@@ -1,4 +1,4 @@
-/* wersja 50 */
+/* wersja 55 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -303,7 +303,7 @@
 
     if (ruch && karta && !karta.hidden) {
       const lot = telefon.matches ? null : przygotujLot(karta, wpis);   // tytuł "przelatuje" z kafla
-      const start = prostokat(karta);
+      const start = prostokat(karta.querySelector(".karta__link"));
       wpis.classList.add("wpis--start");                 // przyciemnienie 100%, biel schowana pod kaflem
       Object.assign(wpis.style, px(start));
       przewinDo(obszar);
@@ -389,28 +389,31 @@
     }
     return [...el.querySelectorAll(".karta__slowo")];
   }
-  /* data publikacji: lot między kaflem a wpisem (tylko zmiana miejsca, bez przygaszania) */
-  function lotDaty(dk, dw, otwieranie) {
+  /* Data publikacji jest "przyczepiona" do lewego górnego rogu kafla/wpisu: rusza się razem z nim,
+     a jej odległość od krawędzi płynnie zmienia się z odległości na kaflu do odległości we wpisie. */
+  function lotDaty(dk, dw, otwieranie, ps, pe) {
     if (!dk || !dw) return null;
     const o = obszar.getBoundingClientRect(), rk = dk.getBoundingClientRect(), rw = dw.getBoundingClientRect();
-    const zrodlo = otwieranie ? rk : rw, cel = otwieranie ? rw : rk;
-    const klon = dk.cloneNode(true);
-    klon.classList.add("data-lot");
-    klon.querySelectorAll(".karta__litera, .karta__slowo").forEach((x) => { x.style.opacity = ""; });
-    Object.assign(klon.style, { left: zrodlo.left - o.left + "px", top: zrodlo.top - o.top + "px" });
+    const sk = rk.width / (dk.offsetWidth || rk.width);                       // skala powiększonego kafla
+    // odstępy od lewego górnego rogu: na kaflu i we wpisie
+    const kafel = otwieranie ? ps : pe;
+    const wr = dw.closest(".wpis").getBoundingClientRect();                  // odstęp daty od rogu wpisu (stały)
+    const offK = { x: rk.left - o.left - kafel.left, y: rk.top - o.top - kafel.top };
+    const offW = { x: rw.left - wr.left, y: rw.top - wr.top };
+    const t = `translate(${offK.x - offW.x}px, ${offK.y - offW.y}px) scale(${sk})`;
     dw.dataset.lot = "1";
     dw.classList.remove("wpis-linia");
+    dw.style.opacity = "";
+    dw.style.transformOrigin = "0 0";
     return {
       start() {
-        dw.style.opacity = "0"; dk.style.opacity = "0";
-        obszar.appendChild(klon);
-        klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${cel.left - zrodlo.left}px, ${cel.top - zrodlo.top}px)` }],
-          { duration: CZAS, delay: otwieranie ? 0 : 200, easing: "ease-in-out", fill: "both" });
+        const kl = otwieranie ? [{ transform: t }, { transform: "translate(0, 0) scale(1)" }]
+                              : [{ transform: "translate(0, 0) scale(1)" }, { transform: t }];
+        dw.animate(kl, { duration: CZAS, delay: otwieranie ? 0 : 200, easing: KRZYWA, fill: otwieranie ? "backwards" : "forwards" });
         setTimeout(() => {
-          dw.style.opacity = ""; dk.style.opacity = "";
-          klon.remove();
           delete dw.dataset.lot;
-        }, (otwieranie ? 0 : 200) + CZAS + 30);
+          if (!otwieranie) dw.getAnimations().forEach((x) => x.cancel());   // wpis jest już schowany
+        }, CZAS + 250);
       },
     };
   }
@@ -427,9 +430,12 @@
     // dolne linijki tytułu z kafla: nieruchoma kopia, która szybko gaśnie
     const klon = tk.cloneNode(true);
     klon.classList.add("tytul-lot");
-    Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
+    Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: tk.offsetWidth + "px",
+      transform: `scale(${rk.width / (tk.offsetWidth || rk.width)})`, transformOrigin: "0 0" });
     [...klon.querySelectorAll(".karta__slowo")].forEach((x, i) => { if (i < n) x.style.opacity = "0"; });
-    const data = lotDaty(karta.querySelector(".karta__data"), wpis.querySelector(".wpis__data"), true);
+    const dk = karta.querySelector(".karta__data"), dw = wpis.querySelector(".wpis__data");
+    if (dw) { dw.dataset.lot = "1"; dw.classList.remove("wpis-linia"); dw.style.opacity = ""; }
+    const skala = rk.width / (tk.offsetWidth || rk.width);                  // kafel mógł być powiększony (hover)
     tw.style.width = rw.width + "px";          // stałe łamanie linijek przez cały lot
     tw.style.maxWidth = "none";
     tw.dataset.lot = "1";
@@ -442,8 +448,10 @@
         // sam tytuł wpisu leci: jego pierwsza linijka startuje dokładnie z miejsca pierwszej linijki kafla.
         // Ruch = ruch rozwijającego się wpisu + przesunięcie zanikające tą samą krzywą → idealnie w parze.
         const sx = rk.left - (rw.left + (start.left - cel.left)), sy = rk.top - (rw.top + (start.top - cel.top));
-        tw.animate([{ transform: `translate(${sx}px, ${sy}px)` }, { transform: "translate(0, 0)" }],
+        tw.style.transformOrigin = "0 0";
+        tw.animate([{ transform: `translate(${sx}px, ${sy}px) scale(${skala})` }, { transform: "translate(0, 0) scale(1)" }],
           { duration: CZAS, easing: KRZYWA, fill: "backwards" });
+        const data = lotDaty(dk, dw, true, start, cel);
         obszar.appendChild(klon);
         [...klon.querySelectorAll(".karta__slowo")].slice(n).forEach((x) =>
           x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));
@@ -479,7 +487,7 @@
       x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = ""; });
     });
     const dx = rw.left - rk.left, dy = rw.top - rk.top;
-    const data = lotDaty(karta.querySelector(".karta__data"), wpis.querySelector(".wpis__data"), false);
+    const data = lotDaty(karta.querySelector(".karta__data"), wpis.querySelector(".wpis__data"), false, prostokat(wpis), prostokat(karta.querySelector(".karta__link")));
     return {
       start() {
         if (data) data.start();
@@ -532,7 +540,7 @@
       // start = tylko widoczna część wpisu (od góry wpisu do dolnej krawędzi ekranu) –
       // dzięki temu wszystkie krawędzie dochodzą do kafla w tym samym czasie, proporcjonalnie
       const r = wpis.getBoundingClientRect();
-      const start = prostokat(wpis), cel = prostokat(karta);
+      const start = prostokat(wpis), cel = prostokat(karta.querySelector(".karta__link"));
       start.height = Math.max(cel.height, Math.min(r.height, window.innerHeight - r.top));
       Object.assign(wpis.style, px(start));
       const a = wpis.animate([px(start), px(cel)], { duration: CZAS, easing: KRZYWA, delay: 200, fill: "forwards" });
