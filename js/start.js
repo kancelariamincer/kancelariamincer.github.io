@@ -13,7 +13,8 @@
   // przejście z bloga na stronę kancelarii: strona wjeżdża z prawej gotowa (bez animacji wejścia)
   var zBloga = false;
   try { var rr = document.referrer ? new URL(document.referrer) : null;
-        zBloga = !!rr && rr.origin === location.origin && /\/blog\//.test(rr.pathname) && !/\/blog\//.test(location.pathname); } catch (e) {}
+        zBloga = !!rr && rr.origin === location.origin && (/\/blog\//.test(rr.pathname) !== /\/blog\//.test(location.pathname))
+                 && !/polityka|privacy/.test(rr.pathname); } catch (e) {}
   // każda strona (kancelaria, blog) animuje wejście tylko przy pierwszym wczytaniu w danej sesji
   var klucz = "widziano:" + location.pathname.replace(/[^/]*\.html$/, "").replace(/^\/en\//, "/");
   var widziana = false;
@@ -27,7 +28,9 @@
     if (!e.viewTransition) return;
     var od = "";
     try { od = navigation.activation && navigation.activation.from ? new URL(navigation.activation.from.url).pathname : ""; } catch (x) {}
-    if (/\/blog\//.test(od) && !/\/blog\//.test(location.pathname)) e.viewTransition.types.add("z-bloga");
+    var naBlogu = /\/blog\//.test(location.pathname), zBlogu = /\/blog\//.test(od);
+    if (zBlogu && !naBlogu) e.viewTransition.types.add("z-bloga");          // blog → kancelaria: w lewo
+    else if (od && !zBlogu && naBlogu) e.viewTransition.types.add("do-bloga"); // kancelaria → blog: w prawo
     else e.viewTransition.skipTransition();
   });
 })();

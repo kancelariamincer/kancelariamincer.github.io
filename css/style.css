@@ -1,4 +1,4 @@
-/* wersja 52 */
+/* wersja 53 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2119,4 +2119,40 @@ body { min-height: calc(4787 * var(--u)); }
   .sekcja--omnie { background: var(--tlo); }
   .tekst--omnie + .tekst--omnie { margin-top: 14px; }
   .omnie__zdjecie { width: 100%; height: auto; max-height: 80vh; margin-top: 28px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14); }
+}
+
+/* =====================================================================
+   v53
+   ===================================================================== */
+/* O mnie: zdjęcie mniejsze – prawa krawędź na linii prawej krawędzi skrajnego kafla usług (1549 px) */
+.omnie__zdjecie {
+  width: calc(675 * var(--u));
+  height: calc(794 * var(--u));
+  top: calc(161 * var(--u));
+}
+/* ikony Instagram i LinkedIn pod tekstem – wielkość flag PL / ENG */
+.omnie__social {
+  top: calc(197 * var(--u) + 418 * var(--f));
+  display: flex; gap: calc(20 * var(--f));
+  list-style: none; margin: 0; padding: 0;
+}
+.omnie__social a { display: block; }
+.omnie__social a:hover { opacity: .7; }
+.omnie__social img { display: block; height: calc(18 * var(--f)); width: auto; }
+@media (max-width: 1099px) {
+  .omnie__social { margin-top: 20px; gap: 14px; }
+  .omnie__social img { height: 16px; }
+}
+
+/* przejście kancelaria → blog: treść odjeżdża w prawo, blog wjeżdża z lewej */
+html:active-view-transition-type(do-bloga)::view-transition-old(root) { animation: vt-w-prawo .8s cubic-bezier(0.4, 0, 0.2, 1) both; }
+html:active-view-transition-type(do-bloga)::view-transition-new(root) { animation: vt-z-lewej .8s cubic-bezier(0.4, 0, 0.2, 1) both; }
+@keyframes vt-w-prawo { to { transform: translateX(100%); } }
+@keyframes vt-z-lewej { from { transform: translateX(-100%); } }
+
+/* blog: zdjęcia kafli i wpisów w tonacji quiet luxury; bez gradientu u góry,
+   dolny gradient sięga na całą wysokość tytułu */
+.karta__tlo, .wpis__okladka { filter: sepia(.38) saturate(.72) brightness(1.06) contrast(.94); }
+.karta__tlo::after, .wpis__ciemne {
+  background: linear-gradient(to bottom, rgba(238,231,220,0) 22%, rgba(238,231,220,.78) 52%, rgba(238,231,220,.88) 100%);
 }
