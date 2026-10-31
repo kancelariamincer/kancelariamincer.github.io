@@ -13,7 +13,7 @@
   "use strict";
 
   const root = document.documentElement;
-  const strona2 = document.getElementById("specjalizacje");
+  const strona2 = document.getElementById("o-mnie") || document.getElementById("specjalizacje");   // pierwsza strona po stronie startowej
   const strona3 = document.getElementById("kontakt");
   const ogranicz = (v) => Math.min(1, Math.max(0, v));
   const wygladz = (t) => t * t * (3 - 2 * t); // smoothstep
@@ -66,7 +66,7 @@
     [document.querySelector(".naglowek"), document.getElementById("kancelaria")],
     [...document.querySelectorAll(".naglowek .linia, #kancelaria .linia"), document.querySelector(".kontakt__wnetrze")]
   );
-  document.querySelectorAll(".sekcja--uslugi, .sekcja--kontakt, .stopka").forEach((el) =>
+  document.querySelectorAll(".sekcja--omnie, .sekcja--uslugi, .sekcja--kontakt, .stopka").forEach((el) =>
     dodajGrupe([el], [...el.querySelectorAll(".linia")])
   );
   root.style.setProperty("--czas-linii", CZAS_LINII + "ms");
@@ -254,6 +254,7 @@
 
   const CELE = {
     "#kancelaria": null,
+    "#o-mnie": () => [document.querySelector(".naglowek-sekcji--omnie"), document.querySelectorAll(".omnie__zdjecie")],
     "#specjalizacje": () => [document.querySelector(".naglowek-sekcji--uslugi"), document.querySelectorAll(".kafle")],
     "#kontakt": () => [document.querySelector(".naglowek-sekcji--kontakt"), document.querySelectorAll(".mapa, .przycisk")],
   };
@@ -485,7 +486,7 @@
   function biezacaSekcja() {
     const srodek = window.innerHeight / 2;
     let wynik = "#kancelaria";
-    ["#kancelaria", "#specjalizacje", "#kontakt"].forEach((h) => {
+    ["#kancelaria", "#o-mnie", "#specjalizacje", "#kontakt"].forEach((h) => {
       const el = document.querySelector(h);
       if (el && el.getBoundingClientRect().top <= srodek) wynik = h;
     });

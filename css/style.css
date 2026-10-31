@@ -1,4 +1,4 @@
-/* wersja 51 */
+/* wersja 52 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2088,4 +2088,35 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
 /* kafle bloga: delikatny beż także u góry – czytelna data na ciemnych zdjęciach */
 .karta__tlo::after, .wpis__ciemne {
   background: linear-gradient(to bottom, rgba(238,231,220,.8) 0, rgba(238,231,220,0) 24%, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%);
+}
+
+/* =====================================================================
+   v52 – nowa strona 2 "O mnie" (między stroną kancelarii a zakresem usług)
+   Kolejne strony przesuwają się o 1117 px – razem z nimi tła i koniec strony.
+   ===================================================================== */
+body { min-height: calc(4787 * var(--u)); }
+.tla { height: calc(4787 * var(--u)); }
+.tlo--waga { top: calc(2007 * var(--u)); }
+.tlo--dachy { top: calc(3351 * var(--u)); }
+.tlo--wygaszenie { top: calc(3939 * var(--u)); }
+
+.sekcja--omnie { background: var(--tlo); }      /* jednolite tło (quiet luxury) */
+.naglowek-sekcji--omnie { --y: 197; }
+.tekst--omnie-1 { top: calc(197 * var(--u) + 54 * var(--f)); }
+.tekst--omnie-2 { top: calc(197 * var(--u) + 194 * var(--f)); }
+.tekst--omnie-3 { top: calc(197 * var(--u) + 334 * var(--f)); }
+/* zdjęcie: lewa krawędź przy środku strony (kolumna 7), prawa przy prawym marginesie */
+.omnie__zdjecie {
+  --x: 874;
+  top: calc(80 * var(--u));
+  width: calc(814 * var(--u));
+  height: calc(957 * var(--u));
+  object-fit: cover; object-position: center top;
+  border-radius: calc(10 * var(--u));
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(0, 0, 0, 0.14);
+}
+@media (max-width: 1099px) {
+  .sekcja--omnie { background: var(--tlo); }
+  .tekst--omnie + .tekst--omnie { margin-top: 14px; }
+  .omnie__zdjecie { width: 100%; height: auto; max-height: 80vh; margin-top: 28px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14); }
 }
