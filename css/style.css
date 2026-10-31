@@ -1,4 +1,4 @@
-/* wersja 55 */
+/* wersja 56 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2233,3 +2233,16 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
 }
 @media (max-width: 1099px) { .omnie__podpis { width: auto; text-align: right; margin-top: 10px; } }
 .wpis__data { display: inline-block; }   /* transformacje (lot daty) działają tylko na elementach blokowych */
+
+/* =====================================================================
+   v56
+   ===================================================================== */
+/* O mnie (telefon): zdjęcie w marginesach strony */
+@media (max-width: 1099px) {
+  .omnie__zdjecie { width: 100%; height: auto; max-height: 80vh; top: auto; box-sizing: border-box; }
+}
+/* gradient strony "O mnie" tylko na tłach – pod tekstami stron 1 i 3 */
+.sekcja--omnie::before, .sekcja--omnie::after { z-index: -1; }
+/* kafle bloga: nakładka koloru zostaje także po najechaniu */
+.karta__link:hover .karta__tlo::after,
+.karta__link:focus-visible .karta__tlo::after { background-color: rgba(238, 231, 220, 0.5); }

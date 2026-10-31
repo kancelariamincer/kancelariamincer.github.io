@@ -1,4 +1,4 @@
-/* wersja 55 */
+/* wersja 56 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -304,8 +304,12 @@
     if (ruch && karta && !karta.hidden) {
       const lot = telefon.matches ? null : przygotujLot(karta, wpis);   // tytuł "przelatuje" z kafla
       const start = prostokat(karta.querySelector(".karta__link"));
+      karta.style.visibility = "hidden";                 // wpis zastępuje kafel – bez "duplikatu" pod spodem
       wpis.classList.add("wpis--start");                 // przyciemnienie 100%, biel schowana pod kaflem
       Object.assign(wpis.style, px(start));
+      // zdjęcie wpisu na starcie ma wysokość kafla (bez pustego paska u dołu), potem dochodzi do swojej wysokości
+      const okl = wpis.querySelector(".wpis__okladka"), hOkl = okl.offsetHeight;
+      okl.animate([{ height: Math.max(start.height, hOkl) + "px" }, { height: hOkl + "px" }], { duration: CZAS, delay: WYGASZENIE, easing: KRZYWA, fill: "backwards" });
       przewinDo(obszar);
       void wpis.offsetWidth;
       wpis.querySelector(".wpis__ciemne").style.opacity = "0";   // 1) przyciemnienie gaśnie
@@ -523,6 +527,7 @@
     clearTimeout(trwa);
     aktualizujKontaktBloga();
     const karta = karty.find((k) => k.dataset.slug === wpis.dataset.slug);
+    if (karta) karta.style.visibility = "";             // kafel wraca pod wpis (przy zamykaniu przenika się z nim)
     const koniec = () => {
       if (document.activeElement && wpis.contains(document.activeElement) || document.activeElement && document.activeElement.closest && document.activeElement.closest(".karta")) document.activeElement.blur();
       wpis.hidden = true;
