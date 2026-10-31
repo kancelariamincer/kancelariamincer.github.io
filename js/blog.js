@@ -1,4 +1,4 @@
-/* wersja 47 */
+/* wersja 48 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -23,11 +23,26 @@
       naglowek.classList.add("bez-przejscia", "naglowek--pasek", "naglowek--ukryty");
       void naglowek.offsetWidth;
       naglowek.classList.remove("bez-przejscia");
-    } else if (pasek && y <= dolNaglowka && y < ostatnieY) {
+    } else if (pasek && y <= 2) {
+      // jak na stronie kancelarii: na samej górze pasek odjeżdża (1 s, cień gaśnie przed końcem),
+      // a w tej samej chwili wraca zwykły nagłówek – logotypy rosną z 60%, przyciski wychodzą z przezroczystości
+      if (!naglowek.classList.contains("naglowek--ukryty")) {
+        const kopia = naglowek.cloneNode(true);
+        kopia.setAttribute("aria-hidden", "true");
+        kopia.inert = true;
+        kopia.style.viewTransitionName = "none";
+        kopia.classList.remove("naglowek--wejscie");
+        kopia.classList.add("naglowek--odjazd");
+        document.body.appendChild(kopia);
+        setTimeout(() => kopia.remove(), 1100);
+      }
       naglowek.classList.add("bez-przejscia");
-      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty");
+      naglowek.classList.remove("naglowek--pasek", "naglowek--ukryty", "naglowek--odjazd");
       void naglowek.offsetWidth;
-      naglowek.classList.remove("bez-przejscia");
+      naglowek.classList.remove("bez-przejscia", "naglowek--wejscie");
+      void naglowek.offsetWidth;
+      naglowek.classList.add("naglowek--wejscie");
+      setTimeout(() => naglowek.classList.remove("naglowek--wejscie"), 600);
     } else if (pasek) {
       if (y > ostatnieY + 3) naglowek.classList.add("naglowek--ukryty");
       else if (y < ostatnieY - 3) naglowek.classList.remove("naglowek--ukryty");
@@ -387,6 +402,9 @@
     klon.classList.add("tytul-lot");
     Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
     const dx = rw.left - rk.left, dy = rw.top - rk.top;
+    // tytuł wpisu trzyma docelową szerokość przez cały lot – rosnący kafel nie może zmieniać łamania linijek
+    tw.style.width = rw.width + "px";
+    tw.style.maxWidth = "none";
     tw.dataset.lot = "1";
     tw.classList.remove("wpis-linia");                 // tytuł nie gaśnie/zapala się drugi raz razem z resztą tekstów
     tw.style.opacity = "";
@@ -398,6 +416,18 @@
         ks.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));   // szybko gasną
         klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${dx}px, ${dy}px)` }],
           { duration: CZAS, easing: KRZYWA, fill: "forwards" });
+        // tytuł wpisu (dopisywana reszta) jedzie razem z lecącą linijką – litery pojawiają się dokładnie
+        // za nią, a nie w innym miejscu rosnącego kafla (to dawało wrażenie podwójnych liter)
+        const glowa = tw.offsetParent;
+        let aktywny = true;
+        const dopasuj = () => {
+          if (!aktywny) return;
+          const kr = klon.getBoundingClientRect(), gr = glowa.getBoundingClientRect();
+          tw.style.transform = `translate(${kr.left - (gr.left + tw.offsetLeft)}px, ${kr.top - (gr.top + tw.offsetTop)}px)`;
+          requestAnimationFrame(dopasuj);
+        };
+        dopasuj();
+        setTimeout(() => { aktywny = false; tw.style.transform = ""; tw.style.width = ""; tw.style.maxWidth = ""; }, CZAS + 30);
         // reszta tytułu wpisu pisze się litera po literze w trakcie otwierania
         const reszta = sw.slice(n);
         reszta.forEach((x) => { x.style.opacity = ""; x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = "0"; }); });
