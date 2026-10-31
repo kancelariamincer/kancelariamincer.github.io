@@ -14,7 +14,11 @@
   var zBloga = false;
   try { var rr = document.referrer ? new URL(document.referrer) : null;
         zBloga = !!rr && rr.origin === location.origin && /\/blog\//.test(rr.pathname) && !/\/blog\//.test(location.pathname); } catch (e) {}
-  if (!malyRuch && !zmianaJezyka && !zBloga) document.documentElement.classList.add("anim");
+  // każda strona (kancelaria, blog) animuje wejście tylko przy pierwszym wczytaniu w danej sesji
+  var klucz = "widziano:" + location.pathname.replace(/[^/]*\.html$/, "").replace(/^\/en\//, "/");
+  var widziana = false;
+  try { widziana = sessionStorage.getItem(klucz) === "1"; sessionStorage.setItem(klucz, "1"); } catch (e) {}
+  if (!malyRuch && !zmianaJezyka && !zBloga && !widziana) document.documentElement.classList.add("anim");
   // telefon: po przejściu z bloga animujemy przyciski menu
   if (zBloga && !malyRuch && window.matchMedia("(max-width: 1099px)").matches) document.documentElement.classList.add("anim-menu");
 

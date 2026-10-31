@@ -1,4 +1,4 @@
-/* wersja 47 */
+/* wersja 49 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2061,3 +2061,17 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
   .blog--en .wpis__tresc { max-width: calc(26.7em + 44px); }
   .blog--en .wpis__lead { max-width: 26.7em; }
 }
+
+/* =====================================================================
+   v49 – długość wierszy: ok. 70 znaków (PL) i 60 (EN), także w układzie mobilnym
+   ===================================================================== */
+.wpis__tresc { max-width: calc(37em + 160 * var(--u)); }
+.blog--en .wpis__tresc { max-width: calc(29.1em + 160 * var(--u)); }
+@media (max-width: 1099px) {
+  .wpis__tresc { max-width: calc(37em + 44px); }
+  .wpis__lead { max-width: 37em; }
+  .blog--en .wpis__tresc { max-width: calc(29.1em + 44px); }
+  .blog--en .wpis__lead { max-width: 29.1em; }
+}
+/* lot daty publikacji */
+.data-lot { position: absolute; z-index: 5; margin: 0; pointer-events: none; color: var(--tekst); white-space: nowrap; }

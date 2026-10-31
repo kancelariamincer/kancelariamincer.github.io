@@ -1,4 +1,4 @@
-/* wersja 48 */
+/* wersja 50 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -232,7 +232,8 @@
 
   function linieWpisu(wpis) {
     const tytul = wpis.querySelector(".wpis__tytul");
-    const el = [wpis.querySelector(".wpis__data"), wpis.querySelector(".wpis__zamknij")];
+    const data = wpis.querySelector(".wpis__data");
+    const el = data.dataset.lot ? [wpis.querySelector(".wpis__zamknij")] : [data, wpis.querySelector(".wpis__zamknij")];
     if (!tytul.dataset.lot) el.push(tytul);              // tytuł animowany przelotem – osobno
     el.push(wpis.querySelector(".wpis__lead"));
     wpis.querySelectorAll(".wpis__tresc > *").forEach((x) => {
@@ -332,7 +333,7 @@
             { duration: BIEL, easing: "cubic-bezier(0, 0, 0.2, 1)" });
         }
         pokazTeksty(wpis, 150);
-        if (lot) lot.start();
+        if (lot) lot.start(start, cel);
       }, WYGASZENIE);
     } else {
       pokazTeksty(wpis, 300);           // np. wejście prosto na adres wpisu – teksty wchodzą kolejno
@@ -388,6 +389,32 @@
     }
     return [...el.querySelectorAll(".karta__slowo")];
   }
+  /* data publikacji: lot między kaflem a wpisem (tylko zmiana miejsca, bez przygaszania) */
+  function lotDaty(dk, dw, otwieranie) {
+    if (!dk || !dw) return null;
+    const o = obszar.getBoundingClientRect(), rk = dk.getBoundingClientRect(), rw = dw.getBoundingClientRect();
+    const zrodlo = otwieranie ? rk : rw, cel = otwieranie ? rw : rk;
+    const klon = dk.cloneNode(true);
+    klon.classList.add("data-lot");
+    klon.querySelectorAll(".karta__litera, .karta__slowo").forEach((x) => { x.style.opacity = ""; });
+    Object.assign(klon.style, { left: zrodlo.left - o.left + "px", top: zrodlo.top - o.top + "px" });
+    dw.dataset.lot = "1";
+    dw.classList.remove("wpis-linia");
+    return {
+      start() {
+        dw.style.opacity = "0"; dk.style.opacity = "0";
+        obszar.appendChild(klon);
+        klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${cel.left - zrodlo.left}px, ${cel.top - zrodlo.top}px)` }],
+          { duration: CZAS, delay: otwieranie ? 0 : 200, easing: "ease-in-out", fill: "both" });
+        setTimeout(() => {
+          dw.style.opacity = ""; dk.style.opacity = "";
+          klon.remove();
+          delete dw.dataset.lot;
+        }, (otwieranie ? 0 : 200) + CZAS + 30);
+      },
+    };
+  }
+
   function przygotujLot(karta, wpis) {
     const tk = karta.querySelector(".karta__tytul"), tw = wpis.querySelector(".wpis__tytul");
     litery(karta);
@@ -396,51 +423,39 @@
     if (!sk.length || sk.length !== sw.length) return null;
     const gora = sk[0].getBoundingClientRect().top;
     const n = sk.filter((x) => Math.abs(x.getBoundingClientRect().top - gora) < 4).length;
-    // pozycje (względem obszaru kafli): tytuł na kaflu teraz, tytuł we wpisie po rozwinięciu (wpis ma już docelowy układ)
     const o = obszar.getBoundingClientRect(), rk = tk.getBoundingClientRect(), rw = tw.getBoundingClientRect();
+    // dolne linijki tytułu z kafla: nieruchoma kopia, która szybko gaśnie
     const klon = tk.cloneNode(true);
     klon.classList.add("tytul-lot");
     Object.assign(klon.style, { left: rk.left - o.left + "px", top: rk.top - o.top + "px", width: rk.width + "px" });
-    const dx = rw.left - rk.left, dy = rw.top - rk.top;
-    // tytuł wpisu trzyma docelową szerokość przez cały lot – rosnący kafel nie może zmieniać łamania linijek
-    tw.style.width = rw.width + "px";
+    [...klon.querySelectorAll(".karta__slowo")].forEach((x, i) => { if (i < n) x.style.opacity = "0"; });
+    const data = lotDaty(karta.querySelector(".karta__data"), wpis.querySelector(".wpis__data"), true);
+    tw.style.width = rw.width + "px";          // stałe łamanie linijek przez cały lot
     tw.style.maxWidth = "none";
     tw.dataset.lot = "1";
-    tw.classList.remove("wpis-linia");                 // tytuł nie gaśnie/zapala się drugi raz razem z resztą tekstów
+    tw.classList.remove("wpis-linia");
     tw.style.opacity = "";
-    sw.forEach((x) => { x.style.opacity = "0"; });
+    sw.forEach((x, i) => { x.style.opacity = i < n ? "" : "0"; x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = ""; }); });
     return {
-      start() {
+      // start / cel – prostokąty wpisu (względem obszaru) na początku i na końcu rozwijania
+      start(start, cel) {
+        // sam tytuł wpisu leci: jego pierwsza linijka startuje dokładnie z miejsca pierwszej linijki kafla.
+        // Ruch = ruch rozwijającego się wpisu + przesunięcie zanikające tą samą krzywą → idealnie w parze.
+        const sx = rk.left - (rw.left + (start.left - cel.left)), sy = rk.top - (rw.top + (start.top - cel.top));
+        tw.animate([{ transform: `translate(${sx}px, ${sy}px)` }, { transform: "translate(0, 0)" }],
+          { duration: CZAS, easing: KRZYWA, fill: "backwards" });
         obszar.appendChild(klon);
-        const ks = [...klon.querySelectorAll(".karta__slowo")];
-        ks.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));   // szybko gasną
-        klon.animate([{ transform: "translate(0, 0)" }, { transform: `translate(${dx}px, ${dy}px)` }],
-          { duration: CZAS, easing: KRZYWA, fill: "forwards" });
-        // tytuł wpisu (dopisywana reszta) jedzie razem z lecącą linijką – litery pojawiają się dokładnie
-        // za nią, a nie w innym miejscu rosnącego kafla (to dawało wrażenie podwójnych liter)
-        const glowa = tw.offsetParent;
-        let aktywny = true;
-        const dopasuj = () => {
-          if (!aktywny) return;
-          const kr = klon.getBoundingClientRect(), gr = glowa.getBoundingClientRect();
-          tw.style.transform = `translate(${kr.left - (gr.left + tw.offsetLeft)}px, ${kr.top - (gr.top + tw.offsetTop)}px)`;
-          requestAnimationFrame(dopasuj);
-        };
-        dopasuj();
-        setTimeout(() => { aktywny = false; tw.style.transform = ""; tw.style.width = ""; tw.style.maxWidth = ""; }, CZAS + 30);
-        // reszta tytułu wpisu pisze się litera po literze w trakcie otwierania
+        [...klon.querySelectorAll(".karta__slowo")].slice(n).forEach((x) =>
+          x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));
+        setTimeout(() => klon.remove(), 200);
+        // reszta tytułu pojawia się słowo po słowie
         const reszta = sw.slice(n);
-        reszta.forEach((x) => { x.style.opacity = ""; x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = "0"; }); });
-        const l = reszta.flatMap((x) => [...x.querySelectorAll(".karta__litera")]);
-        // reszta tytułu buduje się wolniej, dopiero gdy dolne linijki z kafla zgasną (bez nakładania tekstów)
-        const krok = l.length ? 1100 / l.length : 0;
-        l.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, delay: 260 + i * krok, fill: "forwards" })
+        const krok = reszta.length ? 1000 / reszta.length : 0;
+        reszta.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, delay: 260 + i * krok, fill: "forwards" })
           .onfinish = () => { x.style.opacity = ""; });
-        setTimeout(() => {
-          sw.slice(0, n).forEach((x) => { x.style.opacity = ""; });
-          klon.remove();
-        }, CZAS + 30);
-        setTimeout(() => { delete tw.dataset.lot; }, 260 + 1100 + 500);
+        if (data) data.start();
+        setTimeout(() => { tw.style.width = ""; tw.style.maxWidth = ""; }, CZAS + 30);
+        setTimeout(() => { delete tw.dataset.lot; }, 260 + 1000 + 500);
       },
     };
   }
@@ -464,24 +479,28 @@
       x.querySelectorAll(".karta__litera").forEach((l) => { l.style.opacity = ""; });
     });
     const dx = rw.left - rk.left, dy = rw.top - rk.top;
+    const data = lotDaty(karta.querySelector(".karta__data"), wpis.querySelector(".wpis__data"), false);
     return {
       start() {
+        if (data) data.start();
         // tytuł we wpisie: pierwsza linijka od razu "przechodzi" w lecący klon, reszta szybko gaśnie
         sw.slice(0, n).forEach((x) => { x.style.opacity = "0"; });
         sw.slice(n).forEach((x) => x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: "forwards" }));
         obszar.appendChild(klon);
         klon.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
           { duration: CZAS, delay: 200, easing: KRZYWA, fill: "both" });
-        // kafel: pierwsza linijka ukryta do końca lotu, reszta tytułu i data piszą się w trakcie
-        const wszystkie = litery(karta);
-        wszystkie.forEach((l) => { l.style.opacity = "0"; });
-        const pierwsze = new Set(sk.slice(0, n).flatMap((x) => [...x.querySelectorAll(".karta__litera")]));
-        const reszta = wszystkie.filter((l) => !pierwsze.has(l));
-        const krok = reszta.length ? 900 / reszta.length : 0;
-        reszta.forEach((x, i) => x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 300 + i * krok, fill: "forwards" })
-          .onfinish = () => { x.style.opacity = ""; });
+        // kafel: pierwsza linijka ukryta do końca lotu, reszta tytułu pojawia się słowo po słowie
+        litery(karta).forEach((l) => { l.style.opacity = ""; });
+        sk.slice(0, n).forEach((x) => { x.style.opacity = "0"; });
+        const reszta = sk.slice(n);
+        const krok = reszta.length ? 800 / reszta.length : 0;
+        reszta.forEach((x, i) => {
+          x.style.opacity = "0";
+          x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 300 + i * krok, fill: "forwards" })
+            .onfinish = () => { x.style.opacity = ""; };
+        });
         setTimeout(() => {
-          pierwsze.forEach((l) => { l.style.opacity = ""; });
+          sk.slice(0, n).forEach((x) => { x.style.opacity = ""; });
           klon.remove();
           sw.forEach((x) => { x.style.opacity = ""; x.getAnimations().forEach((a) => a.cancel()); });
         }, 200 + CZAS + 30);
