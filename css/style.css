@@ -1,4 +1,4 @@
-/* wersja 49 */
+/* wersja 51 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2075,3 +2075,17 @@ html.anim-menu .naglowek .menu a:nth-child(3) { animation-delay: .2s; }
 }
 /* lot daty publikacji */
 .data-lot { position: absolute; z-index: 5; margin: 0; pointer-events: none; color: var(--tekst); white-space: nowrap; }
+
+/* =====================================================================
+   v51 – zdjęcia wpisów bloga (z dotychczasowego bloga)
+   ===================================================================== */
+.zdjecie--zachowek                  { background-image: url("../img/blog/zachowek.webp"); }
+.zdjecie--jak-napisac-testament     { background-image: url("../img/blog/jak-napisac-testament.webp"); }
+.zdjecie--rozdzielnosc-majatkowa    { background-image: url("../img/blog/rozdzielnosc-majatkowa.webp"); }
+.zdjecie--zasiedzenie-nieruchomosci { background-image: url("../img/blog/zasiedzenie-nieruchomosci.webp"); }
+.zdjecie--podzial-nieruchomosci     { background-image: url("../img/blog/podzial-nieruchomosci.webp"); }
+.zdjecie--nabycie-spadku            { background-image: url("../img/blog/nabycie-spadku.webp"); }
+/* kafle bloga: delikatny beż także u góry – czytelna data na ciemnych zdjęciach */
+.karta__tlo::after, .wpis__ciemne {
+  background: linear-gradient(to bottom, rgba(238,231,220,.8) 0, rgba(238,231,220,0) 24%, rgba(238,231,220,0) 35%, rgba(238,231,220,.85) 100%);
+}
