@@ -1,4 +1,4 @@
-/* wersja 53 */
+/* wersja 54 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2156,3 +2156,43 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
 .karta__tlo::after, .wpis__ciemne {
   background: linear-gradient(to bottom, rgba(238,231,220,0) 22%, rgba(238,231,220,.78) 52%, rgba(238,231,220,.88) 100%);
 }
+
+/* =====================================================================
+   v54
+   ===================================================================== */
+/* "Skontaktuj się z Kancelarią": odstęp do formularza jak między "Nasze biura…" a "Dwie lokalizacje" */
+.formularz__tytul { top: calc(158 * var(--u) + 239 * var(--f)); }
+@media (max-width: 1099px) { .formularz__tytul + .formularz { margin-top: 12px; } }
+
+/* O mnie: jednolite tło nasuwa się łagodnym gradientem na stronę 1 (u góry) i stronę 3 (u dołu) */
+.sekcja--omnie::before, .sekcja--omnie::after {
+  content: ""; position: absolute; left: 0; right: 0; pointer-events: none;
+  height: calc(260 * var(--u));
+}
+.sekcja--omnie::before { top: calc(-260 * var(--u)); background: linear-gradient(to bottom, rgba(238,231,220,0), var(--tlo)); }
+.sekcja--omnie::after  { bottom: calc(-260 * var(--u)); background: linear-gradient(to top, rgba(238,231,220,0), var(--tlo)); }
+@media (max-width: 1099px) {
+  .sekcja--omnie { position: relative; }
+  .sekcja--omnie::before, .sekcja--omnie::after { height: 120px; }
+  .sekcja--omnie::before { top: -120px; }
+  .sekcja--omnie::after { bottom: -120px; z-index: 1; }
+}
+
+/* blog: przycisk × na białym kółku (wielkości kropki biura na mapie, 20 px) */
+.wpis__zamknij { font-size: 0; }
+.wpis__zamknij::before {
+  content: "×"; display: grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; color: var(--tekst);
+  font-size: 15px; line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* blog: zamiast stylizacji – nakładka koloru quiet luxury (50%) na zdjęciach kafli i wpisów */
+.karta__tlo, .wpis__okladka { filter: none; }
+.karta__tlo::after {
+  background:
+    linear-gradient(to bottom, rgba(238,231,220,0) 22%, rgba(238,231,220,.78) 52%, rgba(238,231,220,.88) 100%),
+    rgba(238, 231, 220, 0.5);
+}
+.wpis__okladka::after { background: rgba(238, 231, 220, 0.5); }
