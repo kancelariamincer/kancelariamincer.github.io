@@ -183,11 +183,9 @@
       }
     }
     ostatnieY = y;
-    // pogrubienie aktualnej sekcji
-    if (naglowek.classList.contains("naglowek--pasek")) {
-      const h = biezacaSekcja();
-      linkiMenu.forEach((a) => a.classList.toggle("aktywny", a.getAttribute("href") === h));
-    }
+    // pogrubienie aktualnej sekcji – od razu, także w zwykłym nagłówku
+    const h = biezacaSekcja();
+    linkiMenu.forEach((a) => a.classList.toggle("aktywny", a.getAttribute("href") === h));
   }
 
   /* bieżący rok w stopce (nie trzeba go zmieniać co roku) */
@@ -195,6 +193,29 @@
     document.querySelectorAll(".rok").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
   }
   ustawRok();
+  setTimeout(aktualizujPasek, 0);   // od razu po wczytaniu: pogrubiony przycisk bieżącej sekcji
+
+  /* Strona "O mnie": gdy tekst zbliży się do zdjęcia na mniej niż 50 px (np. iPad),
+     zdjęcie zwęża się proporcjonalnie (prawa krawędź zostaje na miejscu, środek w pionie też) */
+  function dopasujZdjecieOMnie() {
+    const z = document.querySelector(".omnie__zdjecie"), podpis = document.querySelector(".omnie__podpis");
+    if (!z) return;
+    ["left", "width", "height", "top"].forEach((w) => { z.style[w] = ""; if (podpis) podpis.style[w] = ""; });
+    if (window.matchMedia("(max-width: 1099px)").matches) return;
+    let prawa = 0;
+    document.querySelectorAll(".naglowek-sekcji--omnie, .tekst--omnie .linia, .omnie__social").forEach((e) => {
+      const r = document.createRange(); r.selectNodeContents(e);
+      for (const q of r.getClientRects()) prawa = Math.max(prawa, q.right);
+    });
+    const zr = z.getBoundingClientRect();
+    if (zr.left - prawa >= 50) return;
+    const lewa = prawa + 50, w = Math.max(80, zr.right - lewa), h = zr.height * (w / zr.width);
+    const top = parseFloat(getComputedStyle(z).top) + (zr.height - h) / 2;
+    Object.assign(z.style, { left: lewa + "px", width: w + "px", height: h + "px", top: top + "px" });
+    if (podpis) { podpis.style.width = (lewa - 40) + "px"; podpis.style.top = (top + h - 16) + "px"; }
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(dopasujZdjecieOMnie);
+  window.addEventListener("resize", dopasujZdjecieOMnie);
 
   /* wspólna obsługa przewijania */
   let zaplanowane = false;
@@ -375,12 +396,13 @@
   }
 
   function animujOpis(opis) {
-    if (!animacje) return;
+    if (malyRuch.matches) return;
+    opis.classList.add("opis--anim");
     const linie = linijkiOpisu(opis);
     linie.forEach((elementy, i) => elementy.forEach((el) => {
       el.classList.add("jednostka");
       el.classList.remove("widoczna");
-      el.style.setProperty("--opoznienie", Math.round(i * ZAKLADKA_OPISU) + "ms");
+      el.style.setProperty("--opoznienie", Math.round(250 + i * ZAKLADKA_OPISU) + "ms");   // najpierw tło (0,25 s), potem tekst
     }));
     void opis.offsetWidth;                // wymusza start animacji od zera
     linie.forEach((elementy) => elementy.forEach((el) => el.classList.add("widoczna")));
@@ -449,6 +471,7 @@
     const p = kafel.querySelector(".kafel__przycisk");
     p.addEventListener("pointerenter", () => {
       if (!zHover.matches) return;
+      if (otwarty && otwarty.kafel !== kafel) return;   // otwarte okienko usługi blokuje powiększanie innych kafli
       clearTimeout(zegar);
       kafel.classList.add("kafel--powiekszony");     // powiększanie startuje od razu po najechaniu
     });

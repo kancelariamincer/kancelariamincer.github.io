@@ -1,4 +1,4 @@
-/* wersja 56 */
+/* wersja 57 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2246,3 +2246,40 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
 /* kafle bloga: nakładka koloru zostaje także po najechaniu */
 .karta__link:hover .karta__tlo::after,
 .karta__link:focus-visible .karta__tlo::after { background-color: rgba(238, 231, 220, 0.5); }
+
+/* =====================================================================
+   v57
+   ===================================================================== */
+/* bieżąca sekcja pogrubiona od razu, także w zwykłym nagłówku */
+.naglowek .menu a.aktywny { font-weight: 600; }
+
+/* formularz bez pola "Adres": "Skontaktuj się z Kancelarią" wydłużeniami górnymi równo z górną krawędzią mapy,
+   formularz 21 px niżej (jak tytuł → opis), pole wiadomości dłuższe – dół formularza nadal równo z dołem mapy */
+.formularz__tytul { top: calc(282 * var(--u) + 159.1 * var(--f)); }
+.formularz { top: calc(282 * var(--u) + 208.9 * var(--f)); }
+.pole--wiadomosc { height: calc(145 * var(--u)); }
+
+/* okienko usługi: tło pojawia się w 0,25 s, potem wchodzi tekst (zawsze, nie tylko przy pierwszej wizycie) */
+.opis { transition: opacity .25s ease; }
+.opis.opis--anim .jednostka { opacity: 0; }
+.opis.opis--anim .jednostka.widoczna {
+  opacity: 1;
+  transition: opacity var(--czas-opisu, 600ms) cubic-bezier(0.33, 0, 0.2, 1) var(--opoznienie, 0s);
+}
+
+/* blog: kółko pod × w kolorze quiet luxury */
+.wpis__zamknij::before {
+  background:
+    linear-gradient(45deg,  transparent calc(50% - 0.75px), var(--tekst) calc(50% - 0.75px), var(--tekst) calc(50% + 0.75px), transparent calc(50% + 0.75px)) center / 8px 8px no-repeat,
+    linear-gradient(-45deg, transparent calc(50% - 0.75px), var(--tekst) calc(50% - 0.75px), var(--tekst) calc(50% + 0.75px), transparent calc(50% + 0.75px)) center / 8px 8px no-repeat,
+    var(--tlo);
+}
+
+/* telefon: dolna belka kontaktowa – margines nad tekstem jak boczny (20 px), cień jak pod paskiem menu */
+@media (max-width: 1099px) {
+  .kontakt, .blog-kontakt {
+    padding-top: 20px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.14);
+  }
+  .kontakt__jezyk { top: 20px; }
+}
