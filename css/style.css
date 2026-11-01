@@ -1,4 +1,4 @@
-/* wersja 58 */
+/* wersja 59 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2328,3 +2328,26 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
   .opis, .opis--dol { left: calc((100% - 600px) / 2); right: calc((100% - 600px) / 2); height: 600px; }
   .omnie__zdjecie { max-height: 70vh; object-fit: cover; }
 }
+
+/* =====================================================================
+   v59
+   ===================================================================== */
+/* telefon: wejście przycisków menu po kolei – także czwartego ("BLOG") */
+html.anim-menu .naglowek .menu a:nth-child(4) { animation-delay: .3s; }
+
+/* obwódka menu (2 px, pełne zaokrąglenie) także po najechaniu i dotknięciu */
+.menu a:hover::before, .menu a:focus-visible::before, .menu a:active::before { opacity: 1; }
+.menu a:hover { text-decoration: none; }
+/* blog: numery stron – ta sama obwódka dla bieżącej strony i po najechaniu */
+.blog-strony button { position: relative; opacity: 1; padding: 0 10px; }
+.blog-strony button::before {
+  content: ""; position: absolute; inset: -2px -2px;
+  border: 2px solid #fff; border-radius: 999px;
+  opacity: 0; transition: opacity .25s ease; pointer-events: none;
+}
+.blog-strony button[aria-current="page"]::before, .blog-strony button:hover::before, .blog-strony button:active::before { opacity: 1; }
+
+/* zmiana języka na blogu – warstwy animacji tekstu */
+.zj-wzgledny { position: relative; }
+.zj-stary { position: absolute; left: 0; top: 0; right: 0; pointer-events: none; }
+.zj-nowy { display: contents; }

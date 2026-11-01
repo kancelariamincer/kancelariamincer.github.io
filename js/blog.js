@@ -1,4 +1,4 @@
-/* wersja 56 */
+/* wersja 59 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -592,6 +592,9 @@
     return m && m[1] !== "index" ? m[1] : null;
   }
   window.addEventListener("popstate", () => {
+    // powrót przez historię do drugiej wersji językowej – zwykłe wczytanie strony
+    const jezykAdresu = /\/en\//.test(location.pathname) ? "en" : "pl";
+    if (jezykAdresu !== document.documentElement.lang) { location.reload(); return; }
     const slug = zAdresu();
     if (slug) otworz(slug, true, false); else zamknij(true, false);
   });
@@ -631,6 +634,124 @@
     if (k && k.hidden) { strona = Math.floor(karty.indexOf(k) / NA_STRONE) + 1; pokazKarty(); }
     otworz(naStarcie, false, false);
   }
+
+  /* ---------- 5. Zmiana języka bez przeładowania (jak na stronie kancelarii) ----------
+     Teksty gasną falą litera po literze, a nowe zapalają się za nią z nakładką kilku liter.
+     Treść otwartego wpisu (inny układ akapitów) przenika się w całości. */
+  const KONTENERY = [".naglowek", ".blog-glowa", ".blog-boczny", ".blog-karty", ".blog-kontakt", ".blog-stopka", "#zgody"];
+  const TEKSTY = ".menu a, .blog-tytul, .blog-opis .linia, .blog-tagi button, .karta__data, .karta__tytul, .blog-brak, " +
+                 ".blog-kontakt__w, .blog-stopka p, .zgody__tytul, .zgody__tekst, .zgody__opcja span, .zgody .przycisk, label.ukryte";
+  const ATRYBUTY = ["href", "src", "alt", "title", "aria-label", "placeholder", "lang", "hreflang", "aria-current",
+                    "data-tekst", "data-tagi", "data-szukaj", "datetime", "data-tytul"];
+  // porównujemy układ (znaczniki), bez klas dodawanych w trakcie działania strony (widoczna, aktywny…)
+  const DYNAMICZNE = ".zj-stary, .zj-nowy, .karta__slowo, .karta__litera, .blog-strony button";
+  const sygnatura = (el) => [el, ...el.querySelectorAll("*")].filter((x) => !x.matches(DYNAMICZNE) && !x.closest(".zj-stary")).map((x) => (x.matches(".blog-tytul") ? "TYTUL" : x.tagName)).join("|");   // h1 na liście, p na stronie wpisu
+  function kopiujAtrybuty(a, b) {
+    const ea = [a, ...a.querySelectorAll("*")], eb = [b, ...b.querySelectorAll("*")];
+    ea.forEach((x, i) => {
+      const y = eb[i]; if (!y) return;
+      ATRYBUTY.forEach((n) => { if (y.hasAttribute(n)) x.setAttribute(n, y.getAttribute(n)); else if (x.hasAttribute(n)) x.removeAttribute(n); });
+    });
+  }
+  function rozbijNaLitery(el) {
+    const litery = [];
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const wezly = []; while (w.nextNode()) wezly.push(w.currentNode);
+    wezly.forEach((t) => {
+      const frag = document.createDocumentFragment();
+      t.textContent.split(/(\s+)/).forEach((kaw) => {
+        if (!kaw) return;
+        if (/^\s+$/.test(kaw)) { frag.appendChild(document.createTextNode(kaw)); return; }
+        const sl = document.createElement("span"); sl.style.whiteSpace = "nowrap";
+        [...kaw].forEach((z) => { const l = document.createElement("span"); l.textContent = z; sl.appendChild(l); litery.push(l); });
+        frag.appendChild(sl);
+      });
+      t.replaceWith(frag);
+    });
+    return litery;
+  }
+  function zamienTekst(el, nowyHTML) {
+    if (el.innerHTML === nowyHTML) return;
+    if (malyRuch.matches) { el.innerHTML = nowyHTML; return; }
+    const stary = document.createElement("span");
+    stary.setAttribute("aria-hidden", "true");
+    stary.className = "zj-stary";
+    stary.innerHTML = el.innerHTML;
+    el.innerHTML = nowyHTML;
+    if (getComputedStyle(el).position === "static") el.classList.add("zj-wzgledny");
+    el.appendChild(stary);
+    const ls = rozbijNaLitery(stary);
+    const nowy = document.createElement("span"); nowy.className = "zj-nowy";
+    while (el.firstChild !== stary) nowy.appendChild(el.firstChild);
+    el.insertBefore(nowy, stary);
+    const ln = rozbijNaLitery(nowy);
+    const krok = 600 / (Math.max(ls.length, ln.length) + 9);
+    ls.forEach((l, i) => l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: krok * 10, delay: i * krok, fill: "forwards" }));
+    ln.forEach((l, i) => l.animate([{ opacity: 0 }, { opacity: 1 }], { duration: krok * 10, delay: (i + 7) * krok, fill: "backwards" }));
+    setTimeout(() => { el.innerHTML = nowyHTML; el.classList.remove("zj-wzgledny"); }, krok * (Math.max(ls.length, ln.length) + 17) + 50);
+  }
+  let zmiana = false;
+  async function zmienJezyk(url) {
+    if (zmiana) return;
+    zmiana = true;
+    try {
+      const r = await fetch(url, { credentials: "same-origin" });
+      if (!r.ok) throw new Error(r.status);
+      const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+      const pary = KONTENERY.map((sel) => [document.querySelector(sel), doc.querySelector(sel)]);
+      if (pary.some(([a, b]) => !a || !b || sygnatura(a) !== sygnatura(b))) throw new Error("inna struktura");
+      const wpis = otwarty, nowyWpis = wpis ? doc.getElementById(wpis.id) : null;
+      if (wpis && !nowyWpis) throw new Error("brak wpisu");
+      // teksty: zamiana z animacją; atrybuty (linki, opisy, dane wyszukiwarki) – od razu
+      pary.forEach(([a, b]) => {
+        const ta = [...a.querySelectorAll(TEKSTY)], tb = [...b.querySelectorAll(TEKSTY)];
+        kopiujAtrybuty(a, b);
+        ta.forEach((x, i) => { if (tb[i]) zamienTekst(x, tb[i].innerHTML); });
+      });
+      karty.forEach((k) => { delete k.dataset.litery; });
+      // otwarty wpis: tytuł, data, wstęp i autor – falą; treść – przenikanie
+      if (wpis) {
+        ["data-tytul"].forEach((n) => wpis.setAttribute(n, nowyWpis.getAttribute(n)));
+        wpis.querySelector(".wpis__zamknij").setAttribute("aria-label", nowyWpis.querySelector(".wpis__zamknij").getAttribute("aria-label"));
+        [".wpis__data", ".wpis__tytul", ".wpis__lead", ".wpis__autor"].forEach((sel) => {
+          const x = wpis.querySelector(sel), y = nowyWpis.querySelector(sel);
+          if (sel === ".wpis__tytul") delete x.dataset.slowa;
+          zamienTekst(x, y.innerHTML);
+        });
+        const tr = wpis.querySelector(".wpis__tresc"), ty = nowyWpis.querySelector(".wpis__tresc");
+        const a = tr.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" });
+        a.onfinish = () => {
+          tr.innerHTML = ty.innerHTML;
+          a.cancel();
+          tr.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450 });
+          setTimeout(aktualizujKontaktBloga, 60);
+        };
+      }
+      // pozostałe, wcześniej pobrane wpisy są w starym języku – usuwamy je z pamięci
+      document.querySelectorAll(".wpis").forEach((w) => { if (w !== wpis) w.remove(); });
+      Object.keys(pobrane).forEach((k) => delete pobrane[k]);
+      // dokument: język, tytuł, adres
+      document.documentElement.lang = doc.documentElement.lang;
+      document.body.className = doc.body.className;
+      ["indeks", "tytulBloga", "sufiks"].forEach((k) => { if (doc.body.dataset[k] !== undefined) document.body.dataset[k] = doc.body.dataset[k]; });
+      document.title = doc.title;
+      history.pushState({ jezyk: doc.documentElement.lang }, "", url);
+      tagAktywny = null; pole.value = ""; strona = 1;
+      tagi.forEach((t) => t.setAttribute("aria-pressed", "false"));
+      setTimeout(() => {
+        pokazKarty();
+        document.querySelectorAll(".rok").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
+        zmiana = false;
+      }, 1200);
+    } catch (e) {
+      location.href = url;                       // awaryjnie: zwykłe przejście
+    }
+  }
+  document.querySelectorAll(".blog-jezyki a").forEach((a) => a.addEventListener("click", (e) => {
+    if (a.getAttribute("aria-current")) { e.preventDefault(); return; }
+    e.preventDefault();
+    zmienJezyk(a.href);
+  }));
 
   /* ---------- 4. Rok w stopce ---------- */
   document.querySelectorAll(".rok").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
