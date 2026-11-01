@@ -1,4 +1,4 @@
-/* wersja 59 */
+/* wersja 60 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2351,3 +2351,32 @@ html.anim-menu .naglowek .menu a:nth-child(4) { animation-delay: .3s; }
 .zj-wzgledny { position: relative; }
 .zj-stary { position: absolute; left: 0; top: 0; right: 0; pointer-events: none; }
 .zj-nowy { display: contents; }
+
+/* =====================================================================
+   v60
+   ===================================================================== */
+/* telefon: mapa nie może przykrywać paska menu (warstwy mapy zamknięte we własnym kontekście) */
+.mapa { isolation: isolate; }
+
+/* menu: obwódka o połowę cieńsza (1 px); sięga do połowy odstępu, więc obwódki sąsiednich przycisków się stykają */
+.menu a::before { border-width: 1px; inset: -6px calc(-30.5 * var(--u)); }
+@media (max-width: 1099px) {
+  .naglowek:not(.naglowek--pasek) .menu a::before { inset: 0 -10px; }
+  .naglowek--pasek .menu a::before { inset: -3px -4px; }
+}
+
+/* stopka: "Polityka prywatności", "Ustawienia cookies" i linki do wpisów – obwódka 1 px (pigułka) tylko po najechaniu */
+.stopka__polityka a, .blog-stopka a, .stopka .zgody-otworz, .blog-stopka .zgody-otworz, .stopka__kolumna a {
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 1px 10px;
+  margin: 0 -10px;                 /* tekst zostaje w tym samym miejscu */
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  background: none;
+  transition: border-color .25s ease;
+}
+.stopka__polityka a:hover, .blog-stopka a:hover, .stopka .zgody-otworz:hover, .blog-stopka .zgody-otworz:hover, .stopka__kolumna a:hover,
+.stopka__polityka a:focus-visible, .blog-stopka a:focus-visible, .stopka .zgody-otworz:focus-visible, .stopka__kolumna a:focus-visible {
+  border-color: #fff; background: none; text-decoration: none;
+}
