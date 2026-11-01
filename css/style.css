@@ -1,4 +1,4 @@
-/* wersja 57 */
+/* wersja 58 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2282,4 +2282,49 @@ html:active-view-transition-type(do-bloga)::view-transition-new(root) { animatio
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.14);
   }
   .kontakt__jezyk { top: 20px; }
+}
+
+/* =====================================================================
+   v58
+   ===================================================================== */
+/* małe przyciski: zamiast podkreślenia biała, 2-pikselowa obwódka z zaokrąglonymi rogami */
+.rodo__rozwin, .rodo__zwin, .zgody-otworz,
+.stopka__polityka a, .blog-stopka a, .zgody__tekst a {
+  text-decoration: none;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  padding: 0 6px;
+}
+.rodo__rozwin:hover, .rodo__zwin:hover, .zgody-otworz:hover,
+.stopka__polityka a:hover, .blog-stopka a:hover, .zgody__tekst a:hover { text-decoration: none; background: rgba(255, 255, 255, 0.35); }
+
+/* powiększanie kafli po najechaniu 2× szybciej (strona i blog) */
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .kafel__przycisk { transition: background-color .3s ease, border-color .3s ease, box-shadow .35s ease-in-out, transform .35s ease-in-out; }
+  .kafel--powiekszony .kafel__przycisk::after { transition: opacity .35s ease-in-out; }
+  .karta__link { transition: transform .35s ease-in-out, box-shadow .35s ease-in-out; }
+}
+
+/* menu: bieżąca sekcja zaznaczona białą obwódką (pigułka) zamiast pogrubienia; tekst się nie zmienia */
+.naglowek .menu a.aktywny, .naglowek--pasek .menu a.aktywny, .blog .menu a[aria-current] { font-weight: inherit; }
+.menu a { position: relative; }
+.menu a::before {
+  content: ""; position: absolute; inset: -6px -14px;
+  border: 2px solid #fff; border-radius: 999px;
+  opacity: 0; transition: opacity .25s ease;
+  pointer-events: none;
+}
+.menu a.aktywny::before, .blog .menu a[aria-current]::before { opacity: 1; }
+@media (max-width: 1099px) { .menu a::before { inset: -2px -8px; } }
+
+/* szerokości pośrednie (między telefonem a iPadem): treść w kolumnie do 600 px, wyśrodkowanej */
+@media (min-width: 640px) and (max-width: 1099px) {
+  .sekcja, .stopka, .naglowek:not(.naglowek--pasek),
+  .kontakt, .blog-glowa, .blog-uklad, .blog-stopka, .blog-kontakt {
+    padding-left: calc((100% - 600px) / 2);
+    padding-right: calc((100% - 600px) / 2);
+  }
+  .kontakt__jezyk { right: calc((100% - 600px) / 2); }
+  .opis, .opis--dol { left: calc((100% - 600px) / 2); right: calc((100% - 600px) / 2); height: 600px; }
+  .omnie__zdjecie { max-height: 70vh; object-fit: cover; }
 }
