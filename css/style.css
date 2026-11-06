@@ -1,4 +1,4 @@
-/* wersja 60 */
+/* wersja 61 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2379,4 +2379,36 @@ html.anim-menu .naglowek .menu a:nth-child(4) { animation-delay: .3s; }
 .stopka__polityka a:hover, .blog-stopka a:hover, .stopka .zgody-otworz:hover, .blog-stopka .zgody-otworz:hover, .stopka__kolumna a:hover,
 .stopka__polityka a:focus-visible, .blog-stopka a:focus-visible, .stopka .zgody-otworz:focus-visible, .stopka__kolumna a:focus-visible {
   border-color: #fff; background: none; text-decoration: none;
+}
+
+/* =====================================================================
+   v61
+   ===================================================================== */
+/* menu: najechanie nie zmienia grubości ani wielkości tekstu */
+.menu a:hover, .menu a:focus-visible { font-weight: inherit; }
+
+/* blog: numery stron – krój bezszeryfowy (jak tekst), bez obwódki */
+.blog-strony button { font-family: var(--bezszeryf); font-size: max(14px, calc(18 * var(--f))); letter-spacing: -0.007em; padding: 0 4px; }
+.blog-strony button::before { display: none; }
+
+/* stopka: linki do wpisów – obwódka wokół całego linku, nie każdej linijki osobno */
+.stopka__kolumna a { display: inline-block; -webkit-box-decoration-break: slice; box-decoration-break: slice; }
+/* "Polityka prywatności" i "Ustawienia cookies": bez kropki między nimi, obwódki po najechaniu stykają się */
+.stopka__polityka a, .stopka__polityka .zgody-otworz, .blog-stopka a, .blog-stopka .zgody-otworz { margin: 0; }
+.blog-stopka a, .blog-stopka .zgody-otworz {
+  text-decoration: none; border: 1px solid transparent; border-radius: 999px; padding: 1px 10px;
+  background: none; transition: border-color .25s ease; font: inherit; color: inherit;
+}
+.blog-stopka a:hover, .blog-stopka .zgody-otworz:hover { border-color: #fff; background: none; }
+
+/* blog: dane kontaktowe po prawej jak na stronie kancelarii (z rozmyciem i gradientem pod spodem) */
+.kontakt--blog .kontakt__dane { height: auto; width: auto; }
+.kontakt--blog .kontakt__maly { position: static; opacity: 1; transform: none; }
+.kontakt--blog, .blog .gradient-kontakt { transition: opacity .4s ease, visibility 0s linear 0s; }
+@media (min-width: 1100px) {
+  .blog:has(.blog-uklad.wpis-otwarty) .kontakt--blog,
+  .blog:has(.blog-uklad.wpis-otwarty) .gradient-kontakt { opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility 0s linear .4s; }
+}
+@media (max-width: 1099px) {
+  .blog .blog-kontakt, .blog .gradient-kontakt { display: none; }
 }

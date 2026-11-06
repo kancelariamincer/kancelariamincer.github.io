@@ -1,4 +1,4 @@
-/* wersja 59 */
+/* wersja 61 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -45,10 +45,11 @@
       setTimeout(() => naglowek.classList.remove("naglowek--wejscie"), 600);
     } else if (pasek) {
       if (y > ostatnieY + 3) naglowek.classList.add("naglowek--ukryty");
-      else if (y < ostatnieY - 3) naglowek.classList.remove("naglowek--ukryty");
+      else if (y < ostatnieY - 3 && performance.now() > bezPaskaDo) naglowek.classList.remove("naglowek--ukryty");
     }
     ostatnieY = y;
   }
+  let bezPaskaDo = 0;   // przewijanie wywołane otwarciem/zamknięciem wpisu nie pokazuje paska menu
   let zaplanowane = false;
   window.addEventListener("scroll", () => {
     if (zaplanowane) return;
@@ -118,6 +119,8 @@
   function przewinDo(el) {
     const y = el.getBoundingClientRect().top + window.scrollY - 40;
     if (Math.abs(window.scrollY - y) > 2 && window.scrollY > y) {
+      bezPaskaDo = performance.now() + 1500;
+      if (naglowek.classList.contains("naglowek--pasek")) naglowek.classList.add("naglowek--ukryty");
       window.scrollTo({ top: y, behavior: malyRuch.matches ? "auto" : "smooth" });
     }
   }
@@ -206,7 +209,7 @@
 
   // flagi PL / ENG prowadzą do tej samej strony (lista albo ten sam wpis) w drugim języku
   function ustawFlagi(slug) {
-    document.querySelectorAll(".blog-jezyki a").forEach((a) => {
+    document.querySelectorAll(".blog-jezyki a, .kontakt__jezyk a").forEach((a) => {
       const baza = a.getAttribute("href").replace(/[^/]*$/, "");
       a.setAttribute("href", baza + (slug ? slug + ".html" : ""));
     });
@@ -638,9 +641,9 @@
   /* ---------- 5. Zmiana języka bez przeładowania (jak na stronie kancelarii) ----------
      Teksty gasną falą litera po literze, a nowe zapalają się za nią z nakładką kilku liter.
      Treść otwartego wpisu (inny układ akapitów) przenika się w całości. */
-  const KONTENERY = [".naglowek", ".blog-glowa", ".blog-boczny", ".blog-karty", ".blog-kontakt", ".blog-stopka", "#zgody"];
+  const KONTENERY = [".naglowek", ".blog-glowa", ".blog-boczny", ".blog-karty", ".blog-kontakt", ".kontakt", ".blog-stopka", "#zgody"];
   const TEKSTY = ".menu a, .blog-tytul, .blog-opis .linia, .blog-tagi button, .karta__data, .karta__tytul, .blog-brak, " +
-                 ".blog-kontakt__w, .blog-stopka p, .zgody__tytul, .zgody__tekst, .zgody__opcja span, .zgody .przycisk, label.ukryte";
+                 ".blog-kontakt__w, .kontakt__godziny, .kontakt__maly, .blog-stopka p, .zgody__tytul, .zgody__tekst, .zgody__opcja span, .zgody .przycisk, label.ukryte";
   const ATRYBUTY = ["href", "src", "alt", "title", "aria-label", "placeholder", "lang", "hreflang", "aria-current",
                     "data-tekst", "data-tagi", "data-szukaj", "datetime", "data-tytul"];
   // porównujemy układ (znaczniki), bez klas dodawanych w trakcie działania strony (widoczna, aktywny…)
@@ -747,11 +750,33 @@
       location.href = url;                       // awaryjnie: zwykłe przejście
     }
   }
-  document.querySelectorAll(".blog-jezyki a").forEach((a) => a.addEventListener("click", (e) => {
+  document.querySelectorAll(".blog-jezyki a, .kontakt__jezyk a").forEach((a) => a.addEventListener("click", (e) => {
     if (a.getAttribute("aria-current")) { e.preventDefault(); return; }
     e.preventDefault();
     zmienJezyk(a.href);
   }));
+
+  /* dane kontaktowe po prawej (jak na stronie kancelarii) gasną przed stopką */
+  const kontaktBlog = document.querySelector(".kontakt--blog"), gradientBlog = document.querySelector(".gradient-kontakt");
+  const stopkaBlog = document.querySelector(".blog-stopka");
+  function aktualizujKontaktListy() {
+    if (!kontaktBlog || !stopkaBlog || telefon.matches) return;
+    const vh = window.innerHeight, g = stopkaBlog.getBoundingClientRect().top;
+    const dol = vh - parseFloat(getComputedStyle(kontaktBlog).bottom);   // dolna krawędź danych
+    const k = Math.min(1, Math.max(0, (g - dol) / 200));   // gaśnie, zanim stopka wejdzie pod dane
+    kontaktBlog.style.opacity = k.toFixed(3);
+    if (gradientBlog) gradientBlog.style.opacity = k.toFixed(3);
+  }
+  window.addEventListener("scroll", () => requestAnimationFrame(aktualizujKontaktListy), { passive: true });
+  window.addEventListener("resize", aktualizujKontaktListy);
+  aktualizujKontaktListy();
+
+  /* kliknięcie poza otwartym wpisem zamyka go */
+  document.addEventListener("click", (e) => {
+    if (!otwarty || zmiana) return;
+    if (e.target.closest(".wpis, .karta, .naglowek, .blog-jezyki, .kontakt, .blog-kontakt, .zgody, .okno-rodo, a, button, input, label")) return;
+    zamknij(true, true);
+  });
 
   /* ---------- 4. Rok w stopce ---------- */
   document.querySelectorAll(".rok").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
