@@ -1,4 +1,4 @@
-/* wersja 61 */
+/* wersja 62 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2412,3 +2412,12 @@ html.anim-menu .naglowek .menu a:nth-child(4) { animation-delay: .3s; }
 @media (max-width: 1099px) {
   .blog .blog-kontakt, .blog .gradient-kontakt { display: none; }
 }
+
+/* =====================================================================
+   v62 – poprawki z audytu responsywności
+   ===================================================================== */
+/* płynność otwierania wpisu: akapity poza ekranem nie są przeliczane w każdej klatce animacji */
+.wpis__tresc > * { content-visibility: auto; contain-intrinsic-size: auto 60px; }
+/* klauzula RODO i linki do wpisów w stopce: wiersze do ok. 75 znaków (wcześniej do 85–98) */
+.formularz__rodo { max-width: 39em; }
+@media (max-width: 1099px) { .stopka__kolumna { max-width: 35em; } }
