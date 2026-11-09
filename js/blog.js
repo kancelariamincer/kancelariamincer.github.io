@@ -1,4 +1,4 @@
-/* wersja 61 */
+/* wersja 64 */
 /* =========================================================
    Blog kancelarii
    1. Pasek menu przy przewijaniu (jak na stronie głównej)
@@ -238,7 +238,8 @@
     const data = wpis.querySelector(".wpis__data");
     const el = data.dataset.lot ? [wpis.querySelector(".wpis__zamknij")] : [data, wpis.querySelector(".wpis__zamknij")];
     if (!tytul.dataset.lot) el.push(tytul);              // tytuł animowany przelotem – osobno
-    el.push(wpis.querySelector(".wpis__lead"));
+    const lead = wpis.querySelector(".wpis__lead");
+    if (!lead.dataset.lot) el.push(lead);
     wpis.querySelectorAll(".wpis__tresc > *").forEach((x) => {
       if (x.tagName === "UL" || x.tagName === "OL") el.push(...x.children); else el.push(x);
     });
@@ -306,6 +307,7 @@
 
     if (ruch && karta && !karta.hidden) {
       const lot = telefon.matches ? null : przygotujLot(karta, wpis);   // tytuł "przelatuje" z kafla
+      const leadLinie = przygotujLead(wpis);                             // podtytuł wchodzi linijkami z dołu
       const start = prostokat(karta.querySelector(".karta__link"));
       karta.style.visibility = "hidden";                 // wpis zastępuje kafel – bez "duplikatu" pod spodem
       wpis.classList.add("wpis--start");                 // przyciemnienie 100%, biel schowana pod kaflem
@@ -341,6 +343,7 @@
         }
         pokazTeksty(wpis, 150);
         if (lot) lot.start(start, cel);
+        if (leadLinie) leadLinie();
       }, WYGASZENIE);
     } else {
       pokazTeksty(wpis, 300);           // np. wejście prosto na adres wpisu – teksty wchodzą kolejno
@@ -422,6 +425,45 @@
           if (!otwieranie) dw.getAnimations().forEach((x) => x.cancel());   // wpis jest już schowany
         }, CZAS + 250);
       },
+    };
+  }
+
+  /* Podtytuł (wstęp) wpisu: linijki (wg łamania w docelowym układzie) wchodzą z dołu o 5 px,
+     każda kolejna z przesunięciem 20% czasu animacji. */
+  function przygotujLead(wpis) {
+    const lead = wpis.querySelector(".wpis__lead");
+    if (!lead || malyRuch.matches) return null;
+    if (!lead.dataset.linie) {
+      const w = document.createTreeWalker(lead, NodeFilter.SHOW_TEXT), wezly = [];
+      while (w.nextNode()) wezly.push(w.currentNode);
+      wezly.forEach((t) => {
+        const f = document.createDocumentFragment();
+        t.textContent.split(/(\s+)/).forEach((k) => {
+          if (!k) return;
+          if (/^\s+$/.test(k)) { f.appendChild(document.createTextNode(k)); return; }
+          const sp = document.createElement("span"); sp.className = "lead-slowo"; sp.textContent = k; f.appendChild(sp);
+        });
+        t.replaceWith(f);
+      });
+      lead.dataset.linie = "1";
+    }
+    const slowa = [...lead.querySelectorAll(".lead-slowo")];
+    const gory = [...new Set(slowa.map((s) => Math.round(s.getBoundingClientRect().top)))].sort((a, b) => a - b);
+    const nrLinii = slowa.map((s) => gory.indexOf(Math.round(s.getBoundingClientRect().top)));   // łamanie w docelowym układzie
+    lead.dataset.lot = "1";
+    lead.classList.remove("wpis-linia"); lead.style.opacity = "";
+    lead.style.width = lead.getBoundingClientRect().width + "px"; lead.style.maxWidth = "none";   // stałe łamanie w trakcie
+    slowa.forEach((s) => { s.style.opacity = "0"; });
+    return () => {
+      const CZ = 600;
+      slowa.forEach((s, i) => {
+        const linia = Math.max(0, nrLinii[i]);
+        s.animate([{ opacity: 0, transform: "translateY(5px)" }, { opacity: 1, transform: "none" }],
+          { duration: CZ, delay: 250 + linia * CZ * 0.2, easing: "ease-out", fill: "backwards" })
+          .onfinish = () => { s.style.opacity = ""; };
+        s.style.opacity = "";
+      });
+      setTimeout(() => { delete lead.dataset.lot; lead.style.width = ""; lead.style.maxWidth = ""; }, 250 + gory.length * 120 + CZ + 50);
     };
   }
 
@@ -507,13 +549,8 @@
         // kafel: pierwsza linijka ukryta do końca lotu, reszta tytułu pojawia się słowo po słowie
         litery(karta).forEach((l) => { l.style.opacity = ""; });
         sk.slice(0, n).forEach((x) => { x.style.opacity = "0"; });
-        const reszta = sk.slice(n);
-        const krok = reszta.length ? 800 / reszta.length : 0;
-        reszta.forEach((x, i) => {
-          x.style.opacity = "0";
-          x.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 300 + i * krok, fill: "forwards" })
-            .onfinish = () => { x.style.opacity = ""; };
-        });
+        // reszta tytułu na kaflu bez osobnej animacji – pojawia się raz, razem z gaśnięciem wpisu (bez „podwójnego” zapalania)
+        sk.slice(n).forEach((x) => { x.style.opacity = ""; });
         setTimeout(() => {
           sk.slice(0, n).forEach((x) => { x.style.opacity = ""; });
           klon.remove();

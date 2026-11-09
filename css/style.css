@@ -1,4 +1,4 @@
-/* wersja 63 */
+/* wersja 64 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2426,3 +2426,60 @@ html.anim-menu .naglowek .menu a:nth-child(4) { animation-delay: .3s; }
 /* polityka prywatności i strona 404: wiersze ok. 70 znaków (PL) i 60 (EN) zamiast 80–100 */
 .dokument__tresc { max-width: calc(37em + 48px); }
 html[lang="en"] .dokument__tresc { max-width: calc(31.5em + 48px); }
+
+/* =====================================================================
+   v64
+   ===================================================================== */
+/* blog: przejście danych kontaktowych lista → wpis
+   – dane z listy jadą 20 px w prawo (ease-in) i gasną (ease-out),
+   – dane wpisu wchodzą z lewej o 10 px i zapalają się (ease-in) */
+.kontakt--blog { transition: opacity .5s ease-out, transform .5s ease-in, visibility 0s linear 0s; }
+@media (min-width: 1100px) {
+  .blog:has(.blog-uklad.wpis-otwarty) .kontakt--blog { transform: translateX(20px); transition: opacity .5s ease-out, transform .5s ease-in, visibility 0s linear .5s; }
+  .blog-kontakt { transform: translateX(-10px); transition: opacity .5s ease-in, transform .5s ease-in, visibility 0s linear .5s, --szer .5s ease-in-out; }
+  .blog-kontakt.widoczny { transform: none; transition: opacity .5s ease-in .15s, transform .5s ease-in .15s, --szer .5s ease-in-out; }
+}
+
+/* menu: obwódka dopasowana do tekstu – równy margines z każdej strony */
+.menu a::before { inset: -7px; }
+@media (max-width: 1099px) {
+  .naglowek:not(.naglowek--pasek) .menu a::before, .naglowek--pasek .menu a::before { inset: -3px; }
+}
+
+/* "… rozwiń" w klauzuli RODO: obwódka rysowana do środka – nie jest przycinana */
+.rodo__rozwin, .rodo__zwin { border: 0; box-shadow: inset 0 0 0 2px #fff; border-radius: 6px; line-height: inherit; }
+
+/* linki do wpisów w stopce: zaokrąglenie obwódki jak mapa */
+.stopka__kolumna a { border-radius: calc(8 * var(--u)); }
+
+/* adresy biur: po najechaniu biała obwódka zamiast podkreślenia */
+.info a.adres {
+  text-decoration: none; border: 1px solid transparent; border-radius: 999px;
+  padding: 0 8px; margin: 0 -8px; transition: border-color .25s ease;
+}
+.info a.adres:hover, .info a.adres:focus-visible, .info a.adres.aktywny { border-color: #fff; text-decoration: none; }
+
+/* O mnie: zdjęcie – najpierw szybko z przezroczystości, zaraz potem (zazębiając się) rozszerza się
+   z 50% do pełnej szerokości, a zaokrąglenie maleje z 2× do docelowego (1 s, ease-in) */
+html.anim .omnie__zdjecie.linia { opacity: 0; }
+html.anim .omnie__zdjecie.linia.widoczna {
+  opacity: 1;
+  animation: zdjecie-krycie .35s ease-in both, zdjecie-szerokosc 1s ease-in .15s both;
+  transition: none;
+}
+@keyframes zdjecie-krycie { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zdjecie-szerokosc {
+  from { clip-path: inset(0 0 0 50% round calc(20 * var(--u))); }
+  to   { clip-path: inset(0 0 0 0 round calc(10 * var(--u))); }
+}
+@media (max-width: 1099px) {
+  @keyframes zdjecie-szerokosc { from { clip-path: inset(0 0 0 50% round 20px); } to { clip-path: inset(0 0 0 0 round 10px); } }
+}
+
+/* kursor: znak paragrafu; nad tekstem – kreska; nad przyciskami i linkami – łapka */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: url("../img/kursor-paragraf.svg") 12 12, auto; }
+  p, h1, h2, h3, h4, li, time, label, address, figcaption, blockquote, .linia, .tekst, input, textarea { cursor: text; }
+  a, a *, button, button *, select, summary, [role="button"], .kafel__przycisk, .kafel__przycisk *, .karta__link, .karta__link *,
+  .leaflet-marker-icon, .leaflet-control a, input[type="checkbox"], input[type="submit"] { cursor: pointer; }
+}

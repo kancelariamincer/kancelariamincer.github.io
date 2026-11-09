@@ -438,6 +438,11 @@
     const przycisk = kafel.querySelector(".kafel__przycisk");
     const opis = kafel.querySelector(".opis");
     zamknijOpis();
+    // kolejny kafel przy otwartym okienku: powiększa się jak przy najechaniu, a okienko wyrównuje się do jego krawędzi
+    if (window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1100px)").matches) {
+      kafle.forEach((k) => { if (k !== kafel) k.classList.remove("kafel--powiekszony"); });
+      kafel.classList.add("kafel--powiekszony");
+    }
     const kol = i % 5, rzad = Math.floor(i / 5);
     opis.style.setProperty("--opis-x", kol <= 2 ? 278 : -490);
     opis.classList.toggle("opis--dol", rzad > 0);
