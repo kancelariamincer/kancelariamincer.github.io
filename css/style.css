@@ -1,4 +1,4 @@
-/* wersja 68 */
+/* wersja 69 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2547,9 +2547,9 @@ html.anim .omnie__zdjecie.linia.widoczna {
    ===================================================================== */
 /* kursor §: 120% pierwotnej wielkości (30 px), zamiast obrysu – biała poświata pod spodem */
 @media (hover: hover) and (pointer: fine) {
-  html { cursor: url("../img/kursor-paragraf-30.png?v=68") 15 15, auto; }
-  html { cursor: -webkit-image-set(url("../img/kursor-paragraf-30.png?v=68") 1x, url("../img/kursor-paragraf-60.png?v=68") 2x) 15 15, auto; }
-  html { cursor: image-set(url("../img/kursor-paragraf-30.png?v=68") 1x, url("../img/kursor-paragraf-60.png?v=68") 2x) 15 15, auto; }
+  html { cursor: url("../img/kursor-paragraf-30.png?v=69") 15 15, auto; }
+  html { cursor: -webkit-image-set(url("../img/kursor-paragraf-30.png?v=69") 1x, url("../img/kursor-paragraf-60.png?v=69") 2x) 15 15, auto; }
+  html { cursor: image-set(url("../img/kursor-paragraf-30.png?v=69") 1x, url("../img/kursor-paragraf-60.png?v=69") 2x) 15 15, auto; }
 }
 
 /* blog (lista): pod danymi kontaktowymi to samo rozmycie i półprzezroczyste tło co przy wpisie (miękka krawędź 50 px) */
