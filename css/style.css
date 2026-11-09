@@ -1,4 +1,4 @@
-/* wersja 64 */
+/* wersja 65 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2483,3 +2483,26 @@ html.anim .omnie__zdjecie.linia.widoczna {
   a, a *, button, button *, select, summary, [role="button"], .kafel__przycisk, .kafel__przycisk *, .karta__link, .karta__link *,
   .leaflet-marker-icon, .leaflet-control a, input[type="checkbox"], input[type="submit"] { cursor: pointer; }
 }
+
+/* =====================================================================
+   v65
+   ===================================================================== */
+/* blog: dane kontaktowe – dwa razy dłuższa droga (40 px / 20 px), krycie ease-in-out w obie strony */
+.kontakt--blog { transition: opacity .5s ease-in-out, transform .5s ease-in, visibility 0s linear 0s; }
+@media (min-width: 1100px) {
+  .blog:has(.blog-uklad.wpis-otwarty) .kontakt--blog { transform: translateX(40px); transition: opacity .5s ease-in-out, transform .5s ease-in, visibility 0s linear .5s; }
+  .blog-kontakt { transform: translateX(-20px); transition: opacity .5s ease-in-out, transform .5s ease-in, visibility 0s linear .5s, --szer .5s ease-in-out; }
+  .blog-kontakt.widoczny { transform: none; transition: opacity .5s ease-in-out .15s, transform .5s ease-in .15s, --szer .5s ease-in-out; }
+}
+
+/* kursor-paragraf 2× większy */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: url("../img/kursor-paragraf.svg") 24 24, auto; }
+}
+
+/* stopka: po jednym linku w kolumnie, gdy któryś łamie się na więcej niż 2 linijki */
+.stopka__kolumna--jeden li:nth-child(n+2) { display: none; }
+
+/* zdjęcie "O mnie": animacja wejścia (niezależna od animacji wejścia strony) */
+.omnie__zdjecie.zdjecie--czeka { opacity: 0; }
+.omnie__zdjecie.zdjecie--wejscie { animation: zdjecie-krycie .35s ease-in both, zdjecie-szerokosc 1s ease-in .15s both; }

@@ -215,6 +215,32 @@
     if (podpis) { podpis.style.width = (lewa - 40) + "px"; podpis.style.top = (top + h - 16) + "px"; }
   }
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(dopasujZdjecieOMnie);
+
+  /* Zdjęcie na stronie "O mnie": animacja wejścia przy każdym pojawieniu się na ekranie po wczytaniu strony
+     (najpierw szybko z przezroczystości, potem rozszerzanie z 50% do 100% i zaokrąglenie z 2× do docelowego) */
+  const zdjecieOMnie = document.querySelector(".omnie__zdjecie");
+  if (zdjecieOMnie && !malyRuch.matches && "IntersectionObserver" in window) {
+    zdjecieOMnie.classList.add("zdjecie--czeka");
+    new IntersectionObserver((wpisy, obs) => {
+      if (!wpisy[0].isIntersecting) return;
+      zdjecieOMnie.classList.remove("zdjecie--czeka");
+      zdjecieOMnie.classList.add("zdjecie--wejscie");
+      obs.disconnect();
+    }, { threshold: 0.25 }).observe(zdjecieOMnie);
+  }
+
+  /* Stopka: jeśli którykolwiek link do wpisu łamie się na więcej niż 2 linijki, w każdej kolumnie zostaje po jednym linku */
+  function linkiStopki() {
+    const kolumny = [...document.querySelectorAll(".stopka__kolumna")];
+    kolumny.forEach((k) => k.classList.remove("stopka__kolumna--jeden"));
+    const za_dlugi = kolumny.some((k) => [...k.querySelectorAll("a")].some((a) => {
+      const r = document.createRange(); r.selectNodeContents(a);
+      return new Set([...r.getClientRects()].filter((q) => q.width > 1).map((q) => Math.round(q.top))).size > 2;
+    }));
+    kolumny.forEach((k) => k.classList.toggle("stopka__kolumna--jeden", za_dlugi));
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(linkiStopki);
+  window.addEventListener("resize", linkiStopki);
   window.addEventListener("resize", dopasujZdjecieOMnie);
 
   /* wspólna obsługa przewijania */
