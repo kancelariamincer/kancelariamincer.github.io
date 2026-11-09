@@ -1,4 +1,4 @@
-/* wersja 66 */
+/* wersja 67 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2541,3 +2541,36 @@ html.anim .omnie__zdjecie.linia.widoczna {
 
 /* linki do wpisów w stopce: więcej miejsca w obwódce u góry i u dołu */
 .stopka__kolumna a { padding: 4px 10px; margin: -4px -10px; }
+
+/* =====================================================================
+   v67
+   ===================================================================== */
+/* kursor §: 120% pierwotnej wielkości (30 px), zamiast obrysu – biała poświata pod spodem */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: url("../img/kursor-paragraf-30.png") 15 15, auto; }
+  html { cursor: -webkit-image-set(url("../img/kursor-paragraf-30.png") 1x, url("../img/kursor-paragraf-60.png") 2x) 15 15, auto; }
+  html { cursor: image-set(url("../img/kursor-paragraf-30.png") 1x, url("../img/kursor-paragraf-60.png") 2x) 15 15, auto; }
+}
+
+/* blog (lista): pod danymi kontaktowymi to samo rozmycie i półprzezroczyste tło co przy wpisie (miękka krawędź 50 px) */
+@media (min-width: 1100px) {
+  .blog .gradient-kontakt { display: none; }
+  .kontakt--blog::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    inset: -50px;
+    background: rgba(247, 243, 236, 0.5);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 50px, #000 calc(100% - 50px), transparent),
+                        linear-gradient(to bottom, transparent, #000 50px, #000 calc(100% - 50px), transparent);
+    -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(to right, transparent, #000 50px, #000 calc(100% - 50px), transparent),
+                        linear-gradient(to bottom, transparent, #000 50px, #000 calc(100% - 50px), transparent);
+            mask-composite: intersect;
+  }
+  .kontakt--blog { isolation: isolate; }
+}
+
+/* zdjęcie "O mnie": odsłanianie bardzo szybkie na starcie i łagodnie dochodzące do pełnej szerokości (ok. 1,2 s) */
+.omnie__zdjecie.zdjecie--wejscie {
+  animation: zdjecie-krycie .3s ease-out both, zdjecie-szerokosc-srodek 1.2s cubic-bezier(0.16, 1, 0.3, 1) .05s both;
+}
