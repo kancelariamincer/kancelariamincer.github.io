@@ -221,11 +221,15 @@
   const zdjecieOMnie = document.querySelector(".omnie__zdjecie");
   if (zdjecieOMnie && !malyRuch.matches && "IntersectionObserver" in window) {
     zdjecieOMnie.classList.add("zdjecie--czeka");
+    zdjecieOMnie.loading = "eager";
     new IntersectionObserver((wpisy, obs) => {
       if (!wpisy[0].isIntersecting) return;
-      zdjecieOMnie.classList.remove("zdjecie--czeka");
-      zdjecieOMnie.classList.add("zdjecie--wejscie");
       obs.disconnect();
+      // start dopiero po zdekodowaniu obrazu – bez szarpnięcia w trakcie animacji
+      (zdjecieOMnie.decode ? zdjecieOMnie.decode() : Promise.resolve()).catch(() => {}).then(() => requestAnimationFrame(() => {
+        zdjecieOMnie.classList.remove("zdjecie--czeka");
+        zdjecieOMnie.classList.add("zdjecie--wejscie");
+      }));
     }, { threshold: 0.25 }).observe(zdjecieOMnie);
   }
 
@@ -233,11 +237,14 @@
   function linkiStopki() {
     const kolumny = [...document.querySelectorAll(".stopka__kolumna")];
     kolumny.forEach((k) => k.classList.remove("stopka__kolumna--jeden"));
-    const za_dlugi = kolumny.some((k) => [...k.querySelectorAll("a")].some((a) => {
-      const r = document.createRange(); r.selectNodeContents(a);
-      return new Set([...r.getClientRects()].filter((q) => q.width > 1).map((q) => Math.round(q.top))).size > 2;
-    }));
-    kolumny.forEach((k) => k.classList.toggle("stopka__kolumna--jeden", za_dlugi));
+    // tylko w tej kolumnie, w której któryś link ma więcej niż 2 linijki
+    kolumny.forEach((k) => {
+      const za_dlugi = [...k.querySelectorAll("a")].some((a) => {
+        const r = document.createRange(); r.selectNodeContents(a);
+        return new Set([...r.getClientRects()].filter((q) => q.width > 1).map((q) => Math.round(q.top / 4))).size > 2;
+      });
+      k.classList.toggle("stopka__kolumna--jeden", za_dlugi);
+    });
   }
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(linkiStopki);
   window.addEventListener("resize", linkiStopki);

@@ -1,4 +1,4 @@
-/* wersja 65 */
+/* wersja 66 */
 /* =========================================================
    Kancelaria Adwokacka – adw. Agnieszka Mincer-Madejska
    Układ odwzorowany z projektu Figma (MacBook Pro 16": 1728 × 1117 px).
@@ -2506,3 +2506,38 @@ html.anim .omnie__zdjecie.linia.widoczna {
 /* zdjęcie "O mnie": animacja wejścia (niezależna od animacji wejścia strony) */
 .omnie__zdjecie.zdjecie--czeka { opacity: 0; }
 .omnie__zdjecie.zdjecie--wejscie { animation: zdjecie-krycie .35s ease-in both, zdjecie-szerokosc 1s ease-in .15s both; }
+
+/* =====================================================================
+   v66
+   ===================================================================== */
+/* kursor §: obraz PNG (pewniejszy niż SVG), 48 px, ostry na ekranach Retina */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: url("../img/kursor-paragraf-48.png") 24 24, auto; }
+  html { cursor: -webkit-image-set(url("../img/kursor-paragraf-48.png") 1x, url("../img/kursor-paragraf-96.png") 2x) 24 24, auto; }
+  html { cursor: image-set(url("../img/kursor-paragraf-48.png") 1x, url("../img/kursor-paragraf-96.png") 2x) 24 24, auto; }
+}
+
+/* zdjęcie "O mnie": rozszerza się w obie strony od środka (ease-in) */
+@keyframes zdjecie-szerokosc-srodek {
+  from { clip-path: inset(0 25% 0 25% round calc(20 * var(--u))); }
+  to   { clip-path: inset(0 0 0 0 round calc(10 * var(--u))); }
+}
+.omnie__zdjecie.zdjecie--wejscie {
+  will-change: clip-path, opacity;
+  animation: zdjecie-krycie .35s ease-in both, zdjecie-szerokosc-srodek 1s cubic-bezier(.42, 0, 1, 1) .15s both;
+}
+@media (max-width: 1099px) {
+  @keyframes zdjecie-szerokosc-srodek { from { clip-path: inset(0 25% 0 25% round 20px); } to { clip-path: inset(0 0 0 0 round 10px); } }
+}
+
+/* menu: dwa razy więcej miejsca w obwódce na szerokość */
+.menu a::before { inset: -7px -14px; }
+@media (max-width: 1099px) {
+  .naglowek:not(.naglowek--pasek) .menu a::before, .naglowek--pasek .menu a::before { inset: -3px -6px; }
+}
+
+/* "… rozwiń": obwódka jak przy adresach biur (1 px, pełne zaokrąglenie, odstęp 8 px) – rysowana do środka */
+.rodo__rozwin, .rodo__zwin { box-shadow: inset 0 0 0 1px #fff; border-radius: 999px; padding: 0 8px; }
+
+/* linki do wpisów w stopce: więcej miejsca w obwódce u góry i u dołu */
+.stopka__kolumna a { padding: 4px 10px; margin: -4px -10px; }
